@@ -2,10 +2,14 @@ package com.izubot.treinemais.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// White Theme
+val backgroundLight = Color(0xFFF8F8F8)
+val primaryTextLight = Color(0xFF2980A9)
+val secondTextLight = Color(0xFFCEDFE6)
+val darkerTextLight = Color(0xFF48616C)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// Dark Theme
+val backgroundDark = Color(0xFF10171D)
+val primaryTextDark = Color(0xFF08A1FF)
+val secondTextDark = Color(0xFF38414B)
+val lighterTextDark = Color(0xFFB8BCC2)

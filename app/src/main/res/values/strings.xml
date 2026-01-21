@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Treine Mais</string>
+    <string name="subtitle_splash">Track your strength</string>
+    <string name="init">Starting</string>
 </resources>
