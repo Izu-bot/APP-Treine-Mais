@@ -1,19 +1,21 @@
 package com.izubot.treinemais.ui.splash
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,11 +36,12 @@ fun Splash(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            /*
-            * TODO
-            *  Icon app
-            * */
 
+            Image(
+                painter = painterResource(R.mipmap.ic_launcher_foreground),
+                contentDescription = stringResource(R.string.app_name),
+                modifier = Modifier.size(180.dp)
+            )
             Text(
                 text = stringResource(R.string.app_name).uppercase(),
                 fontWeight = FontWeight.ExtraBold,
@@ -55,6 +58,7 @@ fun Splash(
                 letterSpacing = 4.sp,
                 textAlign = TextAlign.Center
             )
+            Spacer(modifier = Modifier.height(160.dp))
         }
 
         Text(
@@ -70,12 +74,15 @@ fun Splash(
         /*
         * TODO
         *  Make progress
+        *  Só é possivel fazer quando tiver a lógica de conexão com a API
         * */
         LinearProgressIndicator(
             trackColor = MaterialTheme.colorScheme.secondary,
             color = MaterialTheme.colorScheme.primary,
             gapSize = 8.dp,
-            modifier = Modifier.width(80.dp).padding(bottom = 12.dp)
+            modifier = Modifier
+                .width(80.dp)
+                .padding(bottom = 12.dp)
         )
     }
 }
