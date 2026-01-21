@@ -14,6 +14,7 @@ private val DarkColorScheme = darkColorScheme(
     primary = backgroundLight,
     secondary = primaryTextLight,
     tertiary = secondTextLight,
+    onSecondary = tertiaryTextLight,
     scrim = darkerTextLight
 )
 
@@ -21,6 +22,7 @@ private val LightColorScheme = lightColorScheme(
     primary = backgroundDark,
     secondary = primaryTextDark,
     tertiary = secondTextDark,
+    onSecondary = tertiaryTextDark,
     scrim = lighterTextDark
 )
 
