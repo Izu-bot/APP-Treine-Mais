@@ -19,8 +19,11 @@ val provider = GoogleFont.Provider(
 val fontName = GoogleFont("Manrope")
 
 val manropeFamily = FontFamily(
-    Font(googleFont = fontName, fontProvider = provider),
-    Font(googleFont = fontName, fontProvider = provider, weight = FontWeight.Bold)
+    Font(googleFont = fontName, fontProvider = provider, weight = FontWeight.Normal),
+    Font(googleFont = fontName, fontProvider = provider, weight = FontWeight.Medium),
+    Font(googleFont = fontName, fontProvider = provider, weight = FontWeight.SemiBold),
+    Font(googleFont = fontName, fontProvider = provider, weight = FontWeight.Bold),
+    Font(googleFont = fontName, fontProvider = provider, weight = FontWeight.ExtraBold)
 )
 
 // Set of Material typography styles to start with
@@ -34,7 +37,7 @@ val Typography = Typography(
     ),
     titleLarge = TextStyle(
         fontFamily = manropeFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.ExtraBold,
         fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp

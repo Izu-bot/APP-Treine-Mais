@@ -2,4 +2,6 @@
     <string name="app_name">Treine Mais</string>
     <string name="subtitle_splash">Track your strength</string>
     <string name="init">Starting</string>
+    <string name="welcome_call_to_action">Train with purpose</string>
+    <string name="welcome_subtitle">Track your progress, set goals, and surpass you daily limits</string>
 </resources>
