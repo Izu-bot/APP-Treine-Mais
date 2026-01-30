@@ -1,5 +1,11 @@
 <resources>
-    <string name="app_name">Treine Mais</string>
+    <string name="app_name">Treine+</string>
+    <string name="app_version">Version %1$s</string>
     <string name="subtitle_splash">Track your strength</string>
     <string name="init">Starting</string>
+    <string name="welcome_call_to_action">Train with purpose</string>
+    <string name="welcome_subtitle">Track your progress, set goals, and surpass you daily limits</string>
+    <string name="welcome_sign_in">I already have an account</string>
+    <string name="welcome_sign_up">Create a new account</string>
+    <string name="welcome_image_content_descriptor">Image of a woman exercising.</string>
 </resources>

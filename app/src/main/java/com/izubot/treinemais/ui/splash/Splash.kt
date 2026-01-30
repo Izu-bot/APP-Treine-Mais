@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.izubot.treinemais.R
+import com.izubot.treinemais.ui.theme.manropeFamily
 
 @Composable
 fun Splash(
@@ -48,7 +49,8 @@ fun Splash(
                 style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.onSecondary,
                 letterSpacing = 6.sp,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                fontFamily = manropeFamily
             )
             Text(
                 text = stringResource(R.string.subtitle_splash).uppercase(),
@@ -56,19 +58,21 @@ fun Splash(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.scrim,
                 letterSpacing = 4.sp,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                fontFamily = manropeFamily
             )
             Spacer(modifier = Modifier.height(160.dp))
         }
 
         Text(
             text = stringResource(R.string.init).uppercase(),
-            fontWeight = FontWeight.W500,
+            fontWeight = FontWeight.SemiBold,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.scrim,
             letterSpacing = 4.sp,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(bottom = 10.dp)
+            modifier = Modifier.padding(bottom = 10.dp),
+            fontFamily = manropeFamily
         )
 
         /*
