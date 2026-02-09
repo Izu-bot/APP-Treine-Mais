@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.izubot.treinemais.ui.login.Login
+import com.izubot.treinemais.ui.splash.Splash
 import com.izubot.treinemais.ui.theme.TreineMaisTheme
 import com.izubot.treinemais.ui.welcome.Welcome
 

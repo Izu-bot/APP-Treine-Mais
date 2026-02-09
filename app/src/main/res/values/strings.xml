@@ -11,6 +11,11 @@
     <string name="arrow_back_welcome">Back to welcome</string>
     <string name="title_login">Access</string>
     <string name="welcome_login">Welcome back!</string>
-    <string name="welcome_login_subtile">Continue your training from where you left off."</string>
+    <string name="welcome_login_subtitle">Continue your training from where you left off."</string>
     <string name="login_enter">Login</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_email_placeholder">Enter your email</string>
+    <string name="login_password_placeholder">Enter your password</string>
+    <string name="login_forgot_password">Forgot your password?</string>
 </resources>
