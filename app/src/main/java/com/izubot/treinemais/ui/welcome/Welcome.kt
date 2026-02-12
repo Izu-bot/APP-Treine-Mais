@@ -96,7 +96,7 @@ fun Welcome(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .size(260.dp)
                     .background(
-                        MaterialTheme.colorScheme.surfaceContainer,
+                        MaterialTheme.colorScheme.onTertiary,
                         shape = RoundedCornerShape(28.dp)
                     )
                     .padding(20.dp),
@@ -128,7 +128,7 @@ fun Welcome(modifier: Modifier = Modifier) {
                 text = stringResource(R.string.welcome_subtitle),
                 fontWeight = FontWeight.SemiBold,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.tertiary,
+                color = MaterialTheme.colorScheme.onTertiary,
                 textAlign = TextAlign.Center,
                 fontFamily = manropeFamily
             )

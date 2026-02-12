@@ -8,4 +8,16 @@
     <string name="welcome_sign_in">I already have an account</string>
     <string name="welcome_sign_up">Create a new account</string>
     <string name="welcome_image_content_descriptor">Image of a woman exercising.</string>
+    <string name="arrow_back_welcome">Back to welcome</string>
+    <string name="title_login">Access</string>
+    <string name="welcome_login">Welcome back!</string>
+    <string name="welcome_login_subtitle">Continue your training from where you left off."</string>
+    <string name="login_enter">Login</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_email_placeholder">Enter your email</string>
+    <string name="login_password_placeholder">Enter your password</string>
+    <string name="login_forgot_password">Forgot your password?</string>
+    <string name="login_no_have_account">Don\'t have an account?</string>
+    <string name="login_create_account">Create an account</string>
 </resources>
