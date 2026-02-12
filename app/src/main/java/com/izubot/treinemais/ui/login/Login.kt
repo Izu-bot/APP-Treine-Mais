@@ -4,12 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
@@ -124,7 +126,7 @@ fun Login(
                 placeholderText = stringResource(R.string.login_email_placeholder),
                 color = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onTertiary,
                     focusedContainerColor = MaterialTheme.colorScheme.onTertiary,
                     unfocusedContainerColor = MaterialTheme.colorScheme.tertiary,
                     focusedTrailingIconColor = MaterialTheme.colorScheme.tertiary,
@@ -150,7 +152,7 @@ fun Login(
                 onVisibilityChange = loginViewModel::onTogglePasswordVisibility,
                 color = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onTertiary,
                     focusedContainerColor = MaterialTheme.colorScheme.onTertiary,
                     unfocusedContainerColor = MaterialTheme.colorScheme.tertiary,
                     focusedTrailingIconColor = MaterialTheme.colorScheme.tertiary,
@@ -184,6 +186,26 @@ fun Login(
                     .padding(horizontal = 26.dp)
                     .size(56.dp)
             )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Row {
+                Text(
+                    text = stringResource(R.string.login_no_have_account),
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Normal,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontFamily = manropeFamily
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = stringResource(R.string.login_create_account),
+                    color = MaterialTheme.colorScheme.secondary,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontFamily = manropeFamily
+                )
+            }
         }
     }
 }
