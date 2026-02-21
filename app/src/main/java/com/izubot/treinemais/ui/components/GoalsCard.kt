@@ -58,7 +58,7 @@ fun GoalsCard(
                 .fillMaxWidth()
                 .padding(vertical = 16.dp, horizontal = 14.dp)
         ) {
-            val iconContainerColor = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surfaceVariant
+            val iconContainerColor = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.tertiary
             val iconTintColor = if (isSelected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant
 
             Box(

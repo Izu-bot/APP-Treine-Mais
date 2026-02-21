@@ -1,7 +1,5 @@
 package com.izubot.treinemais.ui.register
 
-import java.time.LocalDate
-
 data class RegisterUiState(
     val currentStep: Int = 0,
     val totalSteps: Int = 3,
