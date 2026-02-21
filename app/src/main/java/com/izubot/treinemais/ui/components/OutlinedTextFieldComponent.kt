@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Visibility
@@ -23,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.izubot.treinemais.R
 
@@ -36,13 +36,15 @@ fun OutlinedTextFieldComponent(
     color: TextFieldColors,
     isPasswordField: Boolean = false,
     isPasswordVisible: Boolean = false,
+    isUiLogin: Boolean = false,
+    shape: Dp = 26.dp,
     onVisibilityChange: () -> Unit = {},
-    placeholderText: String
+    placeholderText: String,
+    isError: Boolean = false
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 28.dp)
     ) {
         Text(
             text = labelText,
@@ -73,10 +75,11 @@ fun OutlinedTextFieldComponent(
                     }
                 }
             },
-            shape = RoundedCornerShape(26.dp),
-            colors = color
+            shape = RoundedCornerShape(shape),
+            colors = color,
+            isError = isError
         )
-        if (isPasswordField) {
+        if (isPasswordField && isUiLogin) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -89,3 +92,9 @@ fun OutlinedTextFieldComponent(
         }
     }
 }
+
+/*
+* TODO
+*  Falta colocar as interações do teclado
+*  Colocar também a mudança de foco
+* */
