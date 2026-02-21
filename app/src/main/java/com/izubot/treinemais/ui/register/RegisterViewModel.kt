@@ -25,6 +25,18 @@ class RegisterViewModel : ViewModel() {
         _uiState.update { it.copy(confirmPassword = confirmPassword, passwordError = false) }
     }
 
+    fun onNameChange(name: String) {
+        _uiState.update { it.copy(name = name) }
+    }
+
+    fun onGenderSelected(gender: Gender) {
+        _uiState.update { it.copy(selectedGender = gender) }
+    }
+
+    fun onGoalsSelected(goals: Goals) {
+        _uiState.update { it.copy(selectedGoals = goals) }
+    }
+
     fun togglePasswordVisibility() {
         _uiState.update { it.copy(passwordVisibility = !it.passwordVisibility) }
     }
@@ -34,16 +46,16 @@ class RegisterViewModel : ViewModel() {
     }
 
     fun onNextStep() {
-        if (_uiState.value.currentStep == 0) {
-            val passwordsMatch = validatePasswordConfirmationUseCase(
-                password = _uiState.value.password,
-                confirmPassword = _uiState.value.confirmPassword
-            )
-            if (!passwordsMatch) {
-                _uiState.update { it.copy(passwordError = true) }
-                return
-            }
-        }
+//        if (_uiState.value.currentStep == 1) {
+//            val passwordsMatch = validatePasswordConfirmationUseCase(
+//                password = _uiState.value.password,
+//                confirmPassword = _uiState.value.confirmPassword
+//            )
+//            if (!passwordsMatch) {
+//                _uiState.update { it.copy(passwordError = true) }
+//                return
+//            }
+//        }
 
         if (_uiState.value.currentStep < _uiState.value.totalSteps - 1) {
             _uiState.update { it.copy(currentStep = it.currentStep + 1) }

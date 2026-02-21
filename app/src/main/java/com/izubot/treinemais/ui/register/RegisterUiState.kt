@@ -1,5 +1,7 @@
 package com.izubot.treinemais.ui.register
 
+import java.time.LocalDate
+
 data class RegisterUiState(
     val currentStep: Int = 0,
     val totalSteps: Int = 3,
@@ -10,4 +12,6 @@ data class RegisterUiState(
     val confirmPasswordVisibility: Boolean = false,
     val passwordError: Boolean = false,
     val name: String = "",
+    val selectedGender: Gender? = null,
+    val selectedGoals: Goals? = null
 )

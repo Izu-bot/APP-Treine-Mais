@@ -33,4 +33,17 @@
     <string name="register_have_account_login">Log in</string>
     <string name="register_password_error">The passwords must be the same</string>
     <string name="register_button_finish">Complete registration</string>
+    <string name="register_personal_profile">Personal profile</string>
+    <string name="register_call_you">What should we call you?</string>
+    <string name="register_full_name">Your full name</string>
+    <string name="register_gender">What is your gender?</string>
+    <string name="register_gender_explication">We need this for future customization</string>
+    <string name="register_gender_masculine">Masculine</string>
+    <string name="register_gender_feminine">Feminine</string>
+    <string name="register_gender_other">Other</string>
+    <string name="register_goals">What are your goals?</string>
+    <string name="register_goals_explication">This will help us personalize your experience in the app.</string>
+    <string name="register_goals_mass_gain">Mass gain</string>
+    <string name="register_goals_fat_loss">Fat loss</string>
+    <string name="register_goals_health">Health</string>
 </resources>
