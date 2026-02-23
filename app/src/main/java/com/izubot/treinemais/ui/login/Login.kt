@@ -1,6 +1,7 @@
 package com.izubot.treinemais.ui.login
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,19 +42,20 @@ import com.izubot.treinemais.ui.theme.manropeFamily
 
 @Composable
 fun Login(
+    onNavigateToWelcome: () -> Unit,
+    onLoginSuccess: () -> Unit,
     modifier: Modifier = Modifier,
     loginViewModel: LoginViewModel = viewModel()
 ) {
     val state by loginViewModel.state.collectAsState()
 
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
         // Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
         ) {
             Icon(
                 imageVector = Icons.Rounded.ArrowBackIosNew,
@@ -62,6 +64,9 @@ fun Login(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .size(24.dp)
+                    .clickable {
+                        onNavigateToWelcome()
+                    }
             )
             Text(
                 text = stringResource(R.string.title_login),
@@ -123,6 +128,7 @@ fun Login(
                 onValueChange = loginViewModel::onEmailChange,
                 labelText = stringResource(R.string.login_email),
                 leadingIcon = Icons.Rounded.Email,
+                shape = 8.dp,
                 placeholderText = stringResource(R.string.login_email_placeholder),
                 color = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color.Transparent,
@@ -136,7 +142,8 @@ fun Login(
                     unfocusedPlaceholderColor = MaterialTheme.colorScheme.onTertiary,
                     focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
                     cursorColor = MaterialTheme.colorScheme.tertiary
-                )
+                ),
+                modifier = Modifier.padding(horizontal = 12.dp)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -147,6 +154,7 @@ fun Login(
                 labelText = stringResource(R.string.login_password),
                 leadingIcon = Icons.Rounded.Lock,
                 placeholderText = stringResource(R.string.login_password_placeholder),
+                shape = 8.dp,
                 isPasswordField = true,
                 isPasswordVisible = state.isPasswordVisible,
                 onVisibilityChange = loginViewModel::onTogglePasswordVisibility,
@@ -162,7 +170,8 @@ fun Login(
                     unfocusedPlaceholderColor = MaterialTheme.colorScheme.onTertiary,
                     focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
                     cursorColor = MaterialTheme.colorScheme.tertiary
-                )
+                ),
+                modifier = Modifier.padding(horizontal = 12.dp)
             )
 
             Spacer(modifier = Modifier.height(62.dp))
@@ -186,26 +195,6 @@ fun Login(
                     .padding(horizontal = 26.dp)
                     .size(56.dp)
             )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Row {
-                Text(
-                    text = stringResource(R.string.login_no_have_account),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Normal,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontFamily = manropeFamily
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    text = stringResource(R.string.login_create_account),
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontFamily = manropeFamily
-                )
-            }
         }
     }
 }

@@ -38,7 +38,11 @@ import com.izubot.treinemais.ui.theme.manropeFamily
 
 
 @Composable
-fun Welcome(modifier: Modifier = Modifier) {
+fun Welcome(
+    onNavigateToLogin: () -> Unit,
+    onNavigateToRegister: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
 
     val versionName = try {
@@ -136,7 +140,9 @@ fun Welcome(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(68.dp))
 
             ButtonComponent(
-                onClick = {},
+                onClick = {
+                    onNavigateToRegister()
+                },
                 text = R.string.welcome_sign_up,
                 style = MaterialTheme.typography.bodyLarge,
                 family = manropeFamily,
@@ -158,7 +164,9 @@ fun Welcome(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(12.dp))
 
             ButtonComponent(
-                onClick = {},
+                onClick = {
+                    onNavigateToLogin()
+                },
                 text = R.string.welcome_sign_in,
                 style = MaterialTheme.typography.bodyLarge,
                 family = manropeFamily,

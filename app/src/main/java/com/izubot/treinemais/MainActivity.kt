@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.izubot.treinemais.ui.login.Login
+import com.izubot.treinemais.ui.navigation.AppNavigation
 import com.izubot.treinemais.ui.register.Register
 import com.izubot.treinemais.ui.splash.Splash
 import com.izubot.treinemais.ui.theme.TreineMaisTheme
@@ -21,7 +22,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             TreineMaisTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Register(modifier = Modifier.padding(innerPadding))
+                    AppNavigation(
+                        paddingValues = innerPadding
+                    )
                 }
             }
         }

@@ -59,6 +59,7 @@ import com.izubot.treinemais.ui.theme.manropeFamily
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Register(
+    onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RegisterViewModel = viewModel()
 ) {
@@ -80,10 +81,17 @@ fun Register(
         ) {
             Icon(
                 imageVector = Icons.Rounded.ArrowBackIosNew,
+                tint = MaterialTheme.colorScheme.onSecondary,
                 contentDescription = "Back",
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .clickable { viewModel.onPreviousStep() }
+                    .clickable {
+                        if (uiState.currentStep == 0) {
+                            onNavigateBack()
+                        } else {
+                            viewModel.onPreviousStep()
+                        }
+                    }
             )
             StepIndicator(
                 modifier = Modifier.align(Alignment.Center),
