@@ -13,6 +13,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -23,11 +24,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.theme.manropeFamily
+import kotlinx.coroutines.delay
 
 @Composable
 fun Splash(
+    onSplashFinished: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    // Enquanto a API não é implementada
+    LaunchedEffect(key1 = true) {
+        delay(2500L)
+        onSplashFinished()
+    }
+
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
