@@ -34,12 +34,13 @@ fun OutlinedTextFieldComponent(
     labelText: String,
     leadingIcon: ImageVector,
     color: TextFieldColors,
+    placeholderText: String,
+    errorMessage: Int? = null,
     isPasswordField: Boolean = false,
     isPasswordVisible: Boolean = false,
     isUiLogin: Boolean = false,
     shape: Dp = 26.dp,
     onVisibilityChange: () -> Unit = {},
-    placeholderText: String,
     isError: Boolean = false
 ) {
     Column(
@@ -77,7 +78,16 @@ fun OutlinedTextFieldComponent(
             },
             shape = RoundedCornerShape(shape),
             colors = color,
-            isError = isError
+            isError = isError,
+            supportingText = {
+                if (isError) {
+                    Text(
+                        text = stringResource(errorMessage ?: R.string.register_errro_generic),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
         )
         if (isPasswordField && isUiLogin) {
             Spacer(modifier = Modifier.height(8.dp))

@@ -24,6 +24,10 @@ class LoginViewModel : ViewModel() {
         _state.update { it.copy(isPasswordVisible = !it.isPasswordVisible) }
     }
 
+    fun onValidatePassword() {
+        // TODO: Implement password validation logic (e.g., call a repository/use case)
+    }
+
     fun onLoginClick() {
         // TODO: Implement login logic (e.g., call a repository/use case)
         viewModelScope.launch {

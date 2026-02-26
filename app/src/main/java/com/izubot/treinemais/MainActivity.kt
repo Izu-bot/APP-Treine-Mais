@@ -14,7 +14,9 @@ import com.izubot.treinemais.ui.register.Register
 import com.izubot.treinemais.ui.splash.Splash
 import com.izubot.treinemais.ui.theme.TreineMaisTheme
 import com.izubot.treinemais.ui.welcome.Welcome
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

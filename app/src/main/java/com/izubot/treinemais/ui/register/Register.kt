@@ -1,5 +1,6 @@
 package com.izubot.treinemais.ui.register
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -48,7 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.ButtonComponent
 import com.izubot.treinemais.ui.components.GoalsCard
@@ -61,7 +62,7 @@ import com.izubot.treinemais.ui.theme.manropeFamily
 fun Register(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: RegisterViewModel = viewModel()
+    viewModel: RegisterViewModel = hiltViewModel<RegisterViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val pagerState = rememberPagerState(pageCount = { uiState.totalSteps })
@@ -117,7 +118,9 @@ fun Register(
                     name = uiState.name,
                     onNameChange = { viewModel.onNameChange(it) },
                     selectedGender = uiState.selectedGender,
-                    onGenderSelected = { viewModel.onGenderSelected(it) }
+                    onGenderSelected = { viewModel.onGenderSelected(it) },
+                    isNameError = uiState.nameError,
+                    errorNameMessage = uiState.errorNameMessage
                 )
                 2 -> Credentials(
                     email = uiState.email,
@@ -130,13 +133,33 @@ fun Register(
                     onEmailChange = { viewModel.onEmailChange(it) },
                     onPasswordChange = { viewModel.onPasswordChange(it) },
                     onConfirmPasswordChange = { viewModel.onConfirmPasswordChange(it) },
-                    isPasswordError = uiState.passwordError
+                    isPasswordError = uiState.passwordError,
+                    isEmailError = uiState.emailError,
+                    errorPasswordMessage = uiState.errorPasswordMessage,
+                    errorEmailMessage = uiState.errorEmailMessage
                 )
             }
         }
 
         ButtonComponent(
-            onClick = { viewModel.onNextStep() },
+            onClick = {
+                when (uiState.currentStep) {
+                    0 -> viewModel.onNextStep()
+                    1 -> {
+                        if (viewModel.onValidateName()) {
+                            viewModel.onNextStep()
+                        }
+                    }
+                    2 -> {
+                        val isEmailValid = viewModel.onValidateEmail()
+                        val isPasswordValid = viewModel.onValidatePassword()
+
+                        if (isEmailValid && isPasswordValid) {
+                            Log.d("Register", "Registering...")
+                        }
+                    }
+                }
+            },
             text = if (uiState.currentStep < uiState.totalSteps - 1) R.string.register_button_next else R.string.register_button_finish,
             style = MaterialTheme.typography.bodyLarge,
             family = manropeFamily,
@@ -189,6 +212,8 @@ fun Credentials(
     email: String = "",
     password: String = "",
     confirmPassword: String = "",
+    errorPasswordMessage: Int? = null,
+    errorEmailMessage: Int? = null,
     passwordVisible: Boolean = false,
     togglePasswordVisibility: () -> Unit = {},
     confirmPasswordVisible: Boolean = false,
@@ -196,7 +221,8 @@ fun Credentials(
     onEmailChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
     onConfirmPasswordChange: (String) -> Unit = {},
-    isPasswordError: Boolean = false
+    isPasswordError: Boolean = false,
+    isEmailError: Boolean = false
 ) {
     Column(modifier
         .fillMaxWidth()
@@ -241,6 +267,8 @@ fun Credentials(
                 focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
                 cursorColor = MaterialTheme.colorScheme.tertiary
             ),
+            isError = isEmailError,
+            errorMessage = errorEmailMessage
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -268,7 +296,8 @@ fun Credentials(
                 unfocusedPlaceholderColor = MaterialTheme.colorScheme.onTertiary,
                 focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
                 cursorColor = MaterialTheme.colorScheme.tertiary
-            )
+            ),
+            errorMessage = errorPasswordMessage
 
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -296,7 +325,8 @@ fun Credentials(
                 unfocusedPlaceholderColor = MaterialTheme.colorScheme.onTertiary,
                 focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
                 cursorColor = MaterialTheme.colorScheme.tertiary
-            )
+            ),
+            errorMessage = errorPasswordMessage
         )
 //
 //        if (isPasswordError) {
@@ -324,6 +354,8 @@ fun Credentials(
 fun PersonalProfile(
     modifier: Modifier = Modifier,
     name: String = "",
+    isNameError: Boolean = false,
+    errorNameMessage: Int? = null,
     onNameChange: (String) -> Unit = {},
     selectedGender: Gender?,
     onGenderSelected: (Gender) -> Unit
@@ -360,7 +392,9 @@ fun PersonalProfile(
                 unfocusedPlaceholderColor = MaterialTheme.colorScheme.onTertiary,
                 focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
                 cursorColor = MaterialTheme.colorScheme.tertiary
-            )
+            ),
+            isError = isNameError,
+            errorMessage = errorNameMessage
         )
 
         Spacer(modifier = Modifier.height(20.dp))

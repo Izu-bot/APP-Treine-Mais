@@ -47,4 +47,11 @@
     <string name="register_goals_mass_gain">Ganho de massa</string>
     <string name="register_goals_fat_loss">Perda de gordura</string>
     <string name="register_goals_health">Saúde</string>
+    <string name="register_validate_email">O e-mail não pode estar em branco</string>
+    <string name="register_invalid_email">E-mail inválido</string>
+    <string name="register_invalid_password_confirmation">As senhas não coincidem</string>
+    <string name="register_invalid_length_password">A senha deve ter no mínimo 8 caracteres</string>
+    <string name="register_validate_name">O nome não pode estar em branco</string>
+    <string name="register_invalid_name">O nome deve ter no mínimo 3 caracteres</string>
+    <string name="register_errro_generic">Algo deu errado</string>
 </resources>

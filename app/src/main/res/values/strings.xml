@@ -46,4 +46,11 @@
     <string name="register_goals_mass_gain">Mass gain</string>
     <string name="register_goals_fat_loss">Fat loss</string>
     <string name="register_goals_health">Health</string>
+    <string name="register_validate_email">Email cannot be blank</string>
+    <string name="register_invalid_email">Invalid email</string>
+    <string name="register_invalid_password_confirmation">Passwords do not match</string>
+    <string name="register_invalid_length_password">Password must be at least 8 characters</string>
+    <string name="register_validate_name">The name cannot be empty</string>
+    <string name="register_invalid_name">The name must be longer than 3 characters</string>
+    <string name="register_errro_generic">Something went wrong</string>
 </resources>
