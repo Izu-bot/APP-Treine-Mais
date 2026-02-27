@@ -1,7 +1,10 @@
 package com.izubot.treinemais.ui.register
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.izubot.treinemais.domain.model.ValidationResult
+import androidx.lifecycle.viewModelScope
+import com.izubot.treinemais.domain.abstraction.ValidationResult
+import com.izubot.treinemais.domain.usecase.RegisterUserUseCase
 import com.izubot.treinemais.domain.usecase.ValidateEmailUseCase
 import com.izubot.treinemais.domain.usecase.ValidateNameUseCase
 import com.izubot.treinemais.domain.usecase.ValidatePasswordConfirmationUseCase
@@ -9,13 +12,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val validatePasswordConfirmationUseCase: ValidatePasswordConfirmationUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
-    private val validateNameUseCase: ValidateNameUseCase
+    private val validateNameUseCase: ValidateNameUseCase,
+    private val registerUserUseCase: RegisterUserUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RegisterUiState())
@@ -88,6 +93,18 @@ class RegisterViewModel @Inject constructor(
         }
 
         return result is ValidationResult.Success
+    }
+
+    fun register() {
+        viewModelScope.launch {
+            registerUserUseCase(_uiState.value)
+                .onSuccess { user ->
+                    Log.d("Registrar", "Sucesso $user")
+                }
+                .onFailure { error ->
+                    Log.d("Registrar", "Falha $error")
+                }
+        }
     }
 
     fun onNextStep() {

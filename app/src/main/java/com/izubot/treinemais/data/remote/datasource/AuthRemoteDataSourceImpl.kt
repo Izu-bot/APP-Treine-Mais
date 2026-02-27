@@ -1,0 +1,16 @@
+package com.izubot.treinemais.data.remote.datasource
+
+import com.izubot.treinemais.data.remote.api.AuthApi
+import com.izubot.treinemais.data.remote.dto.toDomain
+import com.izubot.treinemais.data.remote.dto.toDto
+import com.izubot.treinemais.domain.model.RegisterRequest
+import com.izubot.treinemais.domain.model.User
+import javax.inject.Inject
+
+class AuthRemoteDataSourceImpl @Inject constructor(
+    private val api: AuthApi
+) : AuthRemoteDataSource {
+    override suspend fun register(request: RegisterRequest) : User {
+        return api.register(request.toDto()).toDomain()
+    }
+}
