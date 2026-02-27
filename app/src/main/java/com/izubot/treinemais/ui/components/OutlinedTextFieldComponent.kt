@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material.icons.rounded.VisibilityOff
@@ -35,6 +37,8 @@ fun OutlinedTextFieldComponent(
     leadingIcon: ImageVector,
     color: TextFieldColors,
     placeholderText: String,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     errorMessage: Int? = null,
     isPasswordField: Boolean = false,
     isPasswordVisible: Boolean = false,
@@ -87,7 +91,9 @@ fun OutlinedTextFieldComponent(
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
-            }
+            },
+            keyboardActions = keyboardActions,
+            keyboardOptions = keyboardOptions
         )
         if (isPasswordField && isUiLogin) {
             Spacer(modifier = Modifier.height(8.dp))
