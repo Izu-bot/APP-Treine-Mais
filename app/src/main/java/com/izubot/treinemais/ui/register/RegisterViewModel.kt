@@ -1,20 +1,28 @@
 package com.izubot.treinemais.ui.register
 
 import androidx.lifecycle.ViewModel
+import com.izubot.treinemais.domain.model.ValidationResult
+import com.izubot.treinemais.domain.usecase.ValidateEmailUseCase
+import com.izubot.treinemais.domain.usecase.ValidateNameUseCase
 import com.izubot.treinemais.domain.usecase.ValidatePasswordConfirmationUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class RegisterViewModel : ViewModel() {
+@HiltViewModel
+class RegisterViewModel @Inject constructor(
+    private val validatePasswordConfirmationUseCase: ValidatePasswordConfirmationUseCase,
+    private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validateNameUseCase: ValidateNameUseCase
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RegisterUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val validatePasswordConfirmationUseCase = ValidatePasswordConfirmationUseCase()
-
     fun onEmailChange(email: String) {
-        _uiState.update { it.copy(email = email) }
+        _uiState.update { it.copy(email = email, emailError = false) }
     }
 
     fun onPasswordChange(password: String) {
@@ -26,7 +34,7 @@ class RegisterViewModel : ViewModel() {
     }
 
     fun onNameChange(name: String) {
-        _uiState.update { it.copy(name = name) }
+        _uiState.update {it.copy(name = name) }
     }
 
     fun onGenderSelected(gender: Gender) {
@@ -45,22 +53,46 @@ class RegisterViewModel : ViewModel() {
         _uiState.update { it.copy(confirmPasswordVisibility = !it.confirmPasswordVisibility) }
     }
 
-    fun onNextStep() {
-//        if (_uiState.value.currentStep == 1) {
-//            val passwordsMatch = validatePasswordConfirmationUseCase(
-//                password = _uiState.value.password,
-//                confirmPassword = _uiState.value.confirmPassword
-//            )
-//            if (!passwordsMatch) {
-//                _uiState.update { it.copy(passwordError = true) }
-//                return
-//            }
-//        }
+    fun onValidateName(): Boolean {
+        val result = validateNameUseCase(_uiState.value.name)
 
+        _uiState.update {
+            it.copy( nameError = result is ValidationResult.Error, errorNameMessage = (result as? ValidationResult.Error)?.message )
+        }
+
+        return result is ValidationResult.Success
+    }
+
+    fun onValidateEmail(): Boolean {
+        val result = validateEmailUseCase(_uiState.value.email)
+
+        _uiState.update {
+            it.copy(
+                emailError = result is ValidationResult.Error,
+                errorEmailMessage = (result as? ValidationResult.Error)?.message
+            )
+        }
+
+        return result is ValidationResult.Success
+    }
+
+
+    fun onValidatePassword(): Boolean {
+        val result = validatePasswordConfirmationUseCase(_uiState.value.password, _uiState.value.confirmPassword)
+
+        _uiState.update {
+            it.copy(
+                passwordError = result is ValidationResult.Error,
+                errorPasswordMessage = (result as? ValidationResult.Error)?.message,
+            )
+        }
+
+        return result is ValidationResult.Success
+    }
+
+    fun onNextStep() {
         if (_uiState.value.currentStep < _uiState.value.totalSteps - 1) {
             _uiState.update { it.copy(currentStep = it.currentStep + 1) }
-        } else {
-            // TODO: Finalize registration
         }
     }
 

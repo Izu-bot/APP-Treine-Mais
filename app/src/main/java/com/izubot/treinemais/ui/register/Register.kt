@@ -1,8 +1,10 @@
 package com.izubot.treinemais.ui.register
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.automirrored.rounded.TrendingDown
@@ -41,14 +44,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.ButtonComponent
 import com.izubot.treinemais.ui.components.GoalsCard
@@ -61,10 +69,14 @@ import com.izubot.treinemais.ui.theme.manropeFamily
 fun Register(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: RegisterViewModel = viewModel()
+    viewModel: RegisterViewModel = hiltViewModel<RegisterViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val pagerState = rememberPagerState(pageCount = { uiState.totalSteps })
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val interactionSource = remember { MutableInteractionSource() }
+
 
     LaunchedEffect(uiState.currentStep) {
         pagerState.animateScrollToPage(uiState.currentStep)
@@ -74,6 +86,13 @@ fun Register(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+            }
     ) {
         Box(
             modifier = Modifier
@@ -117,7 +136,9 @@ fun Register(
                     name = uiState.name,
                     onNameChange = { viewModel.onNameChange(it) },
                     selectedGender = uiState.selectedGender,
-                    onGenderSelected = { viewModel.onGenderSelected(it) }
+                    onGenderSelected = { viewModel.onGenderSelected(it) },
+                    isNameError = uiState.nameError,
+                    errorNameMessage = uiState.errorNameMessage
                 )
                 2 -> Credentials(
                     email = uiState.email,
@@ -130,13 +151,33 @@ fun Register(
                     onEmailChange = { viewModel.onEmailChange(it) },
                     onPasswordChange = { viewModel.onPasswordChange(it) },
                     onConfirmPasswordChange = { viewModel.onConfirmPasswordChange(it) },
-                    isPasswordError = uiState.passwordError
+                    isPasswordError = uiState.passwordError,
+                    isEmailError = uiState.emailError,
+                    errorPasswordMessage = uiState.errorPasswordMessage,
+                    errorEmailMessage = uiState.errorEmailMessage
                 )
             }
         }
 
         ButtonComponent(
-            onClick = { viewModel.onNextStep() },
+            onClick = {
+                when (uiState.currentStep) {
+                    0 -> viewModel.onNextStep()
+                    1 -> {
+                        if (viewModel.onValidateName()) {
+                            viewModel.onNextStep()
+                        }
+                    }
+                    2 -> {
+                        val isEmailValid = viewModel.onValidateEmail()
+                        val isPasswordValid = viewModel.onValidatePassword()
+
+                        if (isEmailValid && isPasswordValid) {
+                            Log.d("Register", "Registering...")
+                        }
+                    }
+                }
+            },
             text = if (uiState.currentStep < uiState.totalSteps - 1) R.string.register_button_next else R.string.register_button_finish,
             style = MaterialTheme.typography.bodyLarge,
             family = manropeFamily,
@@ -189,6 +230,8 @@ fun Credentials(
     email: String = "",
     password: String = "",
     confirmPassword: String = "",
+    errorPasswordMessage: Int? = null,
+    errorEmailMessage: Int? = null,
     passwordVisible: Boolean = false,
     togglePasswordVisibility: () -> Unit = {},
     confirmPasswordVisible: Boolean = false,
@@ -196,7 +239,8 @@ fun Credentials(
     onEmailChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
     onConfirmPasswordChange: (String) -> Unit = {},
-    isPasswordError: Boolean = false
+    isPasswordError: Boolean = false,
+    isEmailError: Boolean = false
 ) {
     Column(modifier
         .fillMaxWidth()
@@ -241,6 +285,12 @@ fun Credentials(
                 focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
                 cursorColor = MaterialTheme.colorScheme.tertiary
             ),
+            isError = isEmailError,
+            errorMessage = errorEmailMessage,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Email
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -268,6 +318,11 @@ fun Credentials(
                 unfocusedPlaceholderColor = MaterialTheme.colorScheme.onTertiary,
                 focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
                 cursorColor = MaterialTheme.colorScheme.tertiary
+            ),
+            errorMessage = errorPasswordMessage,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Password
             )
 
         )
@@ -296,18 +351,13 @@ fun Credentials(
                 unfocusedPlaceholderColor = MaterialTheme.colorScheme.onTertiary,
                 focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
                 cursorColor = MaterialTheme.colorScheme.tertiary
+            ),
+            errorMessage = errorPasswordMessage,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
             )
         )
-//
-//        if (isPasswordError) {
-//            Text(
-//                text = stringResource(R.string.register_password_error),
-//                color = MaterialTheme.colorScheme.error,
-//                style = MaterialTheme.typography.bodySmall,
-//                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-//            )
-//        }
-
         Text(
             text = stringResource(R.string.register_password_verification),
             style = MaterialTheme.typography.bodySmall,
@@ -324,6 +374,8 @@ fun Credentials(
 fun PersonalProfile(
     modifier: Modifier = Modifier,
     name: String = "",
+    isNameError: Boolean = false,
+    errorNameMessage: Int? = null,
     onNameChange: (String) -> Unit = {},
     selectedGender: Gender?,
     onGenderSelected: (Gender) -> Unit
@@ -360,6 +412,11 @@ fun PersonalProfile(
                 unfocusedPlaceholderColor = MaterialTheme.colorScheme.onTertiary,
                 focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
                 cursorColor = MaterialTheme.colorScheme.tertiary
+            ),
+            isError = isNameError,
+            errorMessage = errorNameMessage,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done
             )
         )
 
