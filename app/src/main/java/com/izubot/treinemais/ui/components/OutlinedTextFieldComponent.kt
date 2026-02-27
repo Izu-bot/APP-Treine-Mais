@@ -86,7 +86,7 @@ fun OutlinedTextFieldComponent(
             supportingText = {
                 if (isError) {
                     Text(
-                        text = stringResource(errorMessage ?: R.string.register_errro_generic),
+                        text = stringResource(errorMessage ?: R.string.register_error_generic),
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodySmall
                     )

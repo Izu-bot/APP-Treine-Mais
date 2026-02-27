@@ -53,5 +53,7 @@
     <string name="register_invalid_length_password">A senha deve ter no mínimo 8 caracteres</string>
     <string name="register_validate_name">O nome não pode estar em branco</string>
     <string name="register_invalid_name">O nome deve ter no mínimo 3 caracteres</string>
-    <string name="register_errro_generic">Algo deu errado</string>
+    <string name="register_error_generic">Algo deu errado</string>
+    <string name="login_email_error">O endereço de e-mail não pode estar vazio</string>
+    <string name="login_password_error">A senha não pode estar vazia</string>
 </resources>
