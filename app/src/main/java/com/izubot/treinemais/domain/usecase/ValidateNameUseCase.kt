@@ -1,6 +1,5 @@
 package com.izubot.treinemais.domain.usecase
 
-import android.util.Patterns
 import com.izubot.treinemais.R
 import com.izubot.treinemais.domain.abstraction.ValidationResult
 import javax.inject.Inject
