@@ -15,4 +15,10 @@ class AuthRepositoryImpl @Inject constructor(
             remoteDataSource.register(request)
         }
     }
+
+    override suspend fun confirmEmail(token: String): Result<Unit> {
+        return runCatching {
+            remoteDataSource.confirmEmail(token)
+        }
+    }
 }

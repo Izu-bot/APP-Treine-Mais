@@ -1,6 +1,5 @@
 package com.izubot.treinemais.ui.register
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,6 +35,7 @@ import androidx.compose.material.icons.rounded.Male
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.VolunteerActivism
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -68,6 +68,7 @@ import com.izubot.treinemais.ui.theme.manropeFamily
 @Composable
 fun Register(
     onNavigateBack: () -> Unit,
+    onNavigateToConfirm: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RegisterViewModel = hiltViewModel<RegisterViewModel>()
 ) {
@@ -159,44 +160,52 @@ fun Register(
             }
         }
 
-        ButtonComponent(
-            onClick = {
-                when (uiState.currentStep) {
-                    0 -> viewModel.onNextStep()
-                    1 -> {
-                        if (viewModel.onValidateName()) {
-                            viewModel.onNextStep()
+        if (uiState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                color = MaterialTheme.colorScheme.onSecondary
+            )
+        } else {
+            ButtonComponent(
+                onClick = {
+                    when (uiState.currentStep) {
+                        0 -> viewModel.onNextStep()
+                        1 -> {
+                            if (viewModel.onValidateName()) {
+                                viewModel.onNextStep()
+                            }
                         }
-                    }
-                    2 -> {
-                        val isEmailValid = viewModel.onValidateEmail()
-                        val isPasswordValid = viewModel.onValidatePassword()
+                        2 -> {
+                            val isEmailValid = viewModel.onValidateEmail()
+                            val isPasswordValid = viewModel.onValidatePassword()
 
-                        if (isEmailValid && isPasswordValid) {
-                            Log.d("Register", "Registering...")
+                            if (isEmailValid && isPasswordValid) {
+                                viewModel.register()
+                                onNavigateToConfirm()
+                            }
                         }
                     }
-                }
-            },
-            text = if (uiState.currentStep < uiState.totalSteps - 1) R.string.register_button_next else R.string.register_button_finish,
-            style = MaterialTheme.typography.bodyLarge,
-            family = manropeFamily,
-            weight = FontWeight.Bold,
-            shape = 20.dp,
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 16.dp,
-                pressedElevation = 0.dp
-            ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.onSecondary,
-                contentColor = MaterialTheme.colorScheme.primary
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 26.dp)
-                .size(56.dp),
-            imageVector = if (uiState.currentStep < uiState.totalSteps - 1) Icons.AutoMirrored.Rounded.ArrowForward else Icons.Rounded.DoneAll
-        )
+                },
+                text = if (uiState.currentStep < uiState.totalSteps - 1) R.string.register_button_next else R.string.register_button_finish,
+                style = MaterialTheme.typography.bodyLarge,
+                family = manropeFamily,
+                weight = FontWeight.Bold,
+                shape = 20.dp,
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 16.dp,
+                    pressedElevation = 0.dp
+                ),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.onSecondary,
+                    contentColor = MaterialTheme.colorScheme.primary
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 26.dp)
+                    .size(56.dp),
+                imageVector = if (uiState.currentStep < uiState.totalSteps - 1) Icons.AutoMirrored.Rounded.ArrowForward else Icons.Rounded.DoneAll
+            )
+        }
     }
 }
 

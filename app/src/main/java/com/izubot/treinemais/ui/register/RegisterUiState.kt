@@ -9,6 +9,7 @@ data class RegisterUiState(
     val password: String = "",
     val confirmPassword: String = "",
     val isError: Boolean = false,
+    val errorMassage: String? = "",
     @param:StringRes val errorPasswordMessage: Int? = null,
     @param:StringRes val errorEmailMessage: Int? = null,
     @param:StringRes val errorNameMessage: Int? = null,

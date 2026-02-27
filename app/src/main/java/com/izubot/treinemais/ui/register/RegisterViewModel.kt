@@ -9,8 +9,10 @@ import com.izubot.treinemais.domain.usecase.ValidateEmailUseCase
 import com.izubot.treinemais.domain.usecase.ValidateNameUseCase
 import com.izubot.treinemais.domain.usecase.ValidatePasswordConfirmationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -97,13 +99,18 @@ class RegisterViewModel @Inject constructor(
 
     fun register() {
         viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+
             registerUserUseCase(_uiState.value)
                 .onSuccess { user ->
                     Log.d("Registrar", "Sucesso $user")
                 }
                 .onFailure { error ->
                     Log.d("Registrar", "Falha $error")
+                    _uiState.update { it.copy(isError = true, errorMassage = error.message) }
                 }
+
+            _uiState.update { it.copy(isLoading = false) }
         }
     }
 

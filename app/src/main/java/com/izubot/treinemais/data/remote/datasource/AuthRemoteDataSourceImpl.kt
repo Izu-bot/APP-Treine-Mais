@@ -13,4 +13,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     override suspend fun register(request: RegisterRequest) : User {
         return api.register(request.toDto()).toDomain()
     }
+
+    override suspend fun confirmEmail(token: String) {
+        api.confirmEmail(token)
+    }
 }
