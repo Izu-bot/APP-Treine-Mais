@@ -1,4 +1,4 @@
-package com.izubot.treinemais.domain.model
+package com.izubot.treinemais.domain.abstraction
 
 import androidx.annotation.StringRes
 

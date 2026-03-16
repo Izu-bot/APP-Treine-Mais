@@ -1,15 +1,33 @@
 package com.izubot.treinemais.ui.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.izubot.treinemais.R
+import androidx.lifecycle.viewModelScope
+import com.izubot.treinemais.domain.abstraction.ValidationResult
+import com.izubot.treinemais.domain.usecase.ConfirmEmailUseCase
+import com.izubot.treinemais.domain.usecase.LoginUseCase
+import com.izubot.treinemais.domain.usecase.ValidateEmailUseCase
+import com.izubot.treinemais.domain.usecase.ValidatePasswordConfirmationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val confirmEmailUseCase: ConfirmEmailUseCase,
+    private val loginUseCase: LoginUseCase,
+    private val validatePasswordConfirmationUseCase: ValidatePasswordConfirmationUseCase,
+    private val validateEmailUseCase: ValidateEmailUseCase
+) : ViewModel() {
+
+    private val _toastEvent = Channel<String>()
+    val toastEvent = _toastEvent.receiveAsFlow()
 
     private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
@@ -26,21 +44,60 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         _state.update { it.copy(isPasswordVisible = !it.isPasswordVisible) }
     }
 
-    private fun checkPassword() {
-        if (_state.value.password.isBlank()) {
-            _state.update { it.copy(isPasswordError = true, passwordError = R.string.login_password_error) }
+    fun onValidatePassword() : Boolean {
+        val result = validatePasswordConfirmationUseCase(_state.value.password, _state.value.password)
+
+        _state.update {
+            it.copy(
+                passwordError = result is ValidationResult.Error,
+                errorPasswordMessage = (result as? ValidationResult.Error)?.message,
+            )
+        }
+        return result is ValidationResult.Success
+
+    }
+
+    fun onValidateEmail() : Boolean {
+        val result = validateEmailUseCase(_state.value.email)
+
+        _state.update {
+            it.copy(
+                emailError = result is ValidationResult.Error,
+                errorEmailMessage = (result as? ValidationResult.Error)?.message
+            )
+        }
+
+        return result is ValidationResult.Success
+    }
+
+
+    fun login() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+
+            delay(1500)
+            loginUseCase(_state.value)
+                .onSuccess { user ->
+                    Log.d("Login", "Logado com sucesso: $user")
+                }
+                .onFailure { error ->
+                    Log.d("Login", "Não foi possivel logar: ${error.message}")
+                }
+
+            _state.update { it.copy(isLoading = false) }
         }
     }
 
-    private fun checkEmail() {
-        if (_state.value.email.isBlank()) {
-            _state.update { it.copy(isEmailError = true, emailError = R.string.login_email_error) }
+    fun confirmEmail(token: String) {
+        viewModelScope.launch {
+            confirmEmailUseCase(token)
+                .onSuccess {
+                    _toastEvent.send("Email confirmado")
+                }
+                .onFailure { error ->
+                    Log.d("Login", "$error")
+                    _toastEvent.send("Falha ao confirmar o email")
+                }
         }
-    }
-
-
-    fun onLoginClick() {
-        checkEmail()
-        checkPassword()
     }
 }

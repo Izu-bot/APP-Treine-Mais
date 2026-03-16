@@ -1,5 +1,6 @@
 package com.izubot.treinemais.ui.login
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -20,17 +21,20 @@ import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.icons.rounded.FitnessCenter
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -50,12 +54,29 @@ fun Login(
     onNavigateToWelcome: () -> Unit,
     onLoginSuccess: () -> Unit,
     modifier: Modifier = Modifier,
+    token: String? = null,
     loginViewModel: LoginViewModel = hiltViewModel<LoginViewModel>()
 ) {
     val state by loginViewModel.state.collectAsState()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val interactionSource = remember { MutableInteractionSource() }
+    val context = LocalContext.current
+
+
+    LaunchedEffect(token) {
+        if (token != null) {
+            loginViewModel.confirmEmail(token)
+        }
+    }
+
+    LaunchedEffect(Unit) { loginViewModel.toastEvent.collect { event ->
+        when (event) {
+            is String -> {
+                Toast.makeText(context, event, Toast.LENGTH_SHORT).show()
+            }
+        }
+    } }
 
     Column(
         modifier = modifier
@@ -161,8 +182,8 @@ fun Login(
                     cursorColor = MaterialTheme.colorScheme.tertiary
                 ),
                 modifier = Modifier.padding(horizontal = 12.dp),
-                isError = state.isEmailError,
-                errorMessage = state.emailError,
+                isError = state.emailError,
+                errorMessage = state.errorEmailMessage,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next,
                     keyboardType = KeyboardType.Email
@@ -195,8 +216,8 @@ fun Login(
                     cursorColor = MaterialTheme.colorScheme.tertiary
                 ),
                 modifier = Modifier.padding(horizontal = 12.dp),
-                isError = state.isPasswordError,
-                errorMessage = state.passwordError,
+                isError = state.passwordError,
+                errorMessage = state.errorPasswordMessage,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done,
                     keyboardType = KeyboardType.Password
@@ -204,28 +225,44 @@ fun Login(
             )
 
             Spacer(modifier = Modifier.height(62.dp))
-            ButtonComponent(
-                onClick = {
-                    loginViewModel.onLoginClick()
-                },
-                text = R.string.login_enter,
-                style = MaterialTheme.typography.bodyLarge,
-                family = manropeFamily,
-                weight = FontWeight.Bold,
-                shape = 20.dp,
-                elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 16.dp,
-                    pressedElevation = 0.dp
-                ),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.onSecondary,
-                    contentColor = MaterialTheme.colorScheme.primary
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 26.dp)
-                    .size(56.dp)
-            )
+
+            if (state.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    color = MaterialTheme.colorScheme.onSecondary
+                )
+            }
+            else {
+                ButtonComponent(
+                    onClick = {
+                        val emailVerify = loginViewModel.onValidateEmail()
+                        val passwordVerify = loginViewModel.onValidatePassword()
+
+                        if (emailVerify && passwordVerify) {
+                            loginViewModel.login()
+                            onLoginSuccess()
+                        }
+                    },
+
+                    text = R.string.login_enter,
+                    style = MaterialTheme.typography.bodyLarge,
+                    family = manropeFamily,
+                    weight = FontWeight.Bold,
+                    shape = 20.dp,
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 16.dp,
+                        pressedElevation = 0.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.onSecondary,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 26.dp)
+                        .size(56.dp)
+                )
+            }
         }
     }
 }

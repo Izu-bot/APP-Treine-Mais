@@ -8,6 +8,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navDeepLink
+import androidx.navigation.toRoute
+import com.izubot.treinemais.ui.confirm.Confirm
 import com.izubot.treinemais.ui.login.Login
 import com.izubot.treinemais.ui.register.Register
 import com.izubot.treinemais.ui.splash.Splash
@@ -38,7 +41,7 @@ fun AppNavigation(
         composable<AuthRoute.Welcome> {
             Welcome(
                 onNavigateToLogin = {
-                    navController.navigate(AuthRoute.Login)
+                    navController.navigate(AuthRoute.Login())
                 },
                 onNavigateToRegister = {
                     navController.navigate(AuthRoute.Register)
@@ -48,8 +51,16 @@ fun AppNavigation(
             )
         }
 
-        composable<AuthRoute.Login> {
+        composable<AuthRoute.Login>(
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "http://localhost:5297/auth/confirm-email?token={token}"
+                }
+            )
+        ) { backStackEntry ->
+            val loginRoute: AuthRoute.Login = backStackEntry.toRoute()
             Login(
+                token = loginRoute.token,
                 onNavigateToWelcome = {
                     navController.popBackStack()
                 },
@@ -64,6 +75,16 @@ fun AppNavigation(
                 onNavigateBack = {
                     navController.popBackStack()
                 },
+                onNavigateToConfirm = {
+                    navController.navigate(AuthRoute.Confirm)
+                },
+                modifier = Modifier
+                    .padding(paddingValues)
+            )
+        }
+
+        composable<AuthRoute.Confirm> {
+            Confirm(
                 modifier = Modifier
                     .padding(paddingValues)
             )

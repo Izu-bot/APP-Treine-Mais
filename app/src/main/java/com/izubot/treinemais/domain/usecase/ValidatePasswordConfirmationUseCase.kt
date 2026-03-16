@@ -1,7 +1,7 @@
 package com.izubot.treinemais.domain.usecase
 
 import com.izubot.treinemais.R
-import com.izubot.treinemais.domain.model.ValidationResult
+import com.izubot.treinemais.domain.abstraction.ValidationResult
 import javax.inject.Inject
 
 class ValidatePasswordConfirmationUseCase @Inject constructor() {

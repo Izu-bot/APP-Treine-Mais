@@ -56,4 +56,7 @@
     <string name="register_error_generic">Algo deu errado</string>
     <string name="login_email_error">O endereço de e-mail não pode estar vazio</string>
     <string name="login_password_error">A senha não pode estar vazia</string>
+    <string name="confirm_email">Confirmar Email</string>
+    <string name="confirm_email_subtitle">Verifique seu email para confirmar sua conta</string>
+    <string name="go_to_gmail">Ir para o Gmail</string>
 </resources>

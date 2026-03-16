@@ -1,5 +1,7 @@
 package com.izubot.treinemais.ui.login
 
+import androidx.annotation.StringRes
+
 data class LoginState(
     val email: String = "",
     val password: String = "",
@@ -8,8 +10,8 @@ data class LoginState(
     val loginFailure: Boolean = false,
     val loginError: Int? = null,
     val isPasswordVisible: Boolean = false,
-    val isEmailError: Boolean = false,
-    val isPasswordError: Boolean = false,
-    val emailError: Int? = null,
-    val passwordError: Int? = null
+    val emailError: Boolean = false,
+    @param:StringRes val errorPasswordMessage: Int? = null,
+    @param:StringRes val errorEmailMessage: Int? = null,
+    val passwordError: Boolean = false,
 )

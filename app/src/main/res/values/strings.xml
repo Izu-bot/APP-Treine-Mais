@@ -55,4 +55,7 @@
     <string name="register_error_generic">Something went wrong</string>
     <string name="login_email_error">The email address cannot be empty</string>
     <string name="login_password_error">The password cannot be empty</string>
+    <string name="confirm_email">Confirm Email</string>
+    <string name="confirm_email_subtitle">Check your email to confirm your account</string>
+    <string name="go_to_gmail">Go to Gmail</string>
 </resources>
