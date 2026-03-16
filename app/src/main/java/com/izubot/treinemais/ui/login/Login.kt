@@ -21,6 +21,7 @@ import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.icons.rounded.FitnessCenter
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -224,28 +225,38 @@ fun Login(
             )
 
             Spacer(modifier = Modifier.height(62.dp))
-            ButtonComponent(
-                onClick = {
-                    loginViewModel.onLoginClick()
-                },
-                text = R.string.login_enter,
-                style = MaterialTheme.typography.bodyLarge,
-                family = manropeFamily,
-                weight = FontWeight.Bold,
-                shape = 20.dp,
-                elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 16.dp,
-                    pressedElevation = 0.dp
-                ),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.onSecondary,
-                    contentColor = MaterialTheme.colorScheme.primary
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 26.dp)
-                    .size(56.dp)
-            )
+
+            if (state.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    color = MaterialTheme.colorScheme.onSecondary
+                )
+            }
+            else {
+                ButtonComponent(
+                    onClick = {
+                        // Falta por o login e navegação
+                    },
+
+                    text = R.string.login_enter,
+                    style = MaterialTheme.typography.bodyLarge,
+                    family = manropeFamily,
+                    weight = FontWeight.Bold,
+                    shape = 20.dp,
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 16.dp,
+                        pressedElevation = 0.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.onSecondary,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 26.dp)
+                        .size(56.dp)
+                )
+            }
         }
     }
 }

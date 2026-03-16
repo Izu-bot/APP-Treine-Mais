@@ -1,6 +1,8 @@
 package com.izubot.treinemais.data.remote.api
 
+import com.izubot.treinemais.data.remote.dto.LoginRequestDto
 import com.izubot.treinemais.data.remote.dto.RegisterRequestDto
+import com.izubot.treinemais.data.remote.dto.TokenDto
 import com.izubot.treinemais.data.remote.dto.UserDto
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -13,4 +15,6 @@ interface AuthApi {
 
     @GET("/auth/confirm-email")
     suspend fun confirmEmail(@Query("token") token: String)
+    @POST("/auth/login")
+    suspend fun login(@Body body: LoginRequestDto) : TokenDto
 }

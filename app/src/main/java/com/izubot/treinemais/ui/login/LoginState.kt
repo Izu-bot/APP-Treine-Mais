@@ -11,5 +11,5 @@ data class LoginState(
     val isEmailError: Boolean = false,
     val isPasswordError: Boolean = false,
     val emailError: Int? = null,
-    val passwordError: Int? = null
+    val passwordError: Int? = null,
 )

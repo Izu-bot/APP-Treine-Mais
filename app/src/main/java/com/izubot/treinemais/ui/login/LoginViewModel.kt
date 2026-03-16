@@ -5,8 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.izubot.treinemais.R
 import com.izubot.treinemais.domain.repository.AuthRepository
+import com.izubot.treinemais.domain.usecase.ConfirmEmailUseCase
+import com.izubot.treinemais.domain.usecase.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Delay
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -16,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repository: AuthRepository
+    private val confirmEmailUseCase: ConfirmEmailUseCase,
+    private val loginUseCase: LoginUseCase
 ) : ViewModel() {
 
     private val _toastEvent = Channel<String>()
@@ -37,27 +42,35 @@ class LoginViewModel @Inject constructor(
         _state.update { it.copy(isPasswordVisible = !it.isPasswordVisible) }
     }
 
-    private fun checkPassword() {
-        if (_state.value.password.isBlank()) {
-            _state.update { it.copy(isPasswordError = true, passwordError = R.string.login_password_error) }
-        }
+    private fun onValidatePassword() {
+        // Por o Usecase de validação
     }
 
-    private fun checkEmail() {
-        if (_state.value.email.isBlank()) {
-            _state.update { it.copy(isEmailError = true, emailError = R.string.login_email_error) }
-        }
+    private fun onValidateEmail() {
+        // Por o Usecase de validação
     }
 
 
-    fun onLoginClick() {
-        checkEmail()
-        checkPassword()
+    fun login() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+
+            delay(1500)
+            loginUseCase(_state.value)
+                .onSuccess { user ->
+                    Log.d("Login", "Logado com sucesso: $user")
+                }
+                .onFailure { error ->
+                    Log.d("Login", "Não foi possivel logar: ${error.message}")
+                }
+
+            _state.update { it.copy(isLoading = false) }
+        }
     }
 
     fun confirmEmail(token: String) {
         viewModelScope.launch {
-            repository.confirmEmail(token)
+            confirmEmailUseCase(token)
                 .onSuccess {
                     _toastEvent.send("Email confirmado")
                 }
