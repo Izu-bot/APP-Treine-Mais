@@ -182,8 +182,8 @@ fun Login(
                     cursorColor = MaterialTheme.colorScheme.tertiary
                 ),
                 modifier = Modifier.padding(horizontal = 12.dp),
-                isError = state.isEmailError,
-                errorMessage = state.emailError,
+                isError = state.emailError,
+                errorMessage = state.errorEmailMessage,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next,
                     keyboardType = KeyboardType.Email
@@ -216,8 +216,8 @@ fun Login(
                     cursorColor = MaterialTheme.colorScheme.tertiary
                 ),
                 modifier = Modifier.padding(horizontal = 12.dp),
-                isError = state.isPasswordError,
-                errorMessage = state.passwordError,
+                isError = state.passwordError,
+                errorMessage = state.errorPasswordMessage,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done,
                     keyboardType = KeyboardType.Password
@@ -235,7 +235,13 @@ fun Login(
             else {
                 ButtonComponent(
                     onClick = {
-                        // Falta por o login e navegação
+                        val emailVerify = loginViewModel.onValidateEmail()
+                        val passwordVerify = loginViewModel.onValidatePassword()
+
+                        if (emailVerify && passwordVerify) {
+                            loginViewModel.login()
+                            onLoginSuccess()
+                        }
                     },
 
                     text = R.string.login_enter,

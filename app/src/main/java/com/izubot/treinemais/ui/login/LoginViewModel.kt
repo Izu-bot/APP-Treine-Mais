@@ -4,9 +4,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.izubot.treinemais.R
+import com.izubot.treinemais.domain.abstraction.ValidationResult
 import com.izubot.treinemais.domain.repository.AuthRepository
 import com.izubot.treinemais.domain.usecase.ConfirmEmailUseCase
 import com.izubot.treinemais.domain.usecase.LoginUseCase
+import com.izubot.treinemais.domain.usecase.ValidateEmailUseCase
+import com.izubot.treinemais.domain.usecase.ValidatePasswordConfirmationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Delay
 import kotlinx.coroutines.channels.Channel
@@ -21,7 +24,9 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val confirmEmailUseCase: ConfirmEmailUseCase,
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val validatePasswordConfirmationUseCase: ValidatePasswordConfirmationUseCase,
+    private val validateEmailUseCase: ValidateEmailUseCase
 ) : ViewModel() {
 
     private val _toastEvent = Channel<String>()
@@ -42,12 +47,30 @@ class LoginViewModel @Inject constructor(
         _state.update { it.copy(isPasswordVisible = !it.isPasswordVisible) }
     }
 
-    private fun onValidatePassword() {
-        // Por o Usecase de validação
+    fun onValidatePassword() : Boolean {
+        val result = validatePasswordConfirmationUseCase(_state.value.password, _state.value.password)
+
+        _state.update {
+            it.copy(
+                passwordError = result is ValidationResult.Error,
+                errorPasswordMessage = (result as? ValidationResult.Error)?.message,
+            )
+        }
+        return result is ValidationResult.Success
+
     }
 
-    private fun onValidateEmail() {
-        // Por o Usecase de validação
+    fun onValidateEmail() : Boolean {
+        val result = validateEmailUseCase(_state.value.email)
+
+        _state.update {
+            it.copy(
+                emailError = result is ValidationResult.Error,
+                errorEmailMessage = (result as? ValidationResult.Error)?.message
+            )
+        }
+
+        return result is ValidationResult.Success
     }
 
 
