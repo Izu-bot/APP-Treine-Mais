@@ -3,15 +3,12 @@ package com.izubot.treinemais.ui.login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.izubot.treinemais.R
 import com.izubot.treinemais.domain.abstraction.ValidationResult
-import com.izubot.treinemais.domain.repository.AuthRepository
 import com.izubot.treinemais.domain.usecase.ConfirmEmailUseCase
 import com.izubot.treinemais.domain.usecase.LoginUseCase
 import com.izubot.treinemais.domain.usecase.ValidateEmailUseCase
 import com.izubot.treinemais.domain.usecase.ValidatePasswordConfirmationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Delay
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
