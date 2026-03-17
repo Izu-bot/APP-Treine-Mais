@@ -3,6 +3,7 @@ package com.izubot.treinemais.ui.login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.izubot.treinemais.data.local.TokenManager
 import com.izubot.treinemais.domain.abstraction.ValidationResult
 import com.izubot.treinemais.domain.usecase.ConfirmEmailUseCase
 import com.izubot.treinemais.domain.usecase.LoginUseCase
@@ -10,7 +11,6 @@ import com.izubot.treinemais.domain.usecase.ValidateEmailUseCase
 import com.izubot.treinemais.domain.usecase.ValidatePasswordConfirmationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -23,7 +23,8 @@ class LoginViewModel @Inject constructor(
     private val confirmEmailUseCase: ConfirmEmailUseCase,
     private val loginUseCase: LoginUseCase,
     private val validatePasswordConfirmationUseCase: ValidatePasswordConfirmationUseCase,
-    private val validateEmailUseCase: ValidateEmailUseCase
+    private val validateEmailUseCase: ValidateEmailUseCase,
+    private val tokenManager: TokenManager
 ) : ViewModel() {
 
     private val _toastEvent = Channel<String>()
@@ -71,17 +72,18 @@ class LoginViewModel @Inject constructor(
     }
 
 
-    fun login() {
+    fun login(onSuccess: () -> Unit) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            delay(1500)
             loginUseCase(_state.value)
-                .onSuccess { user ->
-                    Log.d("Login", "Logado com sucesso: $user")
+                .onSuccess { token ->
+                    tokenManager.saveTokens(token.accessToken, token.refreshToken)
+                    onSuccess()
+                    Log.d("Login", "Login success: $token")
                 }
                 .onFailure { error ->
-                    Log.d("Login", "Não foi possivel logar: ${error.message}")
+                    Log.d("Login", "Login error: ${error.message}")
                 }
 
             _state.update { it.copy(isLoading = false) }

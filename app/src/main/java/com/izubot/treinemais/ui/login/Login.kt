@@ -239,8 +239,9 @@ fun Login(
                         val passwordVerify = loginViewModel.onValidatePassword()
 
                         if (emailVerify && passwordVerify) {
-                            loginViewModel.login()
-                            onLoginSuccess()
+                            loginViewModel.login(onSuccess = {
+                                onLoginSuccess()
+                            })
                         }
                     },
 

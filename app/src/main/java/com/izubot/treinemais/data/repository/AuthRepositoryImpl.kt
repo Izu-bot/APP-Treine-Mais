@@ -30,4 +30,16 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun refreshToken(refreshToken: String): Result<Token> {
+        return runCatching {
+            remoteDataSource.refreshToken(refreshToken)
+        }
+    }
+
+    override suspend fun logout(refreshToken: String): Result<String> {
+        return runCatching {
+            remoteDataSource.logout(refreshToken)
+        }
+    }
+
 }

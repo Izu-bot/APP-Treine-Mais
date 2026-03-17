@@ -9,4 +9,6 @@ interface AuthRemoteDataSource {
     suspend fun register(request: RegisterRequest): User
     suspend fun confirmEmail(token: String)
     suspend fun login(request: LoginRequest): Token
+    suspend fun refreshToken(refreshToken: String): Token
+    suspend fun logout(refreshToken: String): String
 }

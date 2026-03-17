@@ -1,6 +1,7 @@
 package com.izubot.treinemais.data.remote.api
 
 import com.izubot.treinemais.data.remote.dto.LoginRequestDto
+import com.izubot.treinemais.data.remote.dto.RefreshTokenRequest
 import com.izubot.treinemais.data.remote.dto.RegisterRequestDto
 import com.izubot.treinemais.data.remote.dto.TokenDto
 import com.izubot.treinemais.data.remote.dto.UserDto
@@ -15,6 +16,12 @@ interface AuthApi {
 
     @GET("/auth/confirm-email")
     suspend fun confirmEmail(@Query("token") token: String)
+
     @POST("/auth/login")
     suspend fun login(@Body body: LoginRequestDto) : TokenDto
+
+    @POST("/auth/refresh")
+    suspend fun refresh(@Body body: RefreshTokenRequest) : TokenDto
+    @POST("auth/logout")
+    suspend fun logout(@Body body: RefreshTokenRequest) : String
 }
