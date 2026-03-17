@@ -33,6 +33,16 @@ object NetworkModule {
         }
     }
 
+    /**
+     * Provides a singleton OkHttpClient configured for authentication and HTTP logging.
+     *
+     * The client is configured with the supplied AuthInterceptor and TokenAuthenticator, and an
+     * HttpLoggingInterceptor that logs request and response bodies.
+     *
+     * @param authInterceptor Interceptor that adds authentication information (e.g., headers) to requests.
+     * @param tokenAuthenticator Authenticator that handles token refreshing and retrying failed auth requests.
+     * @return An OkHttpClient configured with the authentication interceptor, authenticator, and body-level HTTP logging.
+     */
     @Provides
     @Singleton
     fun provideOkHttpClient(
@@ -59,12 +69,23 @@ object NetworkModule {
             .build()
     }
 
+    /**
+     * Creates an AuthApi implementation from the provided Retrofit instance.
+     *
+     * @return An AuthApi implementation created by Retrofit.
+     */
     @Provides
     @Singleton
     fun provideAuthApi(retrofit: Retrofit): AuthApi {
         return retrofit.create(AuthApi::class.java)
     }
 
+    /**
+     * Provides a TokenManager initialized with the application context.
+     *
+     * @param context The application Context used to construct the TokenManager.
+     * @return A TokenManager instance configured with the provided context.
+     */
     @Provides
     @Singleton
     fun provideTokenManager(@ApplicationContext context: Context): TokenManager {

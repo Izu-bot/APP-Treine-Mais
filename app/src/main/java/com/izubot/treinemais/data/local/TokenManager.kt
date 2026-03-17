@@ -25,6 +25,12 @@ class TokenManager(context: Context) {
         private const val KEY_REFRESH_TOKEN = "refresh_token"
     }
 
+    /**
+     * Stores the access and refresh tokens in the encrypted shared preferences, overwriting any existing values.
+     *
+     * @param accessToken The access token to store.
+     * @param refreshToken The refresh token to store.
+     */
     fun saveTokens(accessToken: String, refreshToken: String) {
         sharedPreferences.edit().apply {
             putString(KEY_ACCESS_TOKEN, accessToken)
@@ -33,10 +39,23 @@ class TokenManager(context: Context) {
         }
     }
 
-    fun getAccessToken(): String? = sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
+    /**
+ * Retrieves the stored access token from the encrypted preferences.
+ *
+ * @return The access token string if present, `null` otherwise.
+ */
+fun getAccessToken(): String? = sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
 
-    fun getRefreshToken(): String? = sharedPreferences.getString(KEY_REFRESH_TOKEN, null)
+    /**
+ * Retrieves the stored refresh token from encrypted shared preferences.
+ *
+ * @return The refresh token, or `null` if none is stored.
+ */
+fun getRefreshToken(): String? = sharedPreferences.getString(KEY_REFRESH_TOKEN, null)
 
+    /**
+     * Removes all entries from the encrypted shared preferences, including the stored access and refresh tokens.
+     */
     fun clearTokens() {
         sharedPreferences.edit { clear() }
     }

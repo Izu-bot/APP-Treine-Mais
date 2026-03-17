@@ -12,6 +12,11 @@ data class TokenDto(
     val refreshToken: String
 )
 
+/**
+ * Converts this DTO into a domain Token.
+ *
+ * @return A Token containing the same accessToken and refreshToken values as this DTO.
+ */
 fun TokenDto.toDomain() = Token(
     accessToken = accessToken,
     refreshToken = refreshToken

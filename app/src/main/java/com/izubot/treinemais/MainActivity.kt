@@ -28,6 +28,13 @@ class MainActivity : ComponentActivity() {
     
     private var navController: NavHostController? = null
 
+    /**
+     * Initializes the activity's UI and navigation when the activity is created.
+     *
+     * Enables edge-to-edge mode, determines whether a user is logged in by checking tokens,
+     * creates and stores a NavHostController, applies the app theme, and sets up the Scaffold and
+     * AppNavigation composable with the computed start destination, login state, and session manager.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -52,6 +59,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * Handles a newly delivered intent by updating the activity's stored intent and delegating it to the navigation controller for deep-link processing.
+     *
+     * @param intent The new intent delivered to the activity; used to replace the activity's current intent and to trigger deep-link handling when a NavController is present.
+     */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
