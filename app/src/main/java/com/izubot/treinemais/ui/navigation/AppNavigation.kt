@@ -46,8 +46,6 @@ fun AppNavigation(
             Splash(
                 onSplashFinished = {
                     if (isLoggedIn) {
-                        // TODO: Quando tiver a HomeRoute implementada
-                        // navController.navigate(AuthRoute.Home) { ... }
                         navController.navigate(AuthRoute.Welcome) {
                             popUpTo(AuthRoute.Splash) { inclusive = true }
                         }

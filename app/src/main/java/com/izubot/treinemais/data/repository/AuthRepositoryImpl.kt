@@ -6,6 +6,7 @@ import com.izubot.treinemais.domain.model.RegisterRequest
 import com.izubot.treinemais.domain.model.Token
 import com.izubot.treinemais.domain.model.User
 import com.izubot.treinemais.domain.repository.AuthRepository
+import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 
@@ -31,15 +32,22 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun refreshToken(refreshToken: String): Result<Token> {
-        return runCatching {
-            remoteDataSource.refreshToken(refreshToken)
+        return try {
+            Result.success(remoteDataSource.refreshToken(refreshToken))
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 
     override suspend fun logout(refreshToken: String): Result<String> {
-        return runCatching {
-            remoteDataSource.logout(refreshToken)
+        return try {
+            Result.success(remoteDataSource.logout(refreshToken))
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
-
 }

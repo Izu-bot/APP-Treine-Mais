@@ -7,6 +7,7 @@ import com.izubot.treinemais.data.remote.api.AuthApi
 import com.izubot.treinemais.data.remote.dto.RefreshTokenRequest
 import dagger.Lazy
 import javax.inject.Inject
+import javax.inject.Named
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -16,7 +17,7 @@ import okhttp3.Route
 
 class TokenAuthenticator @Inject constructor(
     private val tokenManager: TokenManager,
-    private val authApi: Lazy<AuthApi>,
+    @param:Named("AuthApiNoAuth") private val authApi: Lazy<AuthApi>,
     private val sessionManager: SessionManager
 ): Authenticator {
 
@@ -33,13 +34,16 @@ class TokenAuthenticator @Inject constructor(
                     .build()
             }
 
-            val refreshToken = tokenManager.getRefreshToken() ?: return null
+            val refreshToken = tokenManager.getRefreshToken() ?:  run {
+                tokenManager.clearTokens()
+                sessionManager.triggerSessionExpired()
+                return null
+            }
 
             return try {
-                // Chamada síncrona para refresh token usando runBlocking
-                val tokenResponse = runBlocking {
-                    authApi.get().refresh(RefreshTokenRequest(refreshToken))
-                }
+                val refreshTokenRequest = RefreshTokenRequest(refreshToken)
+
+                val tokenResponse = runBlocking { authApi.get().refresh(refreshTokenRequest) }
 
                 // Salva os novos tokens no SharedPreferences
                 tokenManager.saveTokens(

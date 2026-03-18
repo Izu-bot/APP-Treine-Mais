@@ -80,7 +80,7 @@ class LoginViewModel @Inject constructor(
                 .onSuccess { token ->
                     tokenManager.saveTokens(token.accessToken, token.refreshToken)
                     onSuccess()
-                    Log.d("Login", "Login success: $token")
+                    Log.d("Login", "Login success")
                 }
                 .onFailure { error ->
                     Log.d("Login", "Login error: ${error.message}")

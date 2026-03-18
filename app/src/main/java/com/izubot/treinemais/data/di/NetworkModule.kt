@@ -14,8 +14,8 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -42,9 +42,14 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
             .authenticator(tokenAuthenticator)
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("NoAuthClient")
+    fun provideNoAuthOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
             .build()
     }
 
@@ -63,6 +68,22 @@ object NetworkModule {
     @Singleton
     fun provideAuthApi(retrofit: Retrofit): AuthApi {
         return retrofit.create(AuthApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    @Named("AuthApiNoAuth")
+    fun provideAuthApiNoAuth(
+        @Named("NoAuthClient") okHttpClient: OkHttpClient,
+        json: Json
+    ): AuthApi {
+        val contentType = "application/json".toMediaType()
+        return Retrofit.Builder()
+            .baseUrl(URL)
+            .client(okHttpClient)
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .build()
+            .create(AuthApi::class.java)
     }
 
     @Provides

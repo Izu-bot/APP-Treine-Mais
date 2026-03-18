@@ -9,9 +9,15 @@ class LogoutUseCase @Inject constructor(
     private val tokenManager: TokenManager
 ) {
     suspend operator fun invoke(): Result<String> {
-        val refreshToken = tokenManager.getRefreshToken() ?: return Result.success(("Refresh token not found"))
+        val refreshToken = tokenManager.getRefreshToken()
 
-        return authRepository.logout(refreshToken).also {
+        return try {
+            if (refreshToken.isNullOrBlank()) {
+                Result.success("Refresh token not found")
+            } else {
+                authRepository.logout(refreshToken)
+            }
+        } finally {
             tokenManager.clearTokens()
         }
     }
