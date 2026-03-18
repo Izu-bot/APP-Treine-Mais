@@ -49,6 +49,19 @@ import com.izubot.treinemais.ui.components.ButtonComponent
 import com.izubot.treinemais.ui.components.OutlinedTextFieldComponent
 import com.izubot.treinemais.ui.theme.manropeFamily
 
+/**
+ * Renders the login screen UI and coordinates user interactions with the LoginViewModel.
+ *
+ * The composable displays email and password fields, validation errors, a submit button or loading
+ * indicator, and header/navigation. If `token` is provided, it triggers email confirmation. It also
+ * observes the view model's toast events and shows them as Android toasts. On successful login, it
+ * invokes `onLoginSuccess`.
+ *
+ * @param onNavigateToWelcome Callback invoked when the user navigates back to the welcome screen.
+ * @param onLoginSuccess Callback invoked after a successful login.
+ * @param modifier Optional [Modifier] for styling and layout.
+ * @param token Optional email verification token; when non-null, email confirmation is initiated.
+ */
 @Composable
 fun Login(
     onNavigateToWelcome: () -> Unit,
@@ -239,8 +252,9 @@ fun Login(
                         val passwordVerify = loginViewModel.onValidatePassword()
 
                         if (emailVerify && passwordVerify) {
-                            loginViewModel.login()
-                            onLoginSuccess()
+                            loginViewModel.login(onSuccess = {
+                                onLoginSuccess()
+                            })
                         }
                     },
 

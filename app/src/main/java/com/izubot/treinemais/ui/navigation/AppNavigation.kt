@@ -3,34 +3,72 @@ package com.izubot.treinemais.ui.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
+import com.izubot.treinemais.data.local.SessionManager
 import com.izubot.treinemais.ui.confirm.Confirm
 import com.izubot.treinemais.ui.login.Login
 import com.izubot.treinemais.ui.register.Register
 import com.izubot.treinemais.ui.splash.Splash
 import com.izubot.treinemais.ui.welcome.Welcome
+import kotlinx.coroutines.flow.collectLatest
 
+/**
+ * Hosts the app's navigation graph for authentication flows and reacts to session state.
+ *
+ * The composable defines routes for Splash, Welcome, Login (with confirm-email deep link), Register and Confirm,
+ * applies the provided padding to each destination, and performs navigation transitions (including clearing
+ * back stack when appropriate). It also observes session expiration and navigates to the Welcome route clearing
+ * the entire back stack when a session expires.
+ *
+ * @param paddingValues Insets to apply to destination screens.
+ * @param startDestination The initial navigation route to show when the NavHost is created.
+ * @param isLoggedIn Whether the user is currently authenticated; used to decide post-splash navigation.
+ * @param sessionManager Provides session events (e.g., session expiration) that drive global navigation reactions.
+ * @param navController Controller used for navigation; a default is provided by rememberNavController().
+ */
 @Composable
 fun AppNavigation(
     paddingValues: PaddingValues,
+    startDestination: AuthRoute,
+    isLoggedIn: Boolean,
+    sessionManager: SessionManager,
     navController: NavHostController = rememberNavController()
 ) {
 
+    // Escuta eventos de sessão expirada do TokenAuthenticator
+    LaunchedEffect(Unit) {
+        sessionManager.sessionExpired.collectLatest {
+            navController.navigate(AuthRoute.Welcome) {
+                // Limpa todo o histórico de navegação
+                popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
+                launchSingleTop = true
+            }
+        }
+    }
+
     NavHost (
         navController = navController,
-        startDestination = AuthRoute.Splash,
+        startDestination = startDestination,
     ) {
         composable<AuthRoute.Splash> {
             Splash(
                 onSplashFinished = {
-                    navController.navigate(AuthRoute.Welcome) {
-                        popUpTo(AuthRoute.Splash) { inclusive = true }
+                    if (isLoggedIn) {
+                        navController.navigate(AuthRoute.Welcome) {
+                            popUpTo(AuthRoute.Splash) { inclusive = true }
+                        }
+                    } else {
+                        navController.navigate(AuthRoute.Welcome) {
+                            popUpTo(AuthRoute.Splash) { inclusive = true }
+                        }
                     }
                 },
                 modifier = Modifier
@@ -64,7 +102,10 @@ fun AppNavigation(
                 onNavigateToWelcome = {
                     navController.popBackStack()
                 },
-                onLoginSuccess = {},
+                onLoginSuccess = {
+                    // Após login com sucesso, navega para a Home
+                    // navController.navigate(AuthRoute.Home) { ... }
+                },
                 modifier = Modifier
                     .padding(paddingValues)
             )

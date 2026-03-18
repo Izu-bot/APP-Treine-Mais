@@ -13,4 +13,6 @@ sealed interface AuthRoute {
     data object Register : AuthRoute
     @Serializable
     data object Confirm : AuthRoute
+    @Serializable
+    data object Home : AuthRoute
 }
