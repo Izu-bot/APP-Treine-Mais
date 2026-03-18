@@ -33,6 +33,11 @@ class TokenAuthenticator @Inject constructor(
      * @return A new Request with an updated `Authorization: Bearer <token>` header, or `null` if a refreshed token cannot be obtained.
      */
     override fun authenticate(route: Route?, response: Response): Request? {
+
+        if (response.priorResponse != null) return null
+
+        if (response.request.url.encodedPath.contains("/auth/refresh")) return null
+
         val currentToken = tokenManager.getAccessToken()
 
         synchronized(this) {
