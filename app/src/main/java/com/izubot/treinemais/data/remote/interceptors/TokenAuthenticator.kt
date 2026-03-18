@@ -37,7 +37,7 @@ class TokenAuthenticator @Inject constructor(
      */
     override fun authenticate(route: Route?, response: Response): Request? {
 
-        if (responseCount(response) >= 2) return null
+        if (response.priorResponse != null) return null
 
         if (response.request.url.encodedPath.endsWith("/auth/refresh")) return null
 
@@ -89,16 +89,4 @@ class TokenAuthenticator @Inject constructor(
             }
         }
     }
-}
-
-private fun responseCount(response: Response): Int {
-    var count = 1
-    var prior = response.priorResponse
-
-    while (prior != null) {
-        count++
-        prior = prior.priorResponse
-    }
-
-    return count
 }
