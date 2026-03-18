@@ -9,6 +9,7 @@ import dagger.Lazy
 import javax.inject.Inject
 import javax.inject.Named
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
@@ -24,6 +25,8 @@ class TokenAuthenticator @Inject constructor(
     /**
      * Attempts to obtain a fresh access token and rebuild the original request with an updated Authorization header.
      *
+     * Verification to prevent infinite loops by checking the attempts and whether the route is the one that generates the refresh token.
+     *
      * If another thread already updated the token, the method retries the request with that token. If no updated token
      * is available, it uses the refresh token to request new tokens, saves them, and returns the original request rebuilt
      * with the new access token. If a refresh is not possible or fails, clears stored tokens and triggers session expiration.
@@ -33,6 +36,11 @@ class TokenAuthenticator @Inject constructor(
      * @return A new Request with an updated `Authorization: Bearer <token>` header, or `null` if a refreshed token cannot be obtained.
      */
     override fun authenticate(route: Route?, response: Response): Request? {
+
+        if (response.priorResponse != null) return null
+
+        if (response.request.url.encodedPath.endsWith("/auth/refresh")) return null
+
         val currentToken = tokenManager.getAccessToken()
 
         synchronized(this) {
@@ -54,7 +62,11 @@ class TokenAuthenticator @Inject constructor(
             return try {
                 val refreshTokenRequest = RefreshTokenRequest(refreshToken)
 
-                val tokenResponse = runBlocking { authApi.get().refresh(refreshTokenRequest) }
+                val tokenResponse = runBlocking {
+                    withTimeout(30_000L) { // 30 segundos
+                        authApi.get().refresh(refreshTokenRequest)
+                    }
+                }
 
                 // Salva os novos tokens no SharedPreferences
                 tokenManager.saveTokens(
