@@ -11,16 +11,16 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface AuthApi {
-    @POST("/auth/register")
+    @POST("auth/register")
     suspend fun register(@Body body: RegisterRequestDto) : UserDto
 
-    @GET("/auth/confirm-email")
+    @GET("auth/confirm-email")
     suspend fun confirmEmail(@Query("token") token: String)
 
-    @POST("/auth/login")
+    @POST("auth/login")
     suspend fun login(@Body body: LoginRequestDto) : TokenDto
 
-    @POST("/auth/refresh")
+    @POST("auth/refresh")
     suspend fun refresh(@Body body: RefreshTokenRequest) : TokenDto
     @POST("auth/logout")
     suspend fun logout(@Body body: RefreshTokenRequest) : String

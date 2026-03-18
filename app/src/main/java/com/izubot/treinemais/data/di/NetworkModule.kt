@@ -14,6 +14,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import javax.inject.Named
 import javax.inject.Singleton
@@ -22,8 +23,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    const val URL = "http://10.0.2.2:5297"
+    const val URL = "http://10.0.2.2:5297/"
 
+    /**
+     * Provides a singleton Json instance configured for serialization.
+     *
+     * @return A Json instance with ignoreUnknownKeys and coerceInputValues enabled.
+     */
     @Provides
     @Singleton
     fun provideJson(): Json {
@@ -49,20 +55,43 @@ object NetworkModule {
         authInterceptor: AuthInterceptor,
         tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
         return OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor)
             .authenticator(tokenAuthenticator)
             .build()
     }
 
+    /**
+     * Provides an OkHttpClient without authentication interceptors or authenticators.
+     *
+     * This client is intended for requests that should not include or trigger authentication
+     * logic, such as initial login or token refresh calls.
+     *
+     * @return An OkHttpClient without authentication logic, including body-level HTTP logging.
+     */
     @Provides
     @Singleton
     @Named("NoAuthClient")
     fun provideNoAuthOkHttpClient(): OkHttpClient {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
         return OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
             .build()
     }
 
+    /**
+     * Provides a singleton Retrofit instance configured with the default OkHttpClient and Json converter.
+     *
+     * @param okHttpClient The default OkHttpClient with authentication.
+     * @param json The Json instance for serialization.
+     * @return A Retrofit instance configured for the application's base URL.
+     */
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient, json: Json): Retrofit {
@@ -77,6 +106,7 @@ object NetworkModule {
     /**
      * Creates an AuthApi implementation from the provided Retrofit instance.
      *
+     * @param retrofit The default Retrofit instance.
      * @return An AuthApi implementation created by Retrofit.
      */
     @Provides
@@ -86,10 +116,12 @@ object NetworkModule {
     }
 
     /**
-     * Provides a TokenManager initialized with the application context.
+     * Provides a specialized AuthApi instance for authentication and token refresh operations
+     * that does not use the default AuthInterceptor or TokenAuthenticator.
      *
-     * @param context The application Context used to construct the TokenManager.
-     * @return A TokenManager instance configured with the provided context.
+     * @param okHttpClient The OkHttpClient without authentication interceptors.
+     * @param json The Json instance for serialization.
+     * @return An AuthApi instance for no-auth requests.
      */
     @Provides
     @Singleton
@@ -107,6 +139,12 @@ object NetworkModule {
             .create(AuthApi::class.java)
     }
 
+    /**
+     * Provides a TokenManager initialized with the application context.
+     *
+     * @param context The application Context used to construct the TokenManager.
+     * @return A TokenManager instance configured with the provided context.
+     */
     @Provides
     @Singleton
     fun provideTokenManager(@ApplicationContext context: Context): TokenManager {

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -47,7 +48,8 @@ fun AppNavigation(
         sessionManager.sessionExpired.collectLatest {
             navController.navigate(AuthRoute.Welcome) {
                 // Limpa todo o histórico de navegação
-                popUpTo(0) { inclusive = true }
+                popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
+                launchSingleTop = true
             }
         }
     }

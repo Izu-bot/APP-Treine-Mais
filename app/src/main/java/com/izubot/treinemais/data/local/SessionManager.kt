@@ -7,7 +7,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SessionManager @Inject constructor() {
-    private val _sessionExpired = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 0)
+    private val _sessionExpired = MutableSharedFlow<Unit>(replay = 0, extraBufferCapacity = 0)
     val sessionExpired = _sessionExpired.asSharedFlow()
 
     /**
