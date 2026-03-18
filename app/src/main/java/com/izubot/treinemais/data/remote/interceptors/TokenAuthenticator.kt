@@ -21,6 +21,17 @@ class TokenAuthenticator @Inject constructor(
     private val sessionManager: SessionManager
 ): Authenticator {
 
+    /**
+     * Attempts to obtain a fresh access token and rebuild the original request with an updated Authorization header.
+     *
+     * If another thread already updated the token, the method retries the request with that token. If no updated token
+     * is available, it uses the refresh token to request new tokens, saves them, and returns the original request rebuilt
+     * with the new access token. If a refresh is not possible or fails, clears stored tokens and triggers session expiration.
+     *
+     * @param route The connection route that triggered the authentication (may be null).
+     * @param response The HTTP response that caused authentication to be attempted.
+     * @return A new Request with an updated `Authorization: Bearer <token>` header, or `null` if a refreshed token cannot be obtained.
+     */
     override fun authenticate(route: Route?, response: Response): Request? {
         val currentToken = tokenManager.getAccessToken()
 

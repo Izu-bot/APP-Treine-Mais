@@ -58,6 +58,13 @@ class LoginViewModel @Inject constructor(
 
     }
 
+    /**
+     * Validates the current email stored in the view state and updates related error fields.
+     *
+     * Updates `emailError` and `errorEmailMessage` in the state based on the validation result.
+     *
+     * @return `true` if the current email is valid, `false` otherwise.
+     */
     fun onValidateEmail() : Boolean {
         val result = validateEmailUseCase(_state.value.email)
 
@@ -72,6 +79,14 @@ class LoginViewModel @Inject constructor(
     }
 
 
+    /**
+     * Attempts to authenticate using the current LoginState, saves received tokens on success, and invokes the provided callback.
+     *
+     * While the request is in progress the view state is updated to indicate loading. On successful authentication the access
+     * and refresh tokens are saved via TokenManager and `onSuccess` is invoked; on failure no tokens are saved and the callback is not invoked.
+     *
+     * @param onSuccess Callback executed after tokens have been persisted following a successful login.
+     */
     fun login(onSuccess: () -> Unit) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }

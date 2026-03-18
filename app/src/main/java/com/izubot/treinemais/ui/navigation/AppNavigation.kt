@@ -19,6 +19,20 @@ import com.izubot.treinemais.ui.splash.Splash
 import com.izubot.treinemais.ui.welcome.Welcome
 import kotlinx.coroutines.flow.collectLatest
 
+/**
+ * Hosts the app's navigation graph for authentication flows and reacts to session state.
+ *
+ * The composable defines routes for Splash, Welcome, Login (with confirm-email deep link), Register and Confirm,
+ * applies the provided padding to each destination, and performs navigation transitions (including clearing
+ * back stack when appropriate). It also observes session expiration and navigates to the Welcome route clearing
+ * the entire back stack when a session expires.
+ *
+ * @param paddingValues Insets to apply to destination screens.
+ * @param startDestination The initial navigation route to show when the NavHost is created.
+ * @param isLoggedIn Whether the user is currently authenticated; used to decide post-splash navigation.
+ * @param sessionManager Provides session events (e.g., session expiration) that drive global navigation reactions.
+ * @param navController Controller used for navigation; a default is provided by rememberNavController().
+ */
 @Composable
 fun AppNavigation(
     paddingValues: PaddingValues,
