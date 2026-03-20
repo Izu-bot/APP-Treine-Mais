@@ -2,6 +2,7 @@ package com.izubot.treinemais.data.local
 
 import android.content.Context
 import android.util.Base64
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -37,6 +38,7 @@ class TokenManager(private val context: Context) {
     }
 
     val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        Log.d("DataStore", "Checking access ${prefs[ACCESS_TOKEN]}\tChecking refresh ${prefs[REFRESH_TOKEN]}")
         prefs[ACCESS_TOKEN] != null && prefs[REFRESH_TOKEN] != null
     }
 
@@ -59,11 +61,11 @@ class TokenManager(private val context: Context) {
 
     private fun String.encrypt(): String {
         val encrypted = aead.encrypt(toByteArray(), null)
-        return Base64.encodeToString(encrypted, Base64.DEFAULT)
+        return Base64.encodeToString(encrypted, Base64.NO_WRAP)
     }
 
     private fun String.decrypt(): String {
-        val decoded = Base64.decode(this, Base64.DEFAULT)
+        val decoded = Base64.decode(this, Base64.NO_WRAP)
         return String(aead.decrypt(decoded, null))
     }
 }

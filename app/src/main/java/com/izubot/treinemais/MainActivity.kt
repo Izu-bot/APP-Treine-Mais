@@ -18,7 +18,6 @@ import com.izubot.treinemais.ui.navigation.AppNavigation
 import com.izubot.treinemais.ui.navigation.AuthRoute
 import com.izubot.treinemais.ui.theme.TreineMaisTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @AndroidEntryPoint

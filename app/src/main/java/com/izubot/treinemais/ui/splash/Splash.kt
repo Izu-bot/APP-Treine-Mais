@@ -14,6 +14,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -32,10 +34,12 @@ fun Splash(
     modifier: Modifier = Modifier
 ) {
 
+    val currentOnSplashFinished by rememberUpdatedState(onSplashFinished)
+
     // Enquanto a API não é implementada
     LaunchedEffect(key1 = true) {
         delay(2500L)
-        onSplashFinished()
+        currentOnSplashFinished()
     }
 
     Column(
