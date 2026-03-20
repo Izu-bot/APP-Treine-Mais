@@ -62,7 +62,7 @@ fun AppNavigation(
             Splash(
                 onSplashFinished = {
                     if (isLoggedIn) {
-                        navController.navigate(AuthRoute.Welcome) {
+                        navController.navigate(AuthRoute.Register) {
                             popUpTo(AuthRoute.Splash) { inclusive = true }
                         }
                     } else {
