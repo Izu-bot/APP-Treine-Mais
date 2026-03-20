@@ -65,8 +65,9 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit.kotlinx.serialization.json)
 
-    // Security
-    implementation(libs.androidx.security.crypto)
+    // Security + DataStore
+    implementation(libs.androidx.datastore.preferences)
+    implementation("com.google.crypto.tink:tink-android:1.20.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

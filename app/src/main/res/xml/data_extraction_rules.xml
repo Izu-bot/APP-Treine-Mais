@@ -9,7 +9,6 @@
         <include .../>
         <exclude .../>
         -->
-        <exclude domain="sharedpref" path="treine_mais_secure_prefs.xml"/>
     </cloud-backup>
     <!--
     <device-transfer>
@@ -17,5 +16,4 @@
         <exclude .../>
     </device-transfer>
     -->
-    <exclude domain="sharedpref" path="treine_mais_secure_prefs.xml"/>
 </data-extraction-rules>
