@@ -14,6 +14,7 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.izubot.treinemais.data.local.SessionManager
 import com.izubot.treinemais.ui.confirm.Confirm
+import com.izubot.treinemais.ui.home.Home
 import com.izubot.treinemais.ui.login.Login
 import com.izubot.treinemais.ui.register.Register
 import com.izubot.treinemais.ui.splash.Splash
@@ -62,7 +63,7 @@ fun AppNavigation(
             Splash(
                 onSplashFinished = {
                     if (isLoggedIn) {
-                        navController.navigate(AuthRoute.Register) {
+                        navController.navigate(AppDestinations.Home) {
                             popUpTo(AuthRoute.Splash) { inclusive = true }
                         }
                     } else {
@@ -129,6 +130,10 @@ fun AppNavigation(
                 modifier = Modifier
                     .padding(paddingValues)
             )
+        }
+
+        composable<AppDestinations.Home> {
+            Home()
         }
     }
 }

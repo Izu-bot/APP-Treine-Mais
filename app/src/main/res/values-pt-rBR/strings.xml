@@ -59,4 +59,5 @@
     <string name="confirm_email">Confirmar Email</string>
     <string name="confirm_email_subtitle">Verifique seu email para confirmar sua conta</string>
     <string name="go_to_gmail">Ir para o Gmail</string>
+    <string name="todays_training">Treino de hoje</string>
 </resources>

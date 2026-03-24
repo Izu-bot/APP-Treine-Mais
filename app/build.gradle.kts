@@ -69,6 +69,8 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation("com.google.crypto.tink:tink-android:1.20.0")
 
+    implementation(libs.coil.compose)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
