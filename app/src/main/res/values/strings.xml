@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Treine+</string>
     <string name="app_version">Version %1$s</string>
@@ -58,4 +59,5 @@
     <string name="confirm_email">Confirm Email</string>
     <string name="confirm_email_subtitle">Check your email to confirm your account</string>
     <string name="go_to_gmail">Go to Gmail</string>
+    <string name="todays_training">Today\'s training</string>
 </resources>
