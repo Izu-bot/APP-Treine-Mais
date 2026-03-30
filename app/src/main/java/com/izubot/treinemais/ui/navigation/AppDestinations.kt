@@ -2,7 +2,8 @@ package com.izubot.treinemais.ui.navigation
 
 import kotlinx.serialization.Serializable
 
-sealed interface AppDestinations {
+sealed interface MainRoute {
+
     @Serializable
-    data object Home : AppDestinations
+    data object Home : MainRoute
 }
