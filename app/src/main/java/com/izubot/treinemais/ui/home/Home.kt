@@ -13,6 +13,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +33,6 @@ import com.izubot.treinemais.ui.components.ButtonComponent
 import com.izubot.treinemais.ui.components.CardTraining
 import com.izubot.treinemais.ui.components.HomeHeaderComponent
 import com.izubot.treinemais.ui.components.WidgetComponent
-import com.izubot.treinemais.ui.theme.manropeFamily
 
 @Composable
 @Preview(showSystemUi = true)
@@ -58,23 +59,16 @@ fun Home(
                     text = homeViewModel.greet(),
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.SemiBold
                 )
 
                 Spacer(modifier = Modifier.width(6.dp))
 
                 Text(
                     text = state.nameUser,
-                    style = MaterialTheme.typography.headlineMedium.copy(
-                        shadow = Shadow(
-                            color = MaterialTheme.colorScheme.onSecondary.copy(1f),
-                            offset = Offset(0f, 0f),
-                            blurRadius = 30f
-                        )
-                    ),
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = manropeFamily
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontWeight = FontWeight.Bold,
                 )
             }
 
@@ -83,8 +77,12 @@ fun Home(
             CardTraining(
                 shape = MaterialTheme.shapes.extraLarge,
                 containerCardColor = MaterialTheme.colorScheme.onSecondary,
-                contentCardColor = MaterialTheme.colorScheme.primary,
+                contentCardColor = MaterialTheme.colorScheme.onSurface,
                 trainingToday = R.string.todays_training,
+                elevationCard = CardDefaults.elevatedCardElevation(
+                    defaultElevation = 6.dp,
+                    pressedElevation = 0.dp
+                ),
                 title = "Upper Body Power",
                 marginSpacing = 20.dp,
                 exercises = "12 exercises",
@@ -92,8 +90,7 @@ fun Home(
                     ButtonComponent(
                         onClick = { },
                         text = R.string.todays_training,
-                        style = MaterialTheme.typography.labelLarge,
-                        family = manropeFamily,
+                        style = MaterialTheme.typography.titleMedium,
                         weight = FontWeight.SemiBold,
                         shape = 28.dp,
                         elevation = ButtonDefaults.buttonElevation(
@@ -101,8 +98,8 @@ fun Home(
                             pressedElevation = 0.dp
                         ),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.onSecondary,
-                            contentColor = MaterialTheme.colorScheme.primary
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            contentColor = MaterialTheme.colorScheme.surface
                         ),
                         modifier = Modifier
                             .fillMaxWidth()

@@ -32,8 +32,12 @@ fun WidgetComponent(
     Card(
         shape = MaterialTheme.shapes.small,
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp,
+            defaultElevation = 4.dp,
             pressedElevation = 0.dp
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.onPrimary,
+            contentColor = MaterialTheme.colorScheme.tertiary
         ),
     ) {
         Column(
@@ -45,12 +49,12 @@ fun WidgetComponent(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier.size(28.dp),
                 )
                 Text(
                     text = label.uppercase(),
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
                 )
             }
 
@@ -59,11 +63,11 @@ fun WidgetComponent(
             Text(
                 text = title.uppercase(),
                 style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.ExtraBold
             )
             Text(
                 text = subTitle.uppercase(),
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Light
             )
         }

@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.izubot.treinemais.ui.theme.manropeFamily
 
 @Composable
 fun VisualCard(
@@ -29,8 +28,8 @@ fun VisualCard(
     modifier: Modifier = Modifier,
 ) {
     val containerColor = if (isSelected) MaterialTheme.colorScheme.secondary else Color.Transparent
-    val contentColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onTertiary
-    val border = if (isSelected) null else BorderStroke(2.dp, MaterialTheme.colorScheme.onTertiary)
+    val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
+    val border = if (isSelected) null else BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary)
 
     Card(
         onClick = onClick,
@@ -55,7 +54,6 @@ fun VisualCard(
             Text(
                 text = stringResource(title),
                 fontWeight = FontWeight.Bold,
-                fontFamily = manropeFamily,
                 style = MaterialTheme.typography.titleMedium
             )
         }

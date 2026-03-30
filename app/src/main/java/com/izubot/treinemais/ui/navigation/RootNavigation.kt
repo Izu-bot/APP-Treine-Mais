@@ -1,7 +1,10 @@
 package com.izubot.treinemais.ui.navigation
 
 import android.content.Intent
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,14 +31,17 @@ fun RootNavigation(
         startDestination = RootRoute.Splash
     ) {
         composable<RootRoute.Splash> {
-            Splash(
-                onSplashFinished = {
-                    val destination = if (isLoggedIn) RootRoute.Main else RootRoute.Auth
-                    navController.navigate(destination) {
-                        popUpTo(RootRoute.Splash) { inclusive = true }
-                    }
-                }
-            )
+            Scaffold { innerPadding ->
+                Splash(
+                    onSplashFinished = {
+                        val destination = if (isLoggedIn) RootRoute.Main else RootRoute.Auth
+                        navController.navigate(destination) {
+                            popUpTo(RootRoute.Splash) { inclusive = true }
+                        }
+                    },
+                    modifier = Modifier.padding(innerPadding)
+                )
+            }
         }
 
         composable<RootRoute.Auth> {

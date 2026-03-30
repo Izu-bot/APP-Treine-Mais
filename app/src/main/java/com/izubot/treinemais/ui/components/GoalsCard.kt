@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.izubot.treinemais.ui.theme.manropeFamily
 
 @Composable
 fun GoalsCard(
@@ -38,7 +37,7 @@ fun GoalsCard(
     isSelected: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val containerColor = if (isSelected) MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f) else Color.Transparent
+    val containerColor = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else Color.Transparent
     val contentColor = MaterialTheme.colorScheme.onBackground
     val border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.secondary) else BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
 
@@ -58,8 +57,8 @@ fun GoalsCard(
                 .fillMaxWidth()
                 .padding(vertical = 16.dp, horizontal = 14.dp)
         ) {
-            val iconContainerColor = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.tertiary
-            val iconTintColor = if (isSelected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant
+            val iconContainerColor = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSecondary
+            val iconTintColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
 
             Box(
                 modifier = Modifier
@@ -84,13 +83,11 @@ fun GoalsCard(
                 Text(
                     text = stringResource(title),
                     fontWeight = FontWeight.Bold,
-                    fontFamily = manropeFamily,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     text = stringResource(subtitle),
                     fontWeight = FontWeight.Normal,
-                    fontFamily = manropeFamily,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

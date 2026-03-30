@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.ButtonComponent
-import com.izubot.treinemais.ui.theme.manropeFamily
 
 
 @Composable
@@ -52,7 +51,9 @@ fun Welcome(
         e.printStackTrace()
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier
+        .fillMaxSize()
+    ) {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -70,7 +71,7 @@ fun Welcome(
                 Icon(
                     imageVector = Icons.Rounded.FitnessCenter,
                     contentDescription = stringResource(R.string.app_name),
-                    tint = MaterialTheme.colorScheme.background,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(30.dp)
                 )
             }
@@ -83,7 +84,6 @@ fun Welcome(
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary,
                 letterSpacing = 1.sp,
-                fontFamily = manropeFamily,
                 modifier = Modifier.align(
                     Alignment.CenterVertically
                 )
@@ -100,7 +100,7 @@ fun Welcome(
                 modifier = Modifier
                     .size(260.dp)
                     .background(
-                        MaterialTheme.colorScheme.onTertiary,
+                        MaterialTheme.colorScheme.primary,
                         shape = RoundedCornerShape(28.dp)
                     )
                     .padding(20.dp),
@@ -123,7 +123,6 @@ fun Welcome(
                 color = MaterialTheme.colorScheme.primary,
                 letterSpacing = 1.sp,
                 textAlign = TextAlign.Center,
-                fontFamily = manropeFamily
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -132,9 +131,8 @@ fun Welcome(
                 text = stringResource(R.string.welcome_subtitle),
                 fontWeight = FontWeight.SemiBold,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onTertiary,
+                color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center,
-                fontFamily = manropeFamily
             )
 
             Spacer(modifier = Modifier.height(68.dp))
@@ -145,11 +143,10 @@ fun Welcome(
                 },
                 text = R.string.welcome_sign_up,
                 style = MaterialTheme.typography.bodyLarge,
-                family = manropeFamily,
                 weight = FontWeight.SemiBold,
                 shape = 28.dp,
                 elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 6.dp,
+                    defaultElevation = 4.dp,
                     pressedElevation = 0.dp
                 ),
                 colors = ButtonDefaults.buttonColors(
@@ -169,7 +166,6 @@ fun Welcome(
                 },
                 text = R.string.welcome_sign_in,
                 style = MaterialTheme.typography.bodyLarge,
-                family = manropeFamily,
                 weight = FontWeight.SemiBold,
                 shape = 28.dp,
                 elevation = ButtonDefaults.buttonElevation(
@@ -185,7 +181,7 @@ fun Welcome(
                     .size(52.dp),
                 borderStroke = BorderStroke(
                     (1.6).dp,
-                    MaterialTheme.colorScheme.onSecondary
+                    MaterialTheme.colorScheme.secondary
                     )
             )
 
@@ -199,7 +195,9 @@ fun Welcome(
                 fontWeight = FontWeight.Medium,
                 style = MaterialTheme.typography.bodyMedium,
                 letterSpacing = 3.sp,
-                color = MaterialTheme.colorScheme.tertiary,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 16.dp)
             )
         }
     }
