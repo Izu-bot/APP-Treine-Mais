@@ -33,7 +33,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -47,21 +46,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.ButtonComponent
 import com.izubot.treinemais.ui.components.OutlinedTextFieldComponent
-import com.izubot.treinemais.ui.theme.manropeFamily
 
-/**
- * Renders the login screen UI and coordinates user interactions with the LoginViewModel.
- *
- * The composable displays email and password fields, validation errors, a submit button or loading
- * indicator, and header/navigation. If `token` is provided, it triggers email confirmation. It also
- * observes the view model's toast events and shows them as Android toasts. On successful login, it
- * invokes `onLoginSuccess`.
- *
- * @param onNavigateToWelcome Callback invoked when the user navigates back to the welcome screen.
- * @param onLoginSuccess Callback invoked after a successful login.
- * @param modifier Optional [Modifier] for styling and layout.
- * @param token Optional email verification token; when non-null, email confirmation is initiated.
- */
 @Composable
 fun Login(
     onNavigateToWelcome: () -> Unit,
@@ -111,7 +96,7 @@ fun Login(
             Icon(
                 imageVector = Icons.Rounded.ArrowBackIosNew,
                 contentDescription = stringResource(R.string.arrow_back_welcome),
-                tint = MaterialTheme.colorScheme.onSecondary,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .size(24.dp)
@@ -149,7 +134,7 @@ fun Login(
                 Icon(
                     imageVector = Icons.Rounded.FitnessCenter,
                     contentDescription = stringResource(R.string.app_name),
-                    tint = MaterialTheme.colorScheme.background,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(90.dp)
                 )
             }
@@ -159,7 +144,6 @@ fun Login(
                 text = stringResource(R.string.welcome_login),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary,
-                fontFamily = manropeFamily,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center
             )
@@ -167,8 +151,7 @@ fun Login(
             Text(
                 text = stringResource(R.string.welcome_login_subtitle),
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSecondary,
-                fontFamily = manropeFamily,
+                color = MaterialTheme.colorScheme.tertiary,
                 fontWeight = FontWeight.Normal
             )
 
@@ -182,17 +165,18 @@ fun Login(
                 shape = 8.dp,
                 placeholderText = stringResource(R.string.login_email_placeholder),
                 color = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onTertiary,
-                    focusedContainerColor = MaterialTheme.colorScheme.onTertiary,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.tertiary,
-                    focusedTrailingIconColor = MaterialTheme.colorScheme.tertiary,
-                    unfocusedTrailingIconColor = MaterialTheme.colorScheme.onTertiary,
-                    unfocusedLeadingIconColor = MaterialTheme.colorScheme.onTertiary,
-                    focusedLeadingIconColor = MaterialTheme.colorScheme.tertiary,
-                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onTertiary,
-                    focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
-                    cursorColor = MaterialTheme.colorScheme.tertiary
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                    focusedContainerColor = MaterialTheme.colorScheme.primary,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                    focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+                    unfocusedTrailingIconColor = MaterialTheme.colorScheme.onPrimary,
+                    unfocusedLeadingIconColor = MaterialTheme.colorScheme.primary,
+                    focusedLeadingIconColor = MaterialTheme.colorScheme.onPrimary,
+                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onPrimary,
+                    cursorColor = MaterialTheme.colorScheme.onPrimary,
+                    focusedTextColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 modifier = Modifier.padding(horizontal = 12.dp),
                 isError = state.emailError,
@@ -216,17 +200,18 @@ fun Login(
                 isPasswordVisible = state.isPasswordVisible,
                 onVisibilityChange = loginViewModel::onTogglePasswordVisibility,
                 color = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onTertiary,
-                    focusedContainerColor = MaterialTheme.colorScheme.onTertiary,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.tertiary,
-                    focusedTrailingIconColor = MaterialTheme.colorScheme.tertiary,
-                    unfocusedTrailingIconColor = MaterialTheme.colorScheme.onTertiary,
-                    unfocusedLeadingIconColor = MaterialTheme.colorScheme.onTertiary,
-                    focusedLeadingIconColor = MaterialTheme.colorScheme.tertiary,
-                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onTertiary,
-                    focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
-                    cursorColor = MaterialTheme.colorScheme.tertiary
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                    focusedContainerColor = MaterialTheme.colorScheme.primary,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                    focusedTrailingIconColor = MaterialTheme.colorScheme.onPrimary,
+                    unfocusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+                    unfocusedLeadingIconColor = MaterialTheme.colorScheme.primary,
+                    focusedLeadingIconColor = MaterialTheme.colorScheme.onPrimary,
+                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onPrimary,
+                    cursorColor = MaterialTheme.colorScheme.onPrimary,
+                    focusedTextColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 modifier = Modifier.padding(horizontal = 12.dp),
                 isError = state.passwordError,
@@ -260,11 +245,10 @@ fun Login(
 
                     text = R.string.login_enter,
                     style = MaterialTheme.typography.bodyLarge,
-                    family = manropeFamily,
                     weight = FontWeight.Bold,
                     shape = 20.dp,
                     elevation = ButtonDefaults.buttonElevation(
-                        defaultElevation = 16.dp,
+                        defaultElevation = 4.dp,
                         pressedElevation = 0.dp
                     ),
                     colors = ButtonDefaults.buttonColors(

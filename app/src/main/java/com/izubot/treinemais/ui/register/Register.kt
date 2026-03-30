@@ -62,7 +62,6 @@ import com.izubot.treinemais.ui.components.ButtonComponent
 import com.izubot.treinemais.ui.components.GoalsCard
 import com.izubot.treinemais.ui.components.OutlinedTextFieldComponent
 import com.izubot.treinemais.ui.components.VisualCard
-import com.izubot.treinemais.ui.theme.manropeFamily
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -101,7 +100,7 @@ fun Register(
         ) {
             Icon(
                 imageVector = Icons.Rounded.ArrowBackIosNew,
-                tint = MaterialTheme.colorScheme.onSecondary,
+                tint = MaterialTheme.colorScheme.primary,
                 contentDescription = "Back",
                 modifier = Modifier
                     .align(Alignment.CenterStart)
@@ -188,11 +187,10 @@ fun Register(
                 },
                 text = if (uiState.currentStep < uiState.totalSteps - 1) R.string.register_button_next else R.string.register_button_finish,
                 style = MaterialTheme.typography.bodyLarge,
-                family = manropeFamily,
                 weight = FontWeight.Bold,
                 shape = 20.dp,
                 elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 16.dp,
+                    defaultElevation = 4.dp,
                     pressedElevation = 0.dp
                 ),
                 colors = ButtonDefaults.buttonColors(
@@ -221,7 +219,7 @@ fun StepIndicator(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         for (i in 0 until totalSteps) {
-            val color = if (i <= currentStep) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surfaceVariant
+            val color = if (i <= currentStep) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSecondary
             Box(
                 modifier = Modifier
                     .height(8.dp)
@@ -260,13 +258,11 @@ fun Credentials(
             text = stringResource(R.string.register_create_account),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-            fontFamily = manropeFamily
         )
 
         Text(
             text = stringResource(R.string.register_access_credentials),
             style = MaterialTheme.typography.bodyMedium,
-            fontFamily = manropeFamily,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.secondary
         )
@@ -282,17 +278,18 @@ fun Credentials(
             placeholderText = stringResource(R.string.register_placeholder_email),
             shape = 8.dp,
             color = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = MaterialTheme.colorScheme.onTertiary,
-                focusedContainerColor = MaterialTheme.colorScheme.onTertiary,
-                unfocusedContainerColor = MaterialTheme.colorScheme.tertiary,
-                focusedTrailingIconColor = MaterialTheme.colorScheme.tertiary,
-                unfocusedTrailingIconColor = MaterialTheme.colorScheme.onTertiary,
-                unfocusedLeadingIconColor = MaterialTheme.colorScheme.onTertiary,
-                focusedLeadingIconColor = MaterialTheme.colorScheme.tertiary,
-                unfocusedPlaceholderColor = MaterialTheme.colorScheme.onTertiary,
-                focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
-                cursorColor = MaterialTheme.colorScheme.tertiary
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                focusedContainerColor = MaterialTheme.colorScheme.primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+                unfocusedTrailingIconColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedLeadingIconColor = MaterialTheme.colorScheme.primary,
+                focusedLeadingIconColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                focusedPlaceholderColor = MaterialTheme.colorScheme.onPrimary,
+                cursorColor = MaterialTheme.colorScheme.onPrimary,
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
             ),
             isError = isEmailError,
             errorMessage = errorEmailMessage,
@@ -316,17 +313,18 @@ fun Credentials(
             shape = 8.dp,
             isError = isPasswordError,
             color = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = MaterialTheme.colorScheme.onTertiary,
-                focusedContainerColor = MaterialTheme.colorScheme.onTertiary,
-                unfocusedContainerColor = MaterialTheme.colorScheme.tertiary,
-                focusedTrailingIconColor = MaterialTheme.colorScheme.tertiary,
-                unfocusedTrailingIconColor = MaterialTheme.colorScheme.onTertiary,
-                unfocusedLeadingIconColor = MaterialTheme.colorScheme.onTertiary,
-                focusedLeadingIconColor = MaterialTheme.colorScheme.tertiary,
-                unfocusedPlaceholderColor = MaterialTheme.colorScheme.onTertiary,
-                focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
-                cursorColor = MaterialTheme.colorScheme.tertiary
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                focusedContainerColor = MaterialTheme.colorScheme.primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                focusedTrailingIconColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+                unfocusedLeadingIconColor = MaterialTheme.colorScheme.primary,
+                focusedLeadingIconColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                focusedPlaceholderColor = MaterialTheme.colorScheme.onPrimary,
+                cursorColor = MaterialTheme.colorScheme.onPrimary,
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
             ),
             errorMessage = errorPasswordMessage,
             keyboardOptions = KeyboardOptions(
@@ -349,17 +347,18 @@ fun Credentials(
             shape = 8.dp,
             isError = isPasswordError,
             color = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = MaterialTheme.colorScheme.onTertiary,
-                focusedContainerColor = MaterialTheme.colorScheme.onTertiary,
-                unfocusedContainerColor = MaterialTheme.colorScheme.tertiary,
-                focusedTrailingIconColor = MaterialTheme.colorScheme.tertiary,
-                unfocusedTrailingIconColor = MaterialTheme.colorScheme.onTertiary,
-                unfocusedLeadingIconColor = MaterialTheme.colorScheme.onTertiary,
-                focusedLeadingIconColor = MaterialTheme.colorScheme.tertiary,
-                unfocusedPlaceholderColor = MaterialTheme.colorScheme.onTertiary,
-                focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
-                cursorColor = MaterialTheme.colorScheme.tertiary
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                focusedContainerColor = MaterialTheme.colorScheme.primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                focusedTrailingIconColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+                unfocusedLeadingIconColor = MaterialTheme.colorScheme.primary,
+                focusedLeadingIconColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                focusedPlaceholderColor = MaterialTheme.colorScheme.onPrimary,
+                cursorColor = MaterialTheme.colorScheme.onPrimary,
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
             ),
             errorMessage = errorPasswordMessage,
             keyboardOptions = KeyboardOptions(
@@ -370,9 +369,8 @@ fun Credentials(
         Text(
             text = stringResource(R.string.register_password_verification),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onTertiary,
+            color = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.padding(start = 0.dp, top = 4.dp),
-            fontFamily = manropeFamily,
             fontWeight = FontWeight.Medium
         )
     }
@@ -397,7 +395,6 @@ fun PersonalProfile(
             text = stringResource(R.string.register_personal_profile),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-            fontFamily = manropeFamily
         )
 
         Spacer(modifier = Modifier.height(36.dp))
@@ -410,17 +407,18 @@ fun PersonalProfile(
             shape = 8.dp,
             placeholderText = stringResource(R.string.register_full_name),
             color = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = MaterialTheme.colorScheme.onTertiary,
-                focusedContainerColor = MaterialTheme.colorScheme.onTertiary,
-                unfocusedContainerColor = MaterialTheme.colorScheme.tertiary,
-                focusedTrailingIconColor = MaterialTheme.colorScheme.tertiary,
-                unfocusedTrailingIconColor = MaterialTheme.colorScheme.onTertiary,
-                unfocusedLeadingIconColor = MaterialTheme.colorScheme.onTertiary,
-                focusedLeadingIconColor = MaterialTheme.colorScheme.tertiary,
-                unfocusedPlaceholderColor = MaterialTheme.colorScheme.onTertiary,
-                focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
-                cursorColor = MaterialTheme.colorScheme.tertiary
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                focusedContainerColor = MaterialTheme.colorScheme.primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+                unfocusedTrailingIconColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedLeadingIconColor = MaterialTheme.colorScheme.primary,
+                focusedLeadingIconColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                focusedPlaceholderColor = MaterialTheme.colorScheme.onPrimary,
+                cursorColor = MaterialTheme.colorScheme.onPrimary,
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
             ),
             isError = isNameError,
             errorMessage = errorNameMessage,
@@ -435,15 +433,13 @@ fun PersonalProfile(
             text = stringResource(R.string.register_gender),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            fontFamily = manropeFamily,
             color = MaterialTheme.colorScheme.secondary
         )
 
         Text(
             text = stringResource(R.string.register_gender_explication),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onTertiary,
-            fontFamily = manropeFamily,
+            color = MaterialTheme.colorScheme.tertiary,
             fontWeight = FontWeight.Medium
         )
 
@@ -492,14 +488,12 @@ fun Goals(
             text = stringResource(R.string.register_goals),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-            fontFamily = manropeFamily
         )
 
         Text(
             text = stringResource(R.string.register_goals_explication),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onTertiary,
-            fontFamily = manropeFamily,
+            color = MaterialTheme.colorScheme.tertiary,
             fontWeight = FontWeight.Medium
         )
 

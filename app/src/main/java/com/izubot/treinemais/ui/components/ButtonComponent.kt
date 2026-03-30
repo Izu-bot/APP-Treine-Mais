@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -31,7 +30,6 @@ fun ButtonComponent(
     onClick: () -> Unit,
     @StringRes text: Int,
     style: TextStyle,
-    family: FontFamily,
     weight: FontWeight,
     shape: Dp,
     elevation: ButtonElevation,
@@ -58,7 +56,6 @@ fun ButtonComponent(
             Text(
                 text = stringResource(text),
                 style = style,
-                fontFamily = family,
                 fontWeight = weight
             )
 

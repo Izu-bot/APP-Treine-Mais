@@ -3,6 +3,7 @@ package com.izubot.treinemais.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -24,13 +25,13 @@ import coil3.compose.AsyncImage
 fun PerfilComponent(
     modifier: Modifier = Modifier,
     imageUrl: String = "",
-    size: Dp = 40.dp,
+    size: Dp = 30.dp,
     onPerfilClick: () -> Unit = {}
 ) {
     IconButton(
         onClick = onPerfilClick,
         modifier = modifier
-            .size(size)
+            .size(size * 2)
             .aspectRatio(1f)
     ) {
         /* TODO: Adicionar uma imagem mockada ou carregar a imagem a partir da URL */
@@ -38,11 +39,11 @@ fun PerfilComponent(
             Image(
                 imageVector = Icons.Outlined.PersonOutline,
                 contentDescription = "Imagem de perfil",
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
                 modifier = Modifier
                     .size(size)
                     .clip(CircleShape)
-                    .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                    .border(1.dp, MaterialTheme.colorScheme.surface, CircleShape)
             )
         } else {
             AsyncImage(

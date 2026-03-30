@@ -23,16 +23,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.izubot.treinemais.R
-import com.izubot.treinemais.ui.theme.manropeFamily
 import kotlinx.coroutines.delay
 
 @Composable
+@Preview
 fun Splash(
-    onSplashFinished: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSplashFinished: () -> Unit = {}
 ) {
 
     val currentOnSplashFinished by rememberUpdatedState(onSplashFinished)
@@ -44,8 +45,7 @@ fun Splash(
     }
 
     Column(
-        modifier = modifier.fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
@@ -63,19 +63,17 @@ fun Splash(
                 text = stringResource(R.string.app_name).uppercase(),
                 fontWeight = FontWeight.ExtraBold,
                 style = MaterialTheme.typography.displaySmall,
-                color = MaterialTheme.colorScheme.onSecondary,
+                color = MaterialTheme.colorScheme.primary,
                 letterSpacing = 6.sp,
                 textAlign = TextAlign.Center,
-                fontFamily = manropeFamily
             )
             Text(
                 text = stringResource(R.string.subtitle_splash).uppercase(),
                 fontWeight = FontWeight.W500,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.scrim,
+                color = MaterialTheme.colorScheme.secondary,
                 letterSpacing = 4.sp,
                 textAlign = TextAlign.Center,
-                fontFamily = manropeFamily
             )
             Spacer(modifier = Modifier.height(160.dp))
         }
@@ -84,11 +82,10 @@ fun Splash(
             text = stringResource(R.string.init).uppercase(),
             fontWeight = FontWeight.SemiBold,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.scrim,
+            color = MaterialTheme.colorScheme.secondary,
             letterSpacing = 4.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 10.dp),
-            fontFamily = manropeFamily
         )
 
         /*
@@ -97,7 +94,7 @@ fun Splash(
         *  Só é possivel fazer quando tiver a lógica de conexão com a API
         * */
         LinearProgressIndicator(
-            trackColor = MaterialTheme.colorScheme.secondary,
+            trackColor = MaterialTheme.colorScheme.onPrimary,
             color = MaterialTheme.colorScheme.primary,
             gapSize = 8.dp,
             modifier = Modifier

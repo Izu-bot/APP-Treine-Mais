@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.ButtonComponent
 import com.izubot.treinemais.ui.theme.TreineMaisTheme
-import com.izubot.treinemais.ui.theme.manropeFamily
 
 @Composable
 fun Confirm(
@@ -48,7 +47,6 @@ fun Confirm(
             text = stringResource(R.string.confirm_email),
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleLarge,
-            fontFamily = manropeFamily,
             letterSpacing = 1.sp,
             color = MaterialTheme.colorScheme.primary,
             fontSize = 30.sp
@@ -73,9 +71,8 @@ fun Confirm(
             text = stringResource(R.string.confirm_email_subtitle),
             fontWeight = FontWeight.SemiBold,
             style = MaterialTheme.typography.titleSmall,
-            fontFamily = manropeFamily,
             letterSpacing = 1.sp,
-            color = MaterialTheme.colorScheme.onTertiary,
+            color = MaterialTheme.colorScheme.tertiary,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -95,11 +92,10 @@ fun Confirm(
             },
             text = R.string.go_to_gmail,
             style = MaterialTheme.typography.bodyLarge,
-            family = manropeFamily,
             weight = FontWeight.SemiBold,
             shape = 28.dp,
             elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 6.dp,
+                defaultElevation = 4.dp,
                 pressedElevation = 0.dp
             ),
             colors = ButtonDefaults.buttonColors(
@@ -107,7 +103,8 @@ fun Confirm(
                 contentColor = MaterialTheme.colorScheme.primary
             ),
             imageVector = Icons.Rounded.MailOutline,
-            colorIcon = MaterialTheme.colorScheme.primary
+            colorIcon = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(width = 236.dp, height = 56.dp)
         )
     }
 }

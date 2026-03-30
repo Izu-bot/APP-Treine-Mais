@@ -1,7 +1,6 @@
 package com.izubot.treinemais.ui.components
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,7 +36,6 @@ fun CardTraining(
     containerCardColor: Color = MaterialTheme.colorScheme.primary,
     contentCardColor: Color = MaterialTheme.colorScheme.secondary,
     elevationCard: CardElevation = CardDefaults.cardElevation(),
-    borderCard: BorderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
     @StringRes trainingToday: Int = 0,
     title: String = "",
     marginSpacing: Dp = 0.dp,
@@ -51,17 +49,17 @@ fun CardTraining(
             contentColor = contentCardColor
         ),
         elevation = elevationCard,
-        border = borderCard,
         modifier = modifier
     ) {
         Column(
-            modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp)
+            modifier = Modifier.padding(26.dp)
         ) {
             Text(
                 text = stringResource(trainingToday),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
-                letterSpacing = 2.sp
+                letterSpacing = 2.sp,
+                color = MaterialTheme.colorScheme.tertiary
             )
 
             Text(
