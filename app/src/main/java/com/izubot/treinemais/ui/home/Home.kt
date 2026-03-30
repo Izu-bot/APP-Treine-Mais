@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,7 +44,6 @@ fun Home(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         HomeHeaderComponent {}
-        HorizontalDivider(Modifier.padding(vertical = 8.dp), thickness = (0.5).dp, color = MaterialTheme.colorScheme.tertiary)
 
         Spacer(modifier = Modifier.height(32.dp))
 

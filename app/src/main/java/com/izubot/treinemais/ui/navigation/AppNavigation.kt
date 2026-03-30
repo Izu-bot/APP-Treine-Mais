@@ -1,139 +1,111 @@
 package com.izubot.treinemais.ui.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navDeepLink
-import androidx.navigation.toRoute
 import com.izubot.treinemais.data.local.SessionManager
-import com.izubot.treinemais.ui.confirm.Confirm
 import com.izubot.treinemais.ui.home.Home
-import com.izubot.treinemais.ui.login.Login
-import com.izubot.treinemais.ui.register.Register
-import com.izubot.treinemais.ui.splash.Splash
-import com.izubot.treinemais.ui.welcome.Welcome
 import kotlinx.coroutines.flow.collectLatest
 
-/**
- * Hosts the app's navigation graph for authentication flows and reacts to session state.
- *
- * The composable defines routes for Splash, Welcome, Login (with confirm-email deep link), Register and Confirm,
- * applies the provided padding to each destination, and performs navigation transitions (including clearing
- * back stack when appropriate). It also observes session expiration and navigates to the Welcome route clearing
- * the entire back stack when a session expires.
- *
- * @param paddingValues Insets to apply to destination screens.
- * @param startDestination The initial navigation route to show when the NavHost is created.
- * @param isLoggedIn Whether the user is currently authenticated; used to decide post-splash navigation.
- * @param sessionManager Provides session events (e.g., session expiration) that drive global navigation reactions.
- * @param navController Controller used for navigation; a default is provided by rememberNavController().
- */
 @Composable
+@Preview
 fun AppNavigation(
-    paddingValues: PaddingValues,
-    startDestination: AuthRoute,
-    isLoggedIn: Boolean,
-    sessionManager: SessionManager,
+    onSessionExpired: () -> Unit = {},
+    sessionManager: SessionManager = SessionManager(),
     navController: NavHostController = rememberNavController()
 ) {
-
-    // Escuta eventos de sessão expirada do TokenAuthenticator
     LaunchedEffect(Unit) {
         sessionManager.sessionExpired.collectLatest {
-            navController.navigate(AuthRoute.Welcome) {
-                // Limpa todo o histórico de navegação
-                popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
-                launchSingleTop = true
+            onSessionExpired()
+        }
+    }
+
+    val currentBackStack by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStack?.destination
+
+    Scaffold(
+        bottomBar = {
+            AppBottomNavigation(
+                currentDestination = currentDestination,
+                onNavigate = { route ->
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = MainRoute.Home,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable<MainRoute.Home> {
+                Home()
             }
         }
     }
+}
 
-    NavHost (
-        navController = navController,
-        startDestination = startDestination,
+@Composable
+private fun AppBottomNavigation(
+    currentDestination: NavDestination?,
+    onNavigate: (Any) -> Unit
+) {
+    NavigationBar(
+        modifier = Modifier.clip(
+            RoundedCornerShape(20.dp)
+        ),
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.primary,
+        tonalElevation = 3.dp,
     ) {
-        composable<AuthRoute.Splash> {
-            Splash(
-                onSplashFinished = {
-                    if (isLoggedIn) {
-                        navController.navigate(AppDestinations.Home) {
-                            popUpTo(AuthRoute.Splash) { inclusive = true }
-                        }
-                    } else {
-                        navController.navigate(AuthRoute.Welcome) {
-                            popUpTo(AuthRoute.Splash) { inclusive = true }
-                        }
-                    }
-                },
-                modifier = Modifier
-                    .padding(paddingValues)
+        AppBottomNavItem.entries.forEach { item ->
+            NavigationBarItem(
+                selected = currentDestination?.hierarchy?.any {
+                    it.hasRoute(item.route::class)
+                } == true,
+                onClick = { onNavigate(item.route) },
+                icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
+                label = { Text(item.label) }
             )
-        }
-
-        composable<AuthRoute.Welcome> {
-            Welcome(
-                onNavigateToLogin = {
-                    navController.navigate(AuthRoute.Login())
-                },
-                onNavigateToRegister = {
-                    navController.navigate(AuthRoute.Register)
-                },
-                modifier = Modifier
-                    .padding(paddingValues)
-            )
-        }
-
-        composable<AuthRoute.Login>(
-            deepLinks = listOf(
-                navDeepLink {
-                    uriPattern = "http://localhost:5297/auth/confirm-email?token={token}"
-                }
-            )
-        ) { backStackEntry ->
-            val loginRoute: AuthRoute.Login = backStackEntry.toRoute()
-            Login(
-                token = loginRoute.token,
-                onNavigateToWelcome = {
-                    navController.popBackStack()
-                },
-                onLoginSuccess = {
-                    // Após login com sucesso, navega para a Home
-                    // navController.navigate(AuthRoute.Home) { ... }
-                },
-                modifier = Modifier
-                    .padding(paddingValues)
-            )
-        }
-
-        composable<AuthRoute.Register> {
-            Register(
-                onNavigateBack = {
-                    navController.popBackStack()
-                },
-                onNavigateToConfirm = {
-                    navController.navigate(AuthRoute.Confirm)
-                },
-                modifier = Modifier
-                    .padding(paddingValues)
-            )
-        }
-
-        composable<AuthRoute.Confirm> {
-            Confirm(
-                modifier = Modifier
-                    .padding(paddingValues)
-            )
-        }
-
-        composable<AppDestinations.Home> {
-            Home()
         }
     }
+}
+
+enum class AppBottomNavItem(
+    val route: Any,
+    val icon: ImageVector,
+    val label: String
+) {
+    HOME(MainRoute.Home, Icons.Default.Home, "Home"),
+    TRAINING(MainRoute.Home, Icons.Default.Home, "Training"),
 }

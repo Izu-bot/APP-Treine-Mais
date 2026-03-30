@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material3.Card
@@ -39,11 +40,12 @@ fun WidgetComponent(
             modifier = Modifier.padding(16.dp)
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(72.dp)
+                horizontalArrangement = Arrangement.spacedBy(62.dp)
             ) {
                 Icon(
                     imageVector = icon,
-                    contentDescription = null
+                    contentDescription = null,
+                    modifier = Modifier.size(28.dp)
                 )
                 Text(
                     text = label.uppercase(),
@@ -56,7 +58,7 @@ fun WidgetComponent(
 
             Text(
                 text = title.uppercase(),
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.SemiBold
             )
             Text(
