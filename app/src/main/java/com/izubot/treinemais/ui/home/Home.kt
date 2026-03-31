@@ -32,8 +32,9 @@ import com.izubot.treinemais.ui.components.HomeHeaderComponent
 import com.izubot.treinemais.ui.components.WidgetComponent
 
 @Composable
-@Preview(showSystemUi = true)
+@Preview
 fun Home(
+    onNavigateToProfile: () -> Unit = {},
     homeViewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
 ) {
     val state by homeViewModel.state.collectAsState()
@@ -41,7 +42,9 @@ fun Home(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        HomeHeaderComponent {}
+        HomeHeaderComponent(
+            onNavigateToProfile = onNavigateToProfile
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 

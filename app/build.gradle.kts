@@ -70,6 +70,8 @@ dependencies {
     implementation("com.google.crypto.tink:tink-android:1.20.0")
 
     implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.coil.svg)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
