@@ -1,5 +1,7 @@
 package com.izubot.treinemais.ui.navigation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -32,6 +34,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.izubot.treinemais.data.local.SessionManager
 import com.izubot.treinemais.ui.home.Home
+import com.izubot.treinemais.ui.profile.Profile
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -50,32 +53,56 @@ fun AppNavigation(
     val currentBackStack by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStack?.destination
 
-    Scaffold(
-        bottomBar = {
-            AppBottomNavigation(
-                currentDestination = currentDestination,
-                onNavigate = { route ->
-                    navController.navigate(route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+    // Lista de rotas que NÃO devem mostrar a BottomBar (Overlays)
+    val overlayRoutes = listOf(MainRoute.Profile::class)
+    
+    val isOverlayActive = currentDestination?.hierarchy?.any { dest ->
+        overlayRoutes.any { routeClass -> dest.hasRoute(routeClass) }
+    } == true
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            bottomBar = {
+                if (!isOverlayActive) {
+                    AppBottomNavigation(
+                        currentDestination = currentDestination,
+                        onNavigate = { route ->
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    )
                 }
-            )
-        }
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = MainRoute.Home,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable<MainRoute.Home> {
-                Home()
+            }
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = MainRoute.Home,
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                composable<MainRoute.Home> {
+                    Home(
+                        onNavigateToProfile = {
+                            navController.navigate(MainRoute.Profile)
+                        }
+                    )
+                }
+
+                composable<MainRoute.Profile> {
+                    Profile(
+                        onDismiss = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
             }
         }
     }
+
 }
 
 @Composable

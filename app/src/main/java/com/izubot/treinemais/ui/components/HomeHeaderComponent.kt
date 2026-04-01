@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 @Preview
 fun HomeHeaderComponent(
     isNotificationActive: Boolean = false,
-    onNavigateToPerfil: () -> Unit = {},
+    onNavigateToProfile: () -> Unit = {},
     onNavigateToNotified: () -> Unit = {}
 ) {
     TopAppBar(
@@ -30,7 +30,7 @@ fun HomeHeaderComponent(
         navigationIcon = {
             PerfilComponent(
                 modifier = Modifier.padding(start = 8.dp),
-                onPerfilClick = { onNavigateToPerfil }
+                onPerfilClick = { onNavigateToProfile() }
             )
         },
         actions = {

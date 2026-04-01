@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -32,6 +33,7 @@ import com.izubot.treinemais.R
 fun OutlinedTextFieldComponent(
     modifier: Modifier = Modifier,
     value: String,
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     onValueChange: (String) -> Unit,
     labelText: String,
     leadingIcon: ImageVector,
@@ -45,7 +47,8 @@ fun OutlinedTextFieldComponent(
     isUiLogin: Boolean = false,
     shape: Dp = 26.dp,
     onVisibilityChange: () -> Unit = {},
-    isError: Boolean = false
+    isError: Boolean = false,
+    readOnly: Boolean = false
 ) {
     Column(
         modifier = modifier
@@ -54,12 +57,13 @@ fun OutlinedTextFieldComponent(
         Text(
             text = labelText,
             textAlign = TextAlign.Start,
-            style = MaterialTheme.typography.bodyMedium,
+            style = textStyle,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = value,
+            textStyle = textStyle,
             onValueChange = onValueChange,
             placeholder = { Text(placeholderText) },
             singleLine = true,
@@ -70,6 +74,7 @@ fun OutlinedTextFieldComponent(
                 )
             },
             modifier = Modifier.fillMaxWidth(),
+            readOnly = readOnly,
             visualTransformation = if (isPasswordField && !isPasswordVisible) PasswordVisualTransformation() else VisualTransformation.None,
             trailingIcon = {
                 if (isPasswordField) {
