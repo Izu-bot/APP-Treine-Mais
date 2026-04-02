@@ -9,13 +9,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import com.izubot.treinemais.data.local.helpers.SessionManager
 import com.izubot.treinemais.data.local.datasource.DataStorePrefs
 import com.izubot.treinemais.ui.navigation.RootNavigation
 import com.izubot.treinemais.ui.theme.TreineMaisTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -31,10 +29,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        lifecycleScope.launch {
-            dataStorePrefs.preload()
-        }
 
         deepLinkIntent = intent
 

@@ -9,11 +9,9 @@ import com.izubot.treinemais.data.local.helpers.NotificationHelper
 import com.izubot.treinemais.data.repository.UserRepository
 import com.izubot.treinemais.domain.usecase.GetAiUseCase
 import com.izubot.treinemais.domain.usecase.GetNotificationUseCase
-import com.izubot.treinemais.domain.usecase.GetProfileImageUriUseCase
 import com.izubot.treinemais.domain.usecase.GetThemeUseCase
 import com.izubot.treinemais.domain.usecase.SaveAiUseCase
 import com.izubot.treinemais.domain.usecase.SaveNotificationUseCase
-import com.izubot.treinemais.domain.usecase.SaveProfileImageUriUseCase
 import com.izubot.treinemais.domain.usecase.SaveThemeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -27,8 +25,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -39,8 +35,6 @@ class ProfileViewModel @Inject constructor(
     private val saveThemeUseCase: SaveThemeUseCase,
     getNotificationUseCase: GetNotificationUseCase,
     private val saveNotificationUseCase: SaveNotificationUseCase,
-    getImageUriUseCase: GetProfileImageUriUseCase,
-    private val saveImageUriUseCase: SaveProfileImageUriUseCase,
     getAiUseCase: GetAiUseCase,
     private val saveAiUseCase: SaveAiUseCase,
     private val notificationHelper: NotificationHelper,
@@ -60,19 +54,13 @@ class ProfileViewModel @Inject constructor(
         _localState,
         getThemeUseCase.themeCache,
         getNotificationUseCase.notificationCache,
-        getImageUriUseCase.imageUrlCache,
         getAiUseCase.aiCache,
-    ) { local, theme, notification, imageUri, aiEnabled ->
+    ) { local, theme, notification, aiEnabled ->
         local.copy(
             isLoading = false,
             themeCheck = theme,
             notificationCheck = notification,
             isAiEnabled = aiEnabled,
-            imageUri = when {
-                imageUri.isEmpty() -> ""
-                imageUri.startsWith("file://") || imageUri.startsWith("http") -> imageUri
-                else -> "file://$imageUri"
-            },
         )
     }.combine( _dbUserFlow ) { stateSoFar, dbUser ->
         stateSoFar.copy(
@@ -93,34 +81,15 @@ class ProfileViewModel @Inject constructor(
     fun onImageSelected(uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
             val localPath = saveImageToInternalStorage(uri)
-            localPath?.let {
-                saveImageUriUseCase(it)
+            localPath.let {
+                // Salvar no Room
             }
         }
     }
 
-    private fun saveImageToInternalStorage(uri: Uri): String? {
-        return try {
-            val inputStream = context.contentResolver.openInputStream(uri)
-            
-            context.filesDir.listFiles { _, name ->
-                name.startsWith("profile_image_") 
-            }?.forEach { it.delete() }
-
-            val fileName = "profile_image_${System.currentTimeMillis()}.jpg"
-            val file = File(context.filesDir, fileName)
-
-            val outputStream = FileOutputStream(file)
-            inputStream?.use { input ->
-                outputStream.use { output ->
-                    input.copyTo(output)
-                }
-            }
-            file.absolutePath
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
+    private fun saveImageToInternalStorage(uri: Uri): String {
+        /*TODO: Salvar no Room*/
+        return ""
     }
 
     fun onChangeName(name: String) {

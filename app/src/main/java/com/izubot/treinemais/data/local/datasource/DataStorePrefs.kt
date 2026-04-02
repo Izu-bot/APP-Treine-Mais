@@ -31,7 +31,6 @@ class DataStorePrefs(private val context: Context) {
         private val THEME_MODE = booleanPreferencesKey("theme_mode")
         private val NOTIFICATION_ENABLED = booleanPreferencesKey("notification_enabled")
         private val AI_ENABLED = booleanPreferencesKey("ai_enabled")
-        private val PROFILE_IMAGE_URI = stringPreferencesKey("profile_image_uri")
     }
 
     private val aead: Aead by lazy {
@@ -78,13 +77,10 @@ class DataStorePrefs(private val context: Context) {
         return try {
             val decoded = Base64.decode(this, Base64.NO_WRAP)
             String(aead.decrypt(decoded, null))
-        } catch (e: Exception) { "" }
+        } catch (e: Exception) { "$e" }
     }
 
     // Caches (Hot Data)
-    private val _imageUrlCache = MutableStateFlow("")
-    val imageUrlCache: StateFlow<String> = _imageUrlCache.asStateFlow()
-
     private val _themeCache = MutableStateFlow(false)
     val themeCache: StateFlow<Boolean> = _themeCache.asStateFlow()
 
@@ -109,19 +105,12 @@ class DataStorePrefs(private val context: Context) {
         context.dataStore.edit { it[AI_ENABLED] = isEnabled }
     }
 
-    suspend fun saveImageUri(imageUri: String) {
-        _imageUrlCache.value = imageUri
-        context.dataStore.edit { it[PROFILE_IMAGE_URI] = imageUri }
-    }
-
     val getThemePref: Flow<Boolean> = context.dataStore.data.map { it[THEME_MODE] ?: false }.onEach { _themeCache.value = it }
     val getNotificationPref: Flow<Boolean> = context.dataStore.data.map { it[NOTIFICATION_ENABLED] ?: false }.onEach { _notificationCache.value = it }
     val getAiPref: Flow<Boolean> = context.dataStore.data.map { it[AI_ENABLED] ?: false }.onEach { _aiCache.value = it }
-    val getImageUri: Flow<String> = context.dataStore.data.map { it[PROFILE_IMAGE_URI] ?: "" }.onEach { _imageUrlCache.value = it }
 
     suspend fun preload() {
         context.dataStore.data.first().let { pref ->
-            _imageUrlCache.value = pref[PROFILE_IMAGE_URI] ?: ""
             _themeCache.value = pref[THEME_MODE] ?: false
             _notificationCache.value = pref[NOTIFICATION_ENABLED] ?: false
             _aiCache.value = pref[AI_ENABLED] ?: false
