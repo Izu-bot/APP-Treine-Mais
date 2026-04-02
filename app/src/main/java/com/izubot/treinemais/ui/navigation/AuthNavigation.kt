@@ -43,7 +43,7 @@ fun AuthNavigation(
             composable<AuthRoute.Login>(
                 deepLinks = listOf(
                     navDeepLink {
-                        uriPattern = "http://localhost:5297/auth/confirm-email?token={token}"
+                        uriPattern = "http://10.0.2.2:5297/auth/confirm-email?token={token}"
                     }
                 )
             ) { backStackEntry ->

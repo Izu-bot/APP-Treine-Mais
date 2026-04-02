@@ -2,17 +2,20 @@ package com.izubot.treinemais.ui.profile
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.izubot.treinemais.R
 import com.izubot.treinemais.data.local.helpers.NotificationHelper
-import com.izubot.treinemais.data.repository.UserRepository
 import com.izubot.treinemais.domain.usecase.GetAiUseCase
 import com.izubot.treinemais.domain.usecase.GetNotificationUseCase
 import com.izubot.treinemais.domain.usecase.GetThemeUseCase
+import com.izubot.treinemais.domain.usecase.GetUserUseCase
 import com.izubot.treinemais.domain.usecase.SaveAiUseCase
 import com.izubot.treinemais.domain.usecase.SaveNotificationUseCase
+import com.izubot.treinemais.domain.usecase.SaveProfileImage
 import com.izubot.treinemais.domain.usecase.SaveThemeUseCase
+import com.izubot.treinemais.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +28,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.File
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -38,16 +42,13 @@ class ProfileViewModel @Inject constructor(
     getAiUseCase: GetAiUseCase,
     private val saveAiUseCase: SaveAiUseCase,
     private val notificationHelper: NotificationHelper,
-    userRepository: UserRepository
+    getUserUseCase: GetUserUseCase,
+    private val saveProfileImage: SaveProfileImage
 ) : ViewModel() {
     private val _channel = Channel<UiEvent>()
     val channel = _channel.receiveAsFlow()
 
-    sealed class UiEvent {
-        data class Toast(val message: String) : UiEvent()
-    }
-
-    private val _dbUserFlow = userRepository.getUserById()
+    private val _dbUserFlow = getUserUseCase()
 
     private val _localState = MutableStateFlow(ProfileUiState())
     val state: StateFlow<ProfileUiState> = combine(
@@ -67,8 +68,10 @@ class ProfileViewModel @Inject constructor(
             name = dbUser?.fullName ?: stateSoFar.name,
             email = dbUser?.email ?: stateSoFar.email,
             gender = dbUser?.gender ?: stateSoFar.gender,
-            birthDate = dbUser?.birthDate?.let { LocalDate.parse(it) } ?: stateSoFar.birthDate,
-            goals = dbUser?.gender ?: stateSoFar.goals,
+            birthDate = dbUser?.birthDate?.takeIf { it != "null" && it.isNotBlank() }?.let {
+                runCatching { LocalDate.parse(it) }.getOrNull()
+            } ?: stateSoFar.birthDate,
+            goals = stateSoFar.goals,
             imageUri = dbUser?.localPhotoPath ?: stateSoFar.imageUri
         )
     }
@@ -80,16 +83,29 @@ class ProfileViewModel @Inject constructor(
 
     fun onImageSelected(uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
-            val localPath = saveImageToInternalStorage(uri)
-            localPath.let {
-                // Salvar no Room
+            try {
+                val imagePath = saveImageToInternalStorage(uri)
+                saveProfileImage(imagePath)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _channel.send(UiEvent.Toast("Falha ao salvar a imagem"))
             }
         }
     }
 
     private fun saveImageToInternalStorage(uri: Uri): String {
-        /*TODO: Salvar no Room*/
-        return ""
+        val inputStream = context.contentResolver.openInputStream(uri)
+
+        val file = File(context.filesDir, "profile_picture_${System.currentTimeMillis()}.jpg")
+
+        inputStream?.use { input ->
+            file.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+
+        Log.d("Imagem", "Imagem salva em: ${file.absolutePath}")
+        return file.absolutePath
     }
 
     fun onChangeName(name: String) {

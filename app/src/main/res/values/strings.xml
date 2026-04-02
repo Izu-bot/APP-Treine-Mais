@@ -72,5 +72,14 @@
     <string name="ai_title_activated">Artificial intelligence activated</string>
     <string name="ai_title_deactivated">Artificial intelligence deactivated</string>
     <string name="profile_notification_disabled">Disable notifications in the app settings</string>
-    
+    <string name="login_email_verificate">Email verified successfully</string>
+    <string name="login_error_email">Error checking email</string>
+    <string name="login_error_message">Failed to log in, please try again</string>
+    <string name="register_user_success">User successfully registered</string>
+    <string name="register_user_error">Failed to register user</string>
+    <string name="welcome_good_morning">Good morning</string>
+    <string name="welcome_good_afternoon">Good afternoon</string>
+    <string name="welcome_good_night">Good night</string>
+
+
 </resources>

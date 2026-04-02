@@ -1,14 +1,17 @@
 package com.izubot.treinemais.ui.register
 
-import android.util.Log
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.izubot.treinemais.R
 import com.izubot.treinemais.domain.abstraction.ValidationResult
 import com.izubot.treinemais.domain.usecase.RegisterUserUseCase
 import com.izubot.treinemais.domain.usecase.ValidateEmailUseCase
 import com.izubot.treinemais.domain.usecase.ValidateNameUseCase
 import com.izubot.treinemais.domain.usecase.ValidatePasswordConfirmationUseCase
+import com.izubot.treinemais.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,11 +22,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
+    @param:ApplicationContext private val context: Context,
     private val validatePasswordConfirmationUseCase: ValidatePasswordConfirmationUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validateNameUseCase: ValidateNameUseCase,
-    private val registerUserUseCase: RegisterUserUseCase
+    private val registerUserUseCase: RegisterUserUseCase,
 ) : ViewModel() {
+
+    private val _channel = Channel<UiEvent>()
+    val channel = _channel.receiveAsFlow()
 
     private val _uiState = MutableStateFlow(RegisterUiState())
     val uiState = _uiState.asStateFlow()
@@ -102,12 +109,13 @@ class RegisterViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true) }
 
             registerUserUseCase(_uiState.value)
-                .onSuccess { user ->
-                    Log.d("Registrar", "Sucesso $user")
+                .onSuccess {
+                    _uiState.update { it.copy(isError = false, errorMassage = null) }
+                    _channel.send(UiEvent.Toast(context.getString(R.string.register_user_success)))
                 }
                 .onFailure { error ->
-                    Log.d("Registrar", "Falha $error")
                     _uiState.update { it.copy(isError = true, errorMassage = error.message) }
+                    _channel.send(UiEvent.Toast(context.getString(R.string.register_user_error)))
                 }
 
             _uiState.update { it.copy(isLoading = false) }

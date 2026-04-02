@@ -51,6 +51,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.PerfilComponent
+import com.izubot.treinemais.utils.UiEvent
 import kotlinx.coroutines.flow.collectLatest
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -98,7 +99,7 @@ fun Profile(
     LaunchedEffect(Unit) {
         profileViewModel.channel.collectLatest { evet ->
             when (evet) {
-                is ProfileViewModel.UiEvent.Toast -> {
+                is UiEvent.Toast -> {
                     Toast.makeText(context, evet.message, Toast.LENGTH_SHORT).show()
                 }
             }

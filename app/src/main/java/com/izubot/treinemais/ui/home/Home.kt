@@ -56,7 +56,7 @@ fun Home(
         ) {
             Row {
                 Text(
-                    text = homeViewModel.greet(),
+                    text = state.greeting,
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold
@@ -65,7 +65,7 @@ fun Home(
                 Spacer(modifier = Modifier.width(6.dp))
 
                 Text(
-                    text = state.nameUser,
+                    text = ", " + state.nameUser.substringBefore(" "),
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.tertiary,
                     fontWeight = FontWeight.Bold,

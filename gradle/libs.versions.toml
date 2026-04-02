@@ -65,3 +65,4 @@ retrofit-kotlinx-serialization-json = { group = "com.jakewharton.retrofit", name
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+androidx-room = { id = "androidx.room", version.ref = "roomCompiler" }

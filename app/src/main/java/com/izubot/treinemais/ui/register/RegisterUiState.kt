@@ -1,6 +1,7 @@
 package com.izubot.treinemais.ui.register
 
 import androidx.annotation.StringRes
+import java.time.LocalDate
 
 data class RegisterUiState(
     val currentStep: Int = 0,
@@ -22,5 +23,6 @@ data class RegisterUiState(
     val nameError: Boolean = false,
     val selectedGender: Gender? = null,
     val selectedGoals: Goals? = null,
-    val enabledButton: Boolean = false
+    val enabledButton: Boolean = false,
+    val birthDate: LocalDate? = null,
 )
