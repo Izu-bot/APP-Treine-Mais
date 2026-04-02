@@ -1,16 +1,16 @@
 package com.izubot.treinemais.domain.usecase
 
-import com.izubot.treinemais.data.local.TokenManager
+import com.izubot.treinemais.data.local.datasource.DataStorePrefs
 import com.izubot.treinemais.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class LogoutUseCase @Inject constructor(
     private val authRepository: AuthRepository,
-    private val tokenManager: TokenManager
+    private val dataStorePrefs: DataStorePrefs
 ) {
     suspend operator fun invoke(): Result<String> {
-        val refreshToken = tokenManager.tokens.first().first
+        val refreshToken = dataStorePrefs.tokens.first().first
 
         return try {
             if (refreshToken.isNullOrBlank()) {
@@ -19,7 +19,7 @@ class LogoutUseCase @Inject constructor(
                 authRepository.logout(refreshToken)
             }
         } finally {
-            tokenManager.clearTokens()
+            dataStorePrefs.clearTokens()
         }
     }
 }

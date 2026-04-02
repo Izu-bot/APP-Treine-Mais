@@ -19,20 +19,13 @@
     <string name="login_email_placeholder">Enter your email</string>
     <string name="login_password_placeholder">Enter your password</string>
     <string name="login_forgot_password">Forgot your password?</string>
-    <string name="login_no_have_account">Don\'t have an account?</string>
-    <string name="login_create_account">Create an account</string>
     <string name="register_create_account">Create your account"</string>
     <string name="register_access_credentials">Your access credentials</string>
-    <string name="register_email">Email</string>
-    <string name="register_password">Password</string>
     <string name="register_placeholder_email">email@example.com</string>
     <string name="register_placeholder_password">Password</string>
     <string name="register_confirm_password">Confirm password</string>
     <string name="register_password_verification">The password must be at least 8 characters long, including letters and numbers</string>
     <string name="register_button_next">Next</string>
-    <string name="register_have_account">Do you already have an account?</string>
-    <string name="register_have_account_login">Log in</string>
-    <string name="register_password_error">The passwords must be the same</string>
     <string name="register_button_finish">Complete registration</string>
     <string name="register_personal_profile">Personal profile</string>
     <string name="register_call_you">What should we call you?</string>
@@ -54,8 +47,6 @@
     <string name="register_validate_name">The name cannot be empty</string>
     <string name="register_invalid_name">The name must be longer than 3 characters</string>
     <string name="register_error_generic">Something went wrong</string>
-    <string name="login_email_error">The email address cannot be empty</string>
-    <string name="login_password_error">The password cannot be empty</string>
     <string name="confirm_email">Confirm Email</string>
     <string name="confirm_email_subtitle">Check your email to confirm your account</string>
     <string name="go_to_gmail">Go to Gmail</string>
@@ -65,23 +56,21 @@
     <string name="profile_name">Name</string>
     <string name="profile_email">Email</string>
     <string name="profile_gender">Gender</string>
-    <string name="profile_goals">Goals</string>
-    <string name="profile_logout">Logout</string>
     <string name="profile_birthdate">Birth Date</string>
-    <string name="profile_height">Height</string>
-    <string name="profile_weight">Weight</string>
-    <string name="profile_save">Save changes</string>
     <string name="profile_application_information">Application information</string>
     <string name="profile_version">Version</string>
     <string name="profile_privacy_policy">Privacy Policy</string>
     <string name="profile_terms_of_use">Terms of Use</string>
-    <string name="profile_delete_account">Delete account</string>
-    <string name="profile_settings">Settings</string>
     <string name="profile_settings_theme">Apply Android dynamic theme</string>
     <string name="profile_support_theme">The Dynamic Colors feature, added in Android 12, allows you to customize your device\'s colors to match the color scheme of your wallpaper</string>
     <string name="profile_notification">Notification</string>
     <string name="profile_support_notification">Receive workout reminders</string>
     <string name="profile_intelligence_artificial">Activate Artificial Intelligence</string>
     <string name="profile_support_ai">Allow Treine+ to use artificial intelligence to suggest workouts and personalize your experience</string>
-
+    <string name="notification_title">Welcome to Train More!</string>
+    <string name="notification_message">Notifications have been enabled</string>
+    <string name="ai_title_activated">Artificial intelligence activated</string>
+    <string name="ai_title_deactivated">Artificial intelligence deactivated</string>
+    <string name="profile_notification_disabled">Disable notifications in the app settings</string>
+    
 </resources>

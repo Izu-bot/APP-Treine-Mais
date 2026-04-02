@@ -32,7 +32,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.izubot.treinemais.data.local.SessionManager
+import com.izubot.treinemais.data.local.helpers.SessionManager
 import com.izubot.treinemais.ui.home.Home
 import com.izubot.treinemais.ui.profile.Profile
 import kotlinx.coroutines.flow.collectLatest

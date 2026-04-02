@@ -1,0 +1,130 @@
+package com.izubot.treinemais.data.local.datasource
+
+import android.content.Context
+import android.util.Base64
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import com.google.crypto.tink.Aead
+import com.google.crypto.tink.KeyTemplates
+import com.google.crypto.tink.RegistryConfiguration
+import com.google.crypto.tink.aead.AeadConfig
+import com.google.crypto.tink.integration.android.AndroidKeysetManager
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "treine_mais_secure_prefs")
+
+class DataStorePrefs(private val context: Context) {
+
+    companion object {
+        private val ACCESS_TOKEN = stringPreferencesKey("access_token")
+        private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
+        private val THEME_MODE = booleanPreferencesKey("theme_mode")
+        private val NOTIFICATION_ENABLED = booleanPreferencesKey("notification_enabled")
+        private val AI_ENABLED = booleanPreferencesKey("ai_enabled")
+        private val PROFILE_IMAGE_URI = stringPreferencesKey("profile_image_uri")
+    }
+
+    private val aead: Aead by lazy {
+        AeadConfig.register()
+        AndroidKeysetManager.Builder()
+            .withKeyTemplate(KeyTemplates.get("AES256_GCM"))
+            .withSharedPref(context, "token_keyset", "token_keyset_prefs")
+            .withMasterKeyUri("android-keystore://token_master_key")
+            .build()
+            .keysetHandle
+            .getPrimitive(RegistryConfiguration.get(), Aead::class.java)
+    }
+
+    val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[ACCESS_TOKEN] != null && prefs[REFRESH_TOKEN] != null
+    }
+
+    val tokens: Flow<Pair<String?, String?>> = context.dataStore.data.map { prefs ->
+        val access = prefs[ACCESS_TOKEN]?.decrypt()
+        val refresh = prefs[REFRESH_TOKEN]?.decrypt()
+        access to refresh
+    }
+
+    suspend fun saveTokens(accessToken: String, refreshToken: String) {
+        context.dataStore.edit { pref ->
+            pref[ACCESS_TOKEN] = accessToken.encrypt()
+            pref[REFRESH_TOKEN] = refreshToken.encrypt()
+        }
+    }
+
+    suspend fun clearTokens() {
+        context.dataStore.edit { pref ->
+            pref.remove(ACCESS_TOKEN)
+            pref.remove(REFRESH_TOKEN)
+        }
+    }
+
+    private fun String.encrypt(): String {
+        val encrypted = aead.encrypt(toByteArray(), null)
+        return Base64.encodeToString(encrypted, Base64.NO_WRAP)
+    }
+
+    private fun String.decrypt(): String {
+        return try {
+            val decoded = Base64.decode(this, Base64.NO_WRAP)
+            String(aead.decrypt(decoded, null))
+        } catch (e: Exception) { "" }
+    }
+
+    // Caches (Hot Data)
+    private val _imageUrlCache = MutableStateFlow("")
+    val imageUrlCache: StateFlow<String> = _imageUrlCache.asStateFlow()
+
+    private val _themeCache = MutableStateFlow(false)
+    val themeCache: StateFlow<Boolean> = _themeCache.asStateFlow()
+
+    private val _notificationCache = MutableStateFlow(false)
+    val notificationCache: StateFlow<Boolean> = _notificationCache.asStateFlow()
+
+    private val _aiCache = MutableStateFlow(false)
+    val aiCache: StateFlow<Boolean> = _aiCache.asStateFlow()
+
+    suspend fun saveThemePrefs(themeMode: Boolean) {
+        _themeCache.value = themeMode
+        context.dataStore.edit { it[THEME_MODE] = themeMode }
+    }
+
+    suspend fun saveNotificationPref(isEnabled: Boolean) {
+        _notificationCache.value = isEnabled
+        context.dataStore.edit { it[NOTIFICATION_ENABLED] = isEnabled }
+    }
+
+    suspend fun saveAiPref(isEnabled: Boolean) {
+        _aiCache.value = isEnabled
+        context.dataStore.edit { it[AI_ENABLED] = isEnabled }
+    }
+
+    suspend fun saveImageUri(imageUri: String) {
+        _imageUrlCache.value = imageUri
+        context.dataStore.edit { it[PROFILE_IMAGE_URI] = imageUri }
+    }
+
+    val getThemePref: Flow<Boolean> = context.dataStore.data.map { it[THEME_MODE] ?: false }.onEach { _themeCache.value = it }
+    val getNotificationPref: Flow<Boolean> = context.dataStore.data.map { it[NOTIFICATION_ENABLED] ?: false }.onEach { _notificationCache.value = it }
+    val getAiPref: Flow<Boolean> = context.dataStore.data.map { it[AI_ENABLED] ?: false }.onEach { _aiCache.value = it }
+    val getImageUri: Flow<String> = context.dataStore.data.map { it[PROFILE_IMAGE_URI] ?: "" }.onEach { _imageUrlCache.value = it }
+
+    suspend fun preload() {
+        context.dataStore.data.first().let { pref ->
+            _imageUrlCache.value = pref[PROFILE_IMAGE_URI] ?: ""
+            _themeCache.value = pref[THEME_MODE] ?: false
+            _notificationCache.value = pref[NOTIFICATION_ENABLED] ?: false
+            _aiCache.value = pref[AI_ENABLED] ?: false
+        }
+    }
+}

@@ -3,7 +3,7 @@ package com.izubot.treinemais.ui.login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.izubot.treinemais.data.local.TokenManager
+import com.izubot.treinemais.data.local.datasource.DataStorePrefs
 import com.izubot.treinemais.domain.abstraction.ValidationResult
 import com.izubot.treinemais.domain.usecase.ConfirmEmailUseCase
 import com.izubot.treinemais.domain.usecase.LoginUseCase
@@ -24,7 +24,7 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val validatePasswordConfirmationUseCase: ValidatePasswordConfirmationUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
-    private val tokenManager: TokenManager
+    private val dataStorePrefs: DataStorePrefs
 ) : ViewModel() {
 
     private val _toastEvent = Channel<String>()
@@ -93,7 +93,7 @@ class LoginViewModel @Inject constructor(
 
             loginUseCase(_state.value)
                 .onSuccess { token ->
-                    tokenManager.saveTokens(token.accessToken, token.refreshToken)
+                    dataStorePrefs.saveTokens(token.accessToken, token.refreshToken)
                     onSuccess()
                     Log.d("Login", "Login success")
                 }

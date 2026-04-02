@@ -69,6 +69,10 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation("com.google.crypto.tink:tink-android:1.20.0")
 
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.coil.svg)

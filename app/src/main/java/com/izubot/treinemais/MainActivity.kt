@@ -8,18 +8,21 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.izubot.treinemais.data.local.SessionManager
-import com.izubot.treinemais.data.local.TokenManager
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import com.izubot.treinemais.data.local.helpers.SessionManager
+import com.izubot.treinemais.data.local.datasource.DataStorePrefs
 import com.izubot.treinemais.ui.navigation.RootNavigation
 import com.izubot.treinemais.ui.theme.TreineMaisTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     
     @Inject
-    lateinit var tokenManager: TokenManager
+    lateinit var dataStorePrefs: DataStorePrefs
     @Inject
     lateinit var sessionManager: SessionManager
     
@@ -28,14 +31,23 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        lifecycleScope.launch {
+            dataStorePrefs.preload()
+        }
+
         deepLinkIntent = intent
 
         setContent {
 //            val isLoggedIn by tokenManager.isLoggedIn.collectAsState(initial = false)
 
+            val isDynamicTheme by dataStorePrefs.getThemePref.collectAsStateWithLifecycle(initialValue = false)
+
             val isLoggedIn by remember { mutableStateOf(true) }
             
-            TreineMaisTheme {
+            TreineMaisTheme(
+                dynamicColor = isDynamicTheme
+            ) {
                 RootNavigation(
                     isLoggedIn = isLoggedIn,
                     sessionManager = sessionManager,

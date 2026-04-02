@@ -1,7 +1,6 @@
 package com.izubot.treinemais.ui.splash
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,8 +14,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -26,22 +25,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.izubot.treinemais.R
-import kotlinx.coroutines.delay
 
 @Composable
 @Preview
 fun Splash(
     modifier: Modifier = Modifier,
-    onSplashFinished: () -> Unit = {}
+    onSplashFinished: () -> Unit = {},
+    splashViewModel: SplashViewModel = hiltViewModel<SplashViewModel>()
 ) {
 
-    val currentOnSplashFinished by rememberUpdatedState(onSplashFinished)
+    val isReady by splashViewModel.isReady.collectAsState()
 
-    // Enquanto a API não é implementada
-    LaunchedEffect(key1 = true) {
-        delay(2500L)
-        currentOnSplashFinished()
+    LaunchedEffect(isReady) {
+        if (isReady) {
+            onSplashFinished()
+        }
     }
 
     Column(
