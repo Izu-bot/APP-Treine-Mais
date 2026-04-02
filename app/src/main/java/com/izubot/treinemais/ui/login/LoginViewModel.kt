@@ -1,15 +1,19 @@
 package com.izubot.treinemais.ui.login
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.izubot.treinemais.data.local.TokenManager
+import com.izubot.treinemais.R
+import com.izubot.treinemais.data.local.datasource.DataStorePrefs
 import com.izubot.treinemais.domain.abstraction.ValidationResult
 import com.izubot.treinemais.domain.usecase.ConfirmEmailUseCase
 import com.izubot.treinemais.domain.usecase.LoginUseCase
 import com.izubot.treinemais.domain.usecase.ValidateEmailUseCase
 import com.izubot.treinemais.domain.usecase.ValidatePasswordConfirmationUseCase
+import com.izubot.treinemais.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,15 +24,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    @param:ApplicationContext private val context: Context,
     private val confirmEmailUseCase: ConfirmEmailUseCase,
     private val loginUseCase: LoginUseCase,
     private val validatePasswordConfirmationUseCase: ValidatePasswordConfirmationUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
-    private val tokenManager: TokenManager
+    private val dataStorePrefs: DataStorePrefs
 ) : ViewModel() {
 
-    private val _toastEvent = Channel<String>()
-    val toastEvent = _toastEvent.receiveAsFlow()
+    private val _channel = Channel<UiEvent>()
+    val channel = _channel.receiveAsFlow()
 
     private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
@@ -58,13 +63,6 @@ class LoginViewModel @Inject constructor(
 
     }
 
-    /**
-     * Validates the current email stored in the view state and updates related error fields.
-     *
-     * Updates `emailError` and `errorEmailMessage` in the state based on the validation result.
-     *
-     * @return `true` if the current email is valid, `false` otherwise.
-     */
     fun onValidateEmail() : Boolean {
         val result = validateEmailUseCase(_state.value.email)
 
@@ -78,26 +76,17 @@ class LoginViewModel @Inject constructor(
         return result is ValidationResult.Success
     }
 
-
-    /**
-     * Attempts to authenticate using the current LoginState, saves received tokens on success, and invokes the provided callback.
-     *
-     * While the request is in progress the view state is updated to indicate loading. On successful authentication the access
-     * and refresh tokens are saved via TokenManager and `onSuccess` is invoked; on failure no tokens are saved and the callback is not invoked.
-     *
-     * @param onSuccess Callback executed after tokens have been persisted following a successful login.
-     */
     fun login(onSuccess: () -> Unit) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
             loginUseCase(_state.value)
                 .onSuccess { token ->
-                    tokenManager.saveTokens(token.accessToken, token.refreshToken)
+                    dataStorePrefs.saveTokens(token.accessToken, token.refreshToken)
                     onSuccess()
-                    Log.d("Login", "Login success")
                 }
                 .onFailure { error ->
+                    _channel.send(UiEvent.Toast(context.getString(R.string.login_error_message)))
                     Log.d("Login", "Login error: ${error.message}")
                 }
 
@@ -109,11 +98,11 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             confirmEmailUseCase(token)
                 .onSuccess {
-                    _toastEvent.send("Email confirmado")
+                    _channel.send(UiEvent.Toast(context.getString(R.string.login_email_verificate)))
                 }
                 .onFailure { error ->
                     Log.d("Login", "$error")
-                    _toastEvent.send("Falha ao confirmar o email")
+                    _channel.send(UiEvent.Toast(context.getString(R.string.login_error_email)))
                 }
         }
     }

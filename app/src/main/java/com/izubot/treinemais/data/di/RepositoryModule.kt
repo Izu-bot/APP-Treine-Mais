@@ -3,7 +3,9 @@ package com.izubot.treinemais.data.di
 import com.izubot.treinemais.data.remote.datasource.AuthRemoteDataSource
 import com.izubot.treinemais.data.remote.datasource.AuthRemoteDataSourceImpl
 import com.izubot.treinemais.data.repository.AuthRepositoryImpl
+import com.izubot.treinemais.data.repository.PrefsRepositoryImpl
 import com.izubot.treinemais.domain.repository.AuthRepository
+import com.izubot.treinemais.domain.repository.PrefsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -26,4 +28,9 @@ abstract class RepositoryModule {
         impl: AuthRemoteDataSourceImpl
     ): AuthRemoteDataSource
 
+    @Binds
+    @Singleton
+    abstract fun bindPrefsRepository(
+        impl: PrefsRepositoryImpl
+    ): PrefsRepository
 }

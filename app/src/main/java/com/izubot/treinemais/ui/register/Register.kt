@@ -1,5 +1,6 @@
 package com.izubot.treinemais.ui.register
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -48,7 +49,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -62,6 +63,8 @@ import com.izubot.treinemais.ui.components.ButtonComponent
 import com.izubot.treinemais.ui.components.GoalsCard
 import com.izubot.treinemais.ui.components.OutlinedTextFieldComponent
 import com.izubot.treinemais.ui.components.VisualCard
+import com.izubot.treinemais.utils.UiEvent
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -76,10 +79,21 @@ fun Register(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val interactionSource = remember { MutableInteractionSource() }
+    val context = LocalContext.current
 
 
     LaunchedEffect(uiState.currentStep) {
         pagerState.animateScrollToPage(uiState.currentStep)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.channel.collectLatest { event ->
+            when (event) {
+                is UiEvent.Toast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     Column(
@@ -178,9 +192,10 @@ fun Register(
                             val isEmailValid = viewModel.onValidateEmail()
                             val isPasswordValid = viewModel.onValidatePassword()
 
-                            if (isEmailValid && isPasswordValid) {
-                                viewModel.register()
-                                onNavigateToConfirm()
+                            if (isEmailValid && isPasswordValid && !uiState.isError) {
+                                viewModel.register().runCatching {
+                                    onNavigateToConfirm()
+                                }
                             }
                         }
                     }

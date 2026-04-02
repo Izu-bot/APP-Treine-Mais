@@ -5,13 +5,15 @@ import com.izubot.treinemais.ui.register.Goals
 import java.time.LocalDate
 
 data class ProfileUiState(
-    val name: String = "Kauan Martins Cardoso",
+    val name: String = "Kauan",
     val email: String = "kauan@gmail.com",
-    val gender: Gender? = null,
-    val goals: Goals? = null,
+    val gender: String? = null,
+    val goals: String? = null,
     val birthDate: LocalDate? = null,
     val showDatePicker: Boolean = false,
     val themeCheck: Boolean = false,
     val notificationCheck: Boolean = false,
-    val isAiEnabled: Boolean = false
+    val isAiEnabled: Boolean = false,
+    val imageUri: String = "",
+    val isLoading: Boolean = true
 )

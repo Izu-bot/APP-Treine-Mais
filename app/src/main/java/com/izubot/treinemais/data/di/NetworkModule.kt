@@ -1,7 +1,7 @@
 package com.izubot.treinemais.data.di
 
 import android.content.Context
-import com.izubot.treinemais.data.local.TokenManager
+import com.izubot.treinemais.data.local.datasource.DataStorePrefs
 import com.izubot.treinemais.data.remote.api.AuthApi
 import com.izubot.treinemais.data.remote.interceptors.AuthInterceptor
 import com.izubot.treinemais.data.remote.interceptors.TokenAuthenticator
@@ -147,7 +147,7 @@ object NetworkModule {
      */
     @Provides
     @Singleton
-    fun provideTokenManager(@ApplicationContext context: Context): TokenManager {
-        return TokenManager(context)
+    fun provideTokenManager(@ApplicationContext context: Context): DataStorePrefs {
+        return DataStorePrefs(context)
     }
 }

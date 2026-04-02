@@ -13,13 +13,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
 fun HomeHeaderComponent(
+    imageUrl: String = "",
+    userName: String = "",
     isNotificationActive: Boolean = false,
     onNavigateToProfile: () -> Unit = {},
     onNavigateToNotified: () -> Unit = {}
@@ -29,13 +29,15 @@ fun HomeHeaderComponent(
         title = {},
         navigationIcon = {
             PerfilComponent(
+                imageUrl = imageUrl,
+                userName = userName,
                 modifier = Modifier.padding(start = 8.dp),
                 onPerfilClick = { onNavigateToProfile() }
             )
         },
         actions = {
             IconButton(
-                onClick = { onNavigateToNotified }
+                onClick = { onNavigateToNotified() }
             ) {
                 if (isNotificationActive) {
                     Image(

@@ -22,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.izubot.treinemais.R
@@ -32,7 +31,6 @@ import com.izubot.treinemais.ui.components.HomeHeaderComponent
 import com.izubot.treinemais.ui.components.WidgetComponent
 
 @Composable
-@Preview
 fun Home(
     onNavigateToProfile: () -> Unit = {},
     homeViewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
@@ -43,6 +41,8 @@ fun Home(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         HomeHeaderComponent(
+            imageUrl = state.imageUri,
+            userName = state.nameUser,
             onNavigateToProfile = onNavigateToProfile
         )
 
@@ -56,7 +56,7 @@ fun Home(
         ) {
             Row {
                 Text(
-                    text = homeViewModel.greet(),
+                    text = state.greeting,
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold
@@ -65,7 +65,7 @@ fun Home(
                 Spacer(modifier = Modifier.width(6.dp))
 
                 Text(
-                    text = state.nameUser,
+                    text = ", " + state.nameUser.substringBefore(" "),
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.tertiary,
                     fontWeight = FontWeight.Bold,

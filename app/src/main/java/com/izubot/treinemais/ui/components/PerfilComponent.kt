@@ -31,12 +31,12 @@ import coil3.compose.AsyncImage
 fun PerfilComponent(
     modifier: Modifier = Modifier,
     imageUrl: String = "",
-    userName: String = "User",
+    userName: String = "",
     size: Dp = 56.dp,
     onPerfilClick: () -> Unit = {},
     editable: Boolean = false
 ) {
-    val avatarFallback = "https://ui-avatars.com/api/?name=${userName}&background=random"
+    val avatarFallback = "https://ui-avatars.com/api/?name=${userName}&size=512"
 
     Box(
         modifier = Modifier.size(size),

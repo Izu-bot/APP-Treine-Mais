@@ -1,4 +1,4 @@
-package com.izubot.treinemais.data.local
+package com.izubot.treinemais.data.local.helpers
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

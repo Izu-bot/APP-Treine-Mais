@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.izubot.treinemais.data.local.SessionManager
+import com.izubot.treinemais.data.local.helpers.SessionManager
 import com.izubot.treinemais.ui.splash.Splash
 import kotlinx.serialization.Serializable
 

@@ -46,6 +46,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.ButtonComponent
 import com.izubot.treinemais.ui.components.OutlinedTextFieldComponent
+import com.izubot.treinemais.utils.UiEvent
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun Login(
@@ -68,13 +70,15 @@ fun Login(
         }
     }
 
-    LaunchedEffect(Unit) { loginViewModel.toastEvent.collect { event ->
-        when (event) {
-            is String -> {
-                Toast.makeText(context, event, Toast.LENGTH_SHORT).show()
+    LaunchedEffect(Unit) {
+        loginViewModel.channel.collectLatest { event ->
+            when (event) {
+                is UiEvent.Toast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
-    } }
+    }
 
     Column(
         modifier = modifier
