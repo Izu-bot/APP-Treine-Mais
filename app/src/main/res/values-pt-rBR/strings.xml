@@ -80,7 +80,7 @@
     <string name="welcome_good_morning">Bom dia</string>
     <string name="welcome_good_afternoon">Boa tarde</string>
     <string name="welcome_good_night">Boa noite</string>
-    <string name="profile_logout">Encerrar sessã</string>
+    <string name="profile_logout">Encerrar sessão</string>
     <string name="profile_logout_title">Sair do Treine+</string>
     <string name="profile_logout_message">Tem certeza de que deseja sair?</string>
     <string name="profile_logout_cancel">Cancelar</string>
