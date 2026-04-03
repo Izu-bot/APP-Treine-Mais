@@ -119,7 +119,7 @@ fun AppSettings(
                                 // Já tem permissão
                                 isPermissionGranted -> onSwitchNotification()
 
-                                // Android deve mostrar rationale
+                                // Android deve mostrar rationale (usuário negou mas não bloqueou)
                                 activity != null && ActivityCompat.shouldShowRequestPermissionRationale(
                                     activity,
                                     Manifest.permission.POST_NOTIFICATIONS
@@ -127,11 +127,9 @@ fun AppSettings(
                                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                                 }
 
-                                // Nunca pediu OU negou permanentemente
+                                // Primeira vez OU Negado permanentemente
                                 else -> {
-                                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                                    intent.data = "package:${context.packageName}".toUri()
-                                    context.startActivity(intent)
+                                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                                 }
                             }
                         } else {
