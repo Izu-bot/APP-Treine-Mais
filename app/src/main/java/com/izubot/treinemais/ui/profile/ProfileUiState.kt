@@ -15,5 +15,7 @@ data class ProfileUiState(
     val notificationCheck: Boolean = false,
     val isAiEnabled: Boolean = false,
     val imageUri: String = "",
-    val isLoading: Boolean = true
+    val isLoading: Boolean = false,
+    val showDialog: Boolean = false,
+    val isLogout: Boolean = false
 )

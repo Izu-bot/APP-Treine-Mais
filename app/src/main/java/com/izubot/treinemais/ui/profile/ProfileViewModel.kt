@@ -7,10 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.izubot.treinemais.R
 import com.izubot.treinemais.data.local.helpers.NotificationHelper
+import com.izubot.treinemais.data.local.helpers.SessionManager
 import com.izubot.treinemais.domain.usecase.GetAiUseCase
 import com.izubot.treinemais.domain.usecase.GetNotificationUseCase
 import com.izubot.treinemais.domain.usecase.GetThemeUseCase
 import com.izubot.treinemais.domain.usecase.GetUserUseCase
+import com.izubot.treinemais.domain.usecase.LogoutUseCase
 import com.izubot.treinemais.domain.usecase.SaveAiUseCase
 import com.izubot.treinemais.domain.usecase.SaveNotificationUseCase
 import com.izubot.treinemais.domain.usecase.SaveProfileImage
@@ -43,7 +45,9 @@ class ProfileViewModel @Inject constructor(
     private val saveAiUseCase: SaveAiUseCase,
     private val notificationHelper: NotificationHelper,
     getUserUseCase: GetUserUseCase,
-    private val saveProfileImage: SaveProfileImage
+    private val saveProfileImage: SaveProfileImage,
+    private val logoutUseCase: LogoutUseCase,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
     private val _channel = Channel<UiEvent>()
     val channel = _channel.receiveAsFlow()
@@ -58,7 +62,6 @@ class ProfileViewModel @Inject constructor(
         getAiUseCase.aiCache,
     ) { local, theme, notification, aiEnabled ->
         local.copy(
-            isLoading = false,
             themeCheck = theme,
             notificationCheck = notification,
             isAiEnabled = aiEnabled,
@@ -155,6 +158,32 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             saveAiUseCase(nextValue)
             _channel.send(UiEvent.Toast(if (nextValue) context.getString(R.string.ai_title_activated) else context.getString(R.string.ai_title_deactivated)))
+        }
+    }
+
+    fun onShowDialog() {
+        _localState.update { it.copy(showDialog = true) }
+    }
+
+    fun onDismissDialog() {
+        _localState.update { it.copy(showDialog = false) }
+    }
+
+    fun onLogout() {
+        if (_localState.value.isLoading) return
+
+        viewModelScope.launch {
+            _localState.update { it.copy(isLoading = true, showDialog = false) }
+            try {
+                logoutUseCase()
+            } catch (e: Exception)
+            {
+                Log.e("ProfileViewModel", "Erro ao deslogar na API", e)
+            } finally {
+                sessionManager.triggerSessionExpired()
+                _localState.update { it.copy(isLogout = true, isLoading = false) }
+                _channel.send(UiEvent.Toast(context.getString(R.string.profile_logout_success)))
+            }
         }
     }
 }

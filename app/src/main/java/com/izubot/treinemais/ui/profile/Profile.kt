@@ -212,6 +212,13 @@ fun Profile(
                     context = context,
                     permissionLauncher = permissionLauncher
                 )
+
+                LogoutComponent(
+                    state = state,
+                    onShowDialog = { profileViewModel.onShowDialog() },
+                    onDismiss = { profileViewModel.onDismissDialog() },
+                    onLogout = { profileViewModel.onLogout() }
+                )
             }
         }
     }

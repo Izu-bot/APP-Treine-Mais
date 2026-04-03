@@ -7,14 +7,9 @@ import javax.inject.Singleton
 
 @Singleton
 class SessionManager @Inject constructor() {
-    private val _sessionExpired = MutableSharedFlow<Unit>(replay = 0, extraBufferCapacity = 0)
+    private val _sessionExpired = MutableSharedFlow<Unit>(replay = 0, extraBufferCapacity = 1)
     val sessionExpired = _sessionExpired.asSharedFlow()
 
-    /**
-     * Signals that the current session has expired.
-     *
-     * Emits an expiration event that subscribers of `sessionExpired` can observe.
-     */
     fun triggerSessionExpired() {
         _sessionExpired.tryEmit(Unit)
     }

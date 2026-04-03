@@ -10,8 +10,7 @@ class LogoutUseCase @Inject constructor(
     private val dataStorePrefs: DataStorePrefs
 ) {
     suspend operator fun invoke(): Result<String> {
-        val refreshToken = dataStorePrefs.tokens.first().first
-
+        val refreshToken = dataStorePrefs.tokens.first().second
         return try {
             if (refreshToken.isNullOrBlank()) {
                 Result.success("Refresh token not found")
