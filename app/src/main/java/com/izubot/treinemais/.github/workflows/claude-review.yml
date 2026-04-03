@@ -1,0 +1,30 @@
+name: Claude PR Review
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  claude-code-review:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          direct_prompt: |
+            Você é um revisor de código sênior focado em ajudar o desenvolvedor a evoluir.
+            Ao revisar este PR:
+            - Explique o PORQUÊ dos problemas, não só o que mudar
+            - Classifique claramente: CRÍTICO / SUGESTÃO / NITPICK
+            - Evite alarmes falsos — só aponte problemas reais com justificativa sólida
+            - Se algo estiver bem feito, diga também
+            Responda em português.
