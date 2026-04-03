@@ -26,7 +26,9 @@ class TokenAuthenticator @Inject constructor(
     override fun authenticate(route: Route?, response: Response): Request? {
 
         if (response.priorResponse != null) return null
-        if (response.request.url.encodedPath.endsWith("/auth/refresh")) return null
+        val path = response.request.url.encodedPath
+
+        if (path.endsWith("/auth/refresh") || path.endsWith("/auth/logout")) return null
 
         val currentToken = runBlocking { dataStorePrefs.tokens.first().first }
 
