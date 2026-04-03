@@ -1,6 +1,8 @@
 package com.izubot.treinemais.ui.navigation
 
 import android.content.Intent
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -19,6 +21,7 @@ import kotlinx.serialization.Serializable
     @Serializable data object Main : RootRoute()
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun RootNavigation(
     isLoggedIn: Boolean,
