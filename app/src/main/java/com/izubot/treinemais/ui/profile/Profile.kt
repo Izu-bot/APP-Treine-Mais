@@ -70,6 +70,12 @@ fun Profile(
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
+    var isPermissionGranted by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
@@ -77,6 +83,8 @@ fun Profile(
                     context,
                     Manifest.permission.POST_NOTIFICATIONS
                 ) == PackageManager.PERMISSION_GRANTED
+
+                isPermissionGranted = currentPermissionStatus
 
                 if (currentPermissionStatus != state.notificationCheck) {
                     profileViewModel.onSwitchNotification()
@@ -88,12 +96,6 @@ fun Profile(
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
-    }
-
-    var isPermissionGranted by remember {
-        mutableStateOf(
-            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
-        )
     }
 
     LaunchedEffect(Unit) {
@@ -200,13 +202,7 @@ fun Profile(
                 AppSettings(
                     uiState = state,
                     onSwitchTheme = { profileViewModel.onSwitchTheme() },
-                    onSwitchNotification = {
-                        if (!state.notificationCheck) {
-                            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                        } else {
-                            profileViewModel.onSwitchNotification()
-                        }
-                    },
+                    onSwitchNotification = { profileViewModel.onSwitchNotification() },
                     onSwitchAiMode = { profileViewModel.onSwitchAiMode() },
                     isPermissionGranted = isPermissionGranted,
                     context = context,
