@@ -36,6 +36,7 @@ import androidx.core.net.toUri
 import com.izubot.treinemais.BuildConfig
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.AppInformation
+import androidx.core.content.edit
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
@@ -119,7 +120,7 @@ fun AppSettings(
                                 // Já tem permissão
                                 isPermissionGranted -> onSwitchNotification()
 
-                                // Android deve mostrar rationale
+                                // Android deve mostrar rationale (usuário negou, mas não bloqueou)
                                 activity != null && ActivityCompat.shouldShowRequestPermissionRationale(
                                     activity,
                                     Manifest.permission.POST_NOTIFICATIONS
@@ -127,15 +128,25 @@ fun AppSettings(
                                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                                 }
 
-                                // Nunca pediu OU negou permanentemente
+                                // Primeira vez OU Negado permanentemente
                                 else -> {
-                                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                                    intent.data = "package:${context.packageName}".toUri()
-                                    context.startActivity(intent)
+                                    val preferences = context.getSharedPreferences("app_terms", Context.MODE_PRIVATE)
+                                    val hasAskedBefore = preferences.getBoolean("notification_asked", false)
+
+                                    if (hasAskedBefore) {
+                                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                        val uri = "package:${context.packageName}".toUri()
+                                        intent.data = uri
+                                        context.startActivity(intent)
+                                    } else {
+                                        preferences.edit { putBoolean("notification_asked", true) }
+                                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                    }
                                 }
                             }
                         } else {
                             Toast.makeText(context, R.string.profile_notification_disabled , Toast.LENGTH_SHORT).show()
+                            onSwitchNotification()
                         }
                     }
                 )

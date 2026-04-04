@@ -18,9 +18,16 @@ jobs:
       pull-requests: write
       issues: write
     steps:
-      - uses: anthropics/claude-code-action@beta
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Claude PR Review
+        uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           direct_prompt: |
             Você é um revisor de código sênior focado em ajudar o desenvolvedor a evoluir.
             Ao revisar este PR:
