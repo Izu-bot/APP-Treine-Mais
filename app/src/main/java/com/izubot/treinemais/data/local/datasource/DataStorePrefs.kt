@@ -13,17 +13,19 @@ import com.google.crypto.tink.KeyTemplates
 import com.google.crypto.tink.RegistryConfiguration
 import com.google.crypto.tink.aead.AeadConfig
 import com.google.crypto.tink.integration.android.AndroidKeysetManager
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "treine_mais_secure_prefs")
 
-class DataStorePrefs(private val context: Context) {
+class DataStorePrefs(
+    private val context: Context,
+    scope: CoroutineScope
+) {
 
     companion object {
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
@@ -73,47 +75,36 @@ class DataStorePrefs(private val context: Context) {
         return Base64.encodeToString(encrypted, Base64.NO_WRAP)
     }
 
-    private fun String.decrypt(): String {
+    private fun String.decrypt(): String? {
         return try {
             val decoded = Base64.decode(this, Base64.NO_WRAP)
             String(aead.decrypt(decoded, null))
-        } catch (e: Exception) { "$e" }
+        } catch (_: Exception) {
+            null
+        }
     }
 
-    // Caches (Hot Data)
-    private val _themeCache = MutableStateFlow(false)
-    val themeCache: StateFlow<Boolean> = _themeCache.asStateFlow()
+    val themeCache: StateFlow<Boolean> = context.dataStore.data
+        .map { it[THEME_MODE] ?: false }
+        .stateIn(scope, SharingStarted.WhileSubscribed(5000), false)
 
-    private val _notificationCache = MutableStateFlow(false)
-    val notificationCache: StateFlow<Boolean> = _notificationCache.asStateFlow()
+    val notificationCache: StateFlow<Boolean> = context.dataStore.data
+        .map { it[NOTIFICATION_ENABLED] ?: false }
+        .stateIn(scope, SharingStarted.WhileSubscribed(5000), false)
 
-    private val _aiCache = MutableStateFlow(false)
-    val aiCache: StateFlow<Boolean> = _aiCache.asStateFlow()
-
+    val aiCache: StateFlow<Boolean> = context.dataStore.data
+        .map { it[AI_ENABLED] ?: false }
+        .stateIn(scope, SharingStarted.WhileSubscribed(5000), false)
     suspend fun saveThemePrefs(themeMode: Boolean) {
-        _themeCache.value = themeMode
         context.dataStore.edit { it[THEME_MODE] = themeMode }
     }
 
     suspend fun saveNotificationPref(isEnabled: Boolean) {
-        _notificationCache.value = isEnabled
         context.dataStore.edit { it[NOTIFICATION_ENABLED] = isEnabled }
     }
 
     suspend fun saveAiPref(isEnabled: Boolean) {
-        _aiCache.value = isEnabled
         context.dataStore.edit { it[AI_ENABLED] = isEnabled }
     }
 
-    val getThemePref: Flow<Boolean> = context.dataStore.data.map { it[THEME_MODE] ?: false }.onEach { _themeCache.value = it }
-    val getNotificationPref: Flow<Boolean> = context.dataStore.data.map { it[NOTIFICATION_ENABLED] ?: false }.onEach { _notificationCache.value = it }
-    val getAiPref: Flow<Boolean> = context.dataStore.data.map { it[AI_ENABLED] ?: false }.onEach { _aiCache.value = it }
-
-    suspend fun preload() {
-        context.dataStore.data.first().let { pref ->
-            _themeCache.value = pref[THEME_MODE] ?: false
-            _notificationCache.value = pref[NOTIFICATION_ENABLED] ?: false
-            _aiCache.value = pref[AI_ENABLED] ?: false
-        }
-    }
 }

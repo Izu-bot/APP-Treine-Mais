@@ -57,28 +57,24 @@ class ProfileViewModel @Inject constructor(
     private val _localState = MutableStateFlow(ProfileUiState())
     val state: StateFlow<ProfileUiState> = combine(
         _localState,
-        getThemeUseCase.themeCache,
-        getNotificationUseCase.notificationCache,
-        getAiUseCase.aiCache,
-    ) { local, theme, notification, aiEnabled ->
+        getThemeUseCase(),
+        getNotificationUseCase(),
+        getAiUseCase(),
+        _dbUserFlow,
+    ) { local, theme, notification, ai, dbUser ->
         local.copy(
             themeCheck = theme,
             notificationCheck = notification,
-            isAiEnabled = aiEnabled,
-        )
-    }.combine( _dbUserFlow ) { stateSoFar, dbUser ->
-        stateSoFar.copy(
-            name = dbUser?.fullName ?: stateSoFar.name,
-            email = dbUser?.email ?: stateSoFar.email,
-            gender = dbUser?.gender ?: stateSoFar.gender,
-            birthDate = dbUser?.birthDate?.takeIf { it != "null" && it.isNotBlank() }?.let {
+            isAiEnabled = ai,
+            name = dbUser?.fullName ?: local.name,
+            email = dbUser?.email ?: local.email,
+            gender = dbUser?.gender ?: local.gender,
+            birthDate = dbUser?.birthDate.takeIf { it != "null" && it!!.isNotBlank() }?.let {
                 runCatching { LocalDate.parse(it) }.getOrNull()
-            } ?: stateSoFar.birthDate,
-            goals = stateSoFar.goals,
-            imageUri = dbUser?.localPhotoPath ?: stateSoFar.imageUri
+            } ?: local.birthDate,
+            imageUri = dbUser?.localPhotoPath ?: local.imageUri
         )
-    }
-        .stateIn(
+    }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Eagerly,
         initialValue = _localState.value

@@ -6,9 +6,9 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.izubot.treinemais.data.local.helpers.SessionManager
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val isLoggedIn by dataStorePrefs.isLoggedIn.collectAsStateWithLifecycle(initialValue = false)
 
-            val isDynamicTheme by dataStorePrefs.getThemePref.collectAsStateWithLifecycle(initialValue = false)
+            val isDynamicTheme by dataStorePrefs.themeCache.collectAsState()
 
 //            val isLoggedIn by remember { mutableStateOf(true) }
             
