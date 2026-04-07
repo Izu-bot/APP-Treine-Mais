@@ -75,11 +75,13 @@ class DataStorePrefs(
         return Base64.encodeToString(encrypted, Base64.NO_WRAP)
     }
 
-    private fun String.decrypt(): String {
+    private fun String.decrypt(): String? {
         return try {
             val decoded = Base64.decode(this, Base64.NO_WRAP)
             String(aead.decrypt(decoded, null))
-        } catch (e: Exception) { "Error decrypting token: ${e.message}" }
+        } catch (_: Exception) {
+            null
+        }
     }
 
     val themeCache: StateFlow<Boolean> = context.dataStore.data
