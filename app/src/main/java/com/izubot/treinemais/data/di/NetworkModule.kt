@@ -11,6 +11,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -143,11 +146,26 @@ object NetworkModule {
      * Provides a TokenManager initialized with the application context.
      *
      * @param context The application Context used to construct the TokenManager.
+     * @param scope The CoroutineScope used for DataStore operations.
      * @return A TokenManager instance configured with the provided context.
      */
     @Provides
     @Singleton
-    fun provideTokenManager(@ApplicationContext context: Context): DataStorePrefs {
-        return DataStorePrefs(context)
+    fun provideTokenManager(
+        @ApplicationContext context: Context,
+        scope: CoroutineScope
+    ): DataStorePrefs {
+        return DataStorePrefs(context, scope)
+    }
+
+    /**
+     * Provides a singleton CoroutineScope for application-wide background tasks.
+     *
+     * @return A CoroutineScope using SupervisorJob and Dispatchers.Default.
+     */
+    @Provides
+    @Singleton
+    fun provideCoroutineScope(): CoroutineScope {
+        return CoroutineScope(SupervisorJob() + Dispatchers.Default)
     }
 }
