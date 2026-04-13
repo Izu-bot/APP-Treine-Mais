@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
         deepLinkIntent = intent
 
         setContent {
-            val isLoggedIn by dataStorePrefs.isLoggedIn.collectAsStateWithLifecycle(initialValue = false)
+            val isLoggedIn by dataStorePrefs.isLoggedIn.collectAsStateWithLifecycle(initialValue = null)
 
             val isDynamicTheme by dataStorePrefs.themeCache.collectAsState()
 

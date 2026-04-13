@@ -21,7 +21,7 @@ import kotlinx.serialization.Serializable
 
 @Composable
 fun RootNavigation(
-    isLoggedIn: Boolean,
+    isLoggedIn: Boolean?,
     sessionManager: SessionManager,
     deepLinkIntent: Intent? = null,
     navController: NavHostController = rememberNavController()
@@ -34,12 +34,15 @@ fun RootNavigation(
             Scaffold { innerPadding ->
                 Splash(
                     onSplashFinished = {
-                        val destination = if (isLoggedIn) RootRoute.Main else RootRoute.Auth
-                        navController.navigate(destination) {
-                            popUpTo(RootRoute.Splash) { inclusive = true }
+                        if (isLoggedIn != null) {
+                            val destination = if (isLoggedIn) RootRoute.Main else RootRoute.Auth
+                            navController.navigate(destination) {
+                                popUpTo(RootRoute.Splash) { inclusive = true }
+                            }
                         }
                     },
-                    modifier = Modifier.padding(innerPadding)
+                    modifier = Modifier.padding(innerPadding),
+                    isLoggedIn = isLoggedIn
                 )
             }
         }
