@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ class SplashViewModel @Inject constructor() : ViewModel() {
 
     private fun prepareAppData() {
         viewModelScope.launch {
+            delay(1000)
             _isReady.value = true
         }
     }

@@ -32,14 +32,15 @@ import com.izubot.treinemais.R
 @Preview
 fun Splash(
     modifier: Modifier = Modifier,
+    isLoggedIn: Boolean? = null,
     onSplashFinished: () -> Unit = {},
     splashViewModel: SplashViewModel = hiltViewModel<SplashViewModel>()
 ) {
 
     val isReady by splashViewModel.isReady.collectAsState()
 
-    LaunchedEffect(isReady) {
-        if (isReady) {
+    LaunchedEffect(isReady, isLoggedIn) {
+        if (isReady && isLoggedIn != null) {
             onSplashFinished()
         }
     }
