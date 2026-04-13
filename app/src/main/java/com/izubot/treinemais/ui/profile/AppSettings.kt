@@ -116,7 +116,7 @@ fun AppSettings(
                                 // Já tem permissão
                                 isPermissionGranted -> onSwitchNotification()
 
-                                Build.VERSION_CODES.TIRAMISU >= Build.VERSION.SDK_INT  -> onSwitchNotification()
+                                Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU -> onSwitchNotification()
 
                                 activity != null && ActivityCompat.shouldShowRequestPermissionRationale(
                                     activity,
