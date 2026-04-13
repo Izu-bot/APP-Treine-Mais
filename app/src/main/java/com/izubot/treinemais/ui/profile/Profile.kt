@@ -71,12 +71,14 @@ fun Profile(
     var isPermissionGranted by remember {
         mutableStateOf(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                // Android 13+ requer permissão explícita POST_NOTIFICATIONS
                 ContextCompat.checkSelfPermission(
                     context,
                     Manifest.permission.POST_NOTIFICATIONS
                 ) == PackageManager.PERMISSION_GRANTED
             } else {
-                true // Verificação implicita, Android < 13
+                // Android < 13: notificações são habilitadas por padrão
+                true
             }
         )
     }

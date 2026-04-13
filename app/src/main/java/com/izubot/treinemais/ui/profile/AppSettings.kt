@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Arrangement
@@ -83,8 +82,7 @@ fun AppSettings(
             trailingContent = {
                 Switch(
                     checked = uiState.themeCheck,
-                    onCheckedChange = { onSwitchTheme()
-                        Log.d("Tema", "${uiState.themeCheck}")}
+                    onCheckedChange = { onSwitchTheme() }
                 )
             },
             colors = ListItemDefaults.colors(
@@ -118,7 +116,7 @@ fun AppSettings(
                                 // Já tem permissão
                                 isPermissionGranted -> onSwitchNotification()
 
-                                Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU -> onSwitchNotification()
+                                Build.VERSION_CODES.TIRAMISU >= Build.VERSION.SDK_INT  -> onSwitchNotification()
 
                                 activity != null && ActivityCompat.shouldShowRequestPermissionRationale(
                                     activity,
@@ -171,8 +169,7 @@ fun AppSettings(
             trailingContent = {
                 Switch(
                     checked = uiState.isAiEnabled,
-                    onCheckedChange = { onSwitchAiMode()
-                        Log.d("Inteligência Artificial", "${uiState.isAiEnabled}") }
+                    onCheckedChange = { onSwitchAiMode() }
                 )
             }
         )
