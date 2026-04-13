@@ -9,7 +9,6 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,7 +37,6 @@ import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.AppInformation
 import androidx.core.content.edit
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun AppSettings(
     permissionLauncher: ActivityResultLauncher<String>,
@@ -120,23 +118,22 @@ fun AppSettings(
                                 // Já tem permissão
                                 isPermissionGranted -> onSwitchNotification()
 
-                                // Android deve mostrar rationale (usuário negou, mas não bloqueou)
+                                Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU -> onSwitchNotification()
+
                                 activity != null && ActivityCompat.shouldShowRequestPermissionRationale(
                                     activity,
                                     Manifest.permission.POST_NOTIFICATIONS
                                 ) -> {
                                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                                 }
-
-                                // Primeira vez OU Negado permanentemente
                                 else -> {
                                     val preferences = context.getSharedPreferences("app_terms", Context.MODE_PRIVATE)
                                     val hasAskedBefore = preferences.getBoolean("notification_asked", false)
 
                                     if (hasAskedBefore) {
-                                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                                        val uri = "package:${context.packageName}".toUri()
-                                        intent.data = uri
+                                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                            data = "package:${context.packageName}".toUri()
+                                        }
                                         context.startActivity(intent)
                                     } else {
                                         preferences.edit { putBoolean("notification_asked", true) }
