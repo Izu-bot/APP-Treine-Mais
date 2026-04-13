@@ -1,7 +1,5 @@
 package com.izubot.treinemais.ui.navigation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -39,7 +37,6 @@ import com.izubot.treinemais.ui.home.Home
 import com.izubot.treinemais.ui.profile.Profile
 import kotlinx.coroutines.flow.collectLatest
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun AppNavigation(
     sessionManager: SessionManager,
