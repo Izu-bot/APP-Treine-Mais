@@ -69,7 +69,7 @@ class ProfileViewModel @Inject constructor(
             name = dbUser?.fullName ?: local.name,
             email = dbUser?.email ?: local.email,
             gender = dbUser?.gender ?: local.gender,
-            birthDate = dbUser?.birthDate.takeIf { it != "null" && it!!.isNotBlank() }?.let {
+            birthDate = dbUser?.birthDate?.takeIf { it != "null" && it.isNotBlank() }?.let {
                 runCatching { LocalDate.parse(it) }.getOrNull()
             } ?: local.birthDate,
             imageUri = dbUser?.localPhotoPath ?: local.imageUri

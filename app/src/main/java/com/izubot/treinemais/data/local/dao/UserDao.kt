@@ -6,7 +6,6 @@ import androidx.room.Upsert
 import com.izubot.treinemais.data.local.entities.SyncStatus
 import com.izubot.treinemais.data.local.entities.User
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 interface UserDao {

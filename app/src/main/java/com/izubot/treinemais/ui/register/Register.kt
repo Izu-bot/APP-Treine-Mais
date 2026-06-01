@@ -92,6 +92,9 @@ fun Register(
                 is UiEvent.Toast -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
+                is UiEvent.Success -> {
+                    onNavigateToConfirm()
+                }
             }
         }
     }
@@ -193,9 +196,7 @@ fun Register(
                             val isPasswordValid = viewModel.onValidatePassword()
 
                             if (isEmailValid && isPasswordValid && !uiState.isError) {
-                                viewModel.register().runCatching {
-                                    onNavigateToConfirm()
-                                }
+                                viewModel.register()
                             }
                         }
                     }

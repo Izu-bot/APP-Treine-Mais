@@ -113,6 +113,7 @@ fun Profile(
                 is UiEvent.Toast -> {
                     Toast.makeText(context, evet.message, Toast.LENGTH_SHORT).show()
                 }
+                else -> Unit
             }
         }
     }

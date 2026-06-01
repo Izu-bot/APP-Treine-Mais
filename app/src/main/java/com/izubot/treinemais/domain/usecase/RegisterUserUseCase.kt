@@ -31,9 +31,9 @@ class RegisterUserUseCase @Inject constructor(
                 name = uiState.name,
                 email = uiState.email,
                 gender = uiState.selectedGender?.name ?: "",
-                birthDate = uiState.birthDate.toString(),
+                birthDate = uiState.birthDate?.toString() ?: "",
                 lastUpdatedAt = System.currentTimeMillis(),
-                isDirty = true,
+                isDirty = false,
                 syncStatus = SyncStatus.SYNCED
             )
             userRepository.insertOrUpdateUser(userLocal.toDomain())

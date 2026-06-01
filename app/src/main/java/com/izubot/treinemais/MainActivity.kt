@@ -35,13 +35,16 @@ class MainActivity : ComponentActivity() {
     
     private var deepLinkIntent by mutableStateOf<Intent?>(null)
 
+    companion object {
+        private const val SYNC_WORKER_NAME = "SyncWorkerName"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresBatteryNotLow(true)
             .build()
 
         val syncRequest = PeriodicWorkRequestBuilder<SyncWorker>(4, TimeUnit.HOURS)
@@ -49,7 +52,7 @@ class MainActivity : ComponentActivity() {
             .build()
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            "SyncWorkName",
+            SYNC_WORKER_NAME,
             ExistingPeriodicWorkPolicy.KEEP,
             syncRequest
         )
