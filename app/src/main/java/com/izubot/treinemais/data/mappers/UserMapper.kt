@@ -2,10 +2,10 @@ package com.izubot.treinemais.data.mappers
 
 import com.izubot.treinemais.data.local.entities.SyncStatus
 import com.izubot.treinemais.data.local.entities.User
-import com.izubot.treinemais.data.remote.dto.UserDto
+import com.izubot.treinemais.data.remote.dto.UserApiDto
 
 
-fun User.toRemoteDto(): UserDto = UserDto(
+fun User.toRemoteDto(): UserApiDto = UserApiDto(
     userId = this.guidUser,
     name = this.fullName,
     email = this.email,
@@ -15,7 +15,7 @@ fun User.toRemoteDto(): UserDto = UserDto(
 )
 
 // Converte o DTO da API de volta para a Entity do Room
-fun UserDto.toEntity(localId: String): User = User(
+fun UserApiDto.toEntity(localId: String): User = User(
     id = localId,
     guidUser = this.userId,
     fullName = this.name,

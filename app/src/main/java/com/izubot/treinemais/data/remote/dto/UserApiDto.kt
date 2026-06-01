@@ -4,16 +4,16 @@ import com.izubot.treinemais.domain.model.User
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserDto(
+data class UserApiDto(
     val userId: String,
-    val name: String,
     val email: String,
-    val gender: String,
-    val birthDate: String,
-    val updatedAt: Long
+    val name: String = "",
+    val gender: String = "",
+    val birthDate: String = "",
+    val updatedAt: Long = System.currentTimeMillis()
 )
 
-fun UserDto.toDomain() = User(
+fun UserApiDto.toDomain() = User(
     userId = userId,
     email = email,
 )
