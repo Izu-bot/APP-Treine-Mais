@@ -1,7 +1,6 @@
 package com.izubot.treinemais.ui.register
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.izubot.treinemais.R
