@@ -1,6 +1,7 @@
 package com.izubot.treinemais.ui.register
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.izubot.treinemais.R
@@ -116,7 +117,10 @@ class RegisterViewModel @Inject constructor(
                 }
                 .onFailure { error ->
                     _uiState.update { it.copy(isError = true, errorMassage = error.message) }
+                    _channel.send(UiEvent.Toast("Erro: ${error.localizedMessage ?: "Falha desconhecida"}"))
                     _channel.send(UiEvent.Toast(context.getString(R.string.register_user_error)))
+                    error.printStackTrace()
+                    Log.d("Register", error.localizedMessage)
                 }
 
             _uiState.update { it.copy(isLoading = false) }

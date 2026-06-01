@@ -3,7 +3,7 @@ package com.izubot.treinemais.domain.usecase
 import com.izubot.treinemais.data.local.dto.UserLocalDto
 import com.izubot.treinemais.data.local.dto.toDomain
 import com.izubot.treinemais.data.local.entities.SyncStatus
-import com.izubot.treinemais.data.repository.UserRepository
+import com.izubot.treinemais.data.repository.UserRepositoryImpl
 import com.izubot.treinemais.domain.model.RegisterRequest
 import com.izubot.treinemais.domain.model.User
 import com.izubot.treinemais.domain.repository.AuthRepository
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class RegisterUserUseCase @Inject constructor(
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository
+    private val userRepositoryImpl: UserRepositoryImpl
 ) {
     suspend operator fun invoke(uiState: RegisterUiState): Result<User> {
         val request = RegisterRequest(
@@ -36,7 +36,7 @@ class RegisterUserUseCase @Inject constructor(
                 isDirty = false,
                 syncStatus = SyncStatus.SYNCED
             )
-            userRepository.insertOrUpdateUser(userLocal.toDomain())
+            userRepositoryImpl.insertOrUpdateUser(userLocal.toDomain())
         }
     }
 }

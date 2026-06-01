@@ -1,13 +1,12 @@
 package com.izubot.treinemais.domain.usecase
 
-import com.izubot.treinemais.data.repository.UserRepository
-import kotlinx.coroutines.flow.Flow
+import com.izubot.treinemais.data.repository.UserRepositoryImpl
 import javax.inject.Inject
 
 class SaveProfileImage @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepositoryImpl: UserRepositoryImpl
 ) {
     suspend operator fun invoke(uri: String) {
-        userRepository.saveProfileImage(uri)
+        userRepositoryImpl.saveProfileImage(uri)
     }
 }
