@@ -116,8 +116,7 @@ class RegisterViewModel @Inject constructor(
                 }
                 .onFailure { error ->
                     _uiState.update { it.copy(isError = true, errorMassage = error.message) }
-                    _channel.send(UiEvent.Toast(
-                            error.localizedMessage ?: context.getString(R.string.register_user_error))                    )
+                    _channel.send(UiEvent.Toast(context.getString(R.string.register_user_error)))
                     error.printStackTrace()
                 }
 
