@@ -1,12 +1,12 @@
 package com.izubot.treinemais.data.repository
 
 import com.izubot.treinemais.data.local.dao.UserDao
+import com.izubot.treinemais.data.local.entities.SyncStatus
 import com.izubot.treinemais.data.local.entities.User
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
-class UserRepository @Inject constructor(
+class UserRepositoryImpl @Inject constructor(
     private val userDao: UserDao
 ) {
     fun getUser() = userDao.getUser()
@@ -21,4 +21,6 @@ class UserRepository @Inject constructor(
             userDao.insertOrUpdateUser(updatedUser)
         }
     }
+
+    suspend fun getUnsyncedData(status: SyncStatus) = userDao.getUserWithSyncStatus(status)
 }

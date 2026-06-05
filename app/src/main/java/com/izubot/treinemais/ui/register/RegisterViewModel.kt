@@ -112,10 +112,12 @@ class RegisterViewModel @Inject constructor(
                 .onSuccess {
                     _uiState.update { it.copy(isError = false, errorMassage = null) }
                     _channel.send(UiEvent.Toast(context.getString(R.string.register_user_success)))
+                    _channel.send(UiEvent.Success)
                 }
                 .onFailure { error ->
                     _uiState.update { it.copy(isError = true, errorMassage = error.message) }
                     _channel.send(UiEvent.Toast(context.getString(R.string.register_user_error)))
+                    error.printStackTrace()
                 }
 
             _uiState.update { it.copy(isLoading = false) }

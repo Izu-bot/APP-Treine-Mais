@@ -76,6 +76,7 @@ fun Login(
                 is UiEvent.Toast -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
+                else -> Unit
             }
         }
     }

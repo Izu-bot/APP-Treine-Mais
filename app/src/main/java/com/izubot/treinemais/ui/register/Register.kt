@@ -58,6 +58,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.ButtonComponent
 import com.izubot.treinemais.ui.components.GoalsCard
@@ -91,6 +92,9 @@ fun Register(
             when (event) {
                 is UiEvent.Toast -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+                is UiEvent.Success -> {
+                    onNavigateToConfirm()
                 }
             }
         }
@@ -193,9 +197,7 @@ fun Register(
                             val isPasswordValid = viewModel.onValidatePassword()
 
                             if (isEmailValid && isPasswordValid && !uiState.isError) {
-                                viewModel.register().runCatching {
-                                    onNavigateToConfirm()
-                                }
+                                viewModel.register()
                             }
                         }
                     }

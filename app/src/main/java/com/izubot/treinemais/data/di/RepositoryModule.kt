@@ -4,8 +4,10 @@ import com.izubot.treinemais.data.remote.datasource.AuthRemoteDataSource
 import com.izubot.treinemais.data.remote.datasource.AuthRemoteDataSourceImpl
 import com.izubot.treinemais.data.repository.AuthRepositoryImpl
 import com.izubot.treinemais.data.repository.PrefsRepositoryImpl
+import com.izubot.treinemais.data.repository.SyncRepositoryImpl
 import com.izubot.treinemais.domain.repository.AuthRepository
 import com.izubot.treinemais.domain.repository.PrefsRepository
+import com.izubot.treinemais.domain.repository.SyncRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,4 +35,10 @@ abstract class RepositoryModule {
     abstract fun bindPrefsRepository(
         impl: PrefsRepositoryImpl
     ): PrefsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSyncRepository(
+        impl: SyncRepositoryImpl
+    ): SyncRepository
 }
