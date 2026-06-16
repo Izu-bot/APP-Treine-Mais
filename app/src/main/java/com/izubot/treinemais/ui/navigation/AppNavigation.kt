@@ -35,6 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import com.izubot.treinemais.data.local.helpers.SessionManager
 import com.izubot.treinemais.ui.home.Home
 import com.izubot.treinemais.ui.profile.Profile
+import com.izubot.treinemais.ui.training.Training
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -101,6 +102,10 @@ fun AppNavigation(
                         }
                     )
                 }
+
+                composable<MainRoute.Training> {
+                    Training()
+                }
             }
         }
     }
@@ -145,5 +150,5 @@ enum class AppBottomNavItem(
     val label: String
 ) {
     HOME(MainRoute.Home, Icons.Default.Home, "Home"),
-    TRAINING("TESTE", Icons.Default.FitnessCenter, "Training"),
+    TRAINING(MainRoute.Training, Icons.Default.FitnessCenter, "Trainings"),
 }

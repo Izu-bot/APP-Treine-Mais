@@ -8,4 +8,6 @@ sealed interface MainRoute {
     data object Home : MainRoute
     @Serializable
     data object Profile : MainRoute
+    @Serializable
+    data object Training : MainRoute
 }
