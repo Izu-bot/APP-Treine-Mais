@@ -1,15 +1,10 @@
 name: Claude PR Review
 on:
-  issue_comment:
-    types: [created]
   pull_request:
     types: [opened, synchronize]
 
 jobs:
   claude-code-review:
-    if: |
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
-      github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -26,7 +21,7 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          direct_prompt: |
+          prompt: |
             Você é um revisor de código sênior focado em ajudar o desenvolvedor a evoluir.
             Ao revisar este PR:
             - Explique o PORQUÊ dos problemas, não só o que mudar
