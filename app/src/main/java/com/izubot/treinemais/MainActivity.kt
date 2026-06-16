@@ -16,8 +16,8 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.izubot.treinemais.data.local.helpers.SessionManager
 import com.izubot.treinemais.data.local.datasource.DataStorePrefs
+import com.izubot.treinemais.data.local.helpers.SessionManager
 import com.izubot.treinemais.data.worker.SyncWorker
 import com.izubot.treinemais.ui.navigation.RootNavigation
 import com.izubot.treinemais.ui.theme.TreineMaisTheme
@@ -27,12 +27,13 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    
+
     @Inject
     lateinit var dataStorePrefs: DataStorePrefs
+
     @Inject
     lateinit var sessionManager: SessionManager
-    
+
     private var deepLinkIntent by mutableStateOf<Intent?>(null)
 
     companion object {
@@ -65,7 +66,7 @@ class MainActivity : ComponentActivity() {
             val isDynamicTheme by dataStorePrefs.themeCache.collectAsState()
 
 //            val isLoggedIn by remember { mutableStateOf(true) }
-            
+
             TreineMaisTheme(
                 dynamicColor = isDynamicTheme
             ) {
