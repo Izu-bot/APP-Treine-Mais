@@ -21,6 +21,8 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          track_progress: true
+          use_sticky_comment: true
           prompt: |
             Você é um revisor de código sênior focado em ajudar o desenvolvedor a evoluir.
             Ao revisar este PR:
