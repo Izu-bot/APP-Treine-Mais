@@ -9,7 +9,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.work.Constraints
@@ -17,8 +16,8 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.izubot.treinemais.data.local.helpers.SessionManager
 import com.izubot.treinemais.data.local.datasource.DataStorePrefs
+import com.izubot.treinemais.data.local.helpers.SessionManager
 import com.izubot.treinemais.data.worker.SyncWorker
 import com.izubot.treinemais.ui.navigation.RootNavigation
 import com.izubot.treinemais.ui.theme.TreineMaisTheme
@@ -28,12 +27,13 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    
+
     @Inject
     lateinit var dataStorePrefs: DataStorePrefs
+
     @Inject
     lateinit var sessionManager: SessionManager
-    
+
     private var deepLinkIntent by mutableStateOf<Intent?>(null)
 
     companion object {
@@ -61,12 +61,12 @@ class MainActivity : ComponentActivity() {
         deepLinkIntent = intent
 
         setContent {
-//            val isLoggedIn by dataStorePrefs.isLoggedIn.collectAsStateWithLifecycle(initialValue = null)
+            val isLoggedIn by dataStorePrefs.isLoggedIn.collectAsStateWithLifecycle(initialValue = null)
 
             val isDynamicTheme by dataStorePrefs.themeCache.collectAsState()
 
-            val isLoggedIn by remember { mutableStateOf(true) }
-            
+//            val isLoggedIn by remember { mutableStateOf(true) }
+
             TreineMaisTheme(
                 dynamicColor = isDynamicTheme
             ) {

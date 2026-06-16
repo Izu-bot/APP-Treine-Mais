@@ -22,14 +22,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.izubot.treinemais.domain.model.Exercise
 import com.izubot.treinemais.domain.model.Training
 import com.izubot.treinemais.ui.components.CardMyTrainingsComponent
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun Training(
     modifier: Modifier = Modifier,
@@ -93,8 +91,7 @@ fun Training(
 
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f),
+                    .fillMaxSize(),
                 contentPadding = PaddingValues(
                     start = 18.dp,
                     end = 18.dp,
