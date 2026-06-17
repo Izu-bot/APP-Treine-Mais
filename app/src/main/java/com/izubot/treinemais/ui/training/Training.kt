@@ -30,6 +30,7 @@ import com.izubot.treinemais.ui.components.CardMyTrainingsComponent
 
 @Composable
 fun Training(
+    onNavigateToNewTraining: () -> Unit,
     modifier: Modifier = Modifier,
     trainingViewModel: TrainingViewModel = hiltViewModel<TrainingViewModel>()
     ) {
@@ -55,7 +56,7 @@ fun Training(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* TODO: Adicionar novo treino */ }
+                onClick = { onNavigateToNewTraining() }
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Adicionar treino")
             }

@@ -34,6 +34,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.izubot.treinemais.data.local.helpers.SessionManager
 import com.izubot.treinemais.ui.home.Home
+import com.izubot.treinemais.ui.new_training.NewTraining
 import com.izubot.treinemais.ui.profile.Profile
 import com.izubot.treinemais.ui.training.Training
 import kotlinx.coroutines.flow.collectLatest
@@ -48,7 +49,10 @@ fun AppNavigation(
     val currentDestination = currentBackStack?.destination
 
     // Lista de rotas que NÃO devem mostrar a BottomBar (Overlays)
-    val overlayRoutes = listOf(MainRoute.Profile::class)
+    val overlayRoutes = listOf(
+        MainRoute.Profile::class,
+        MainRoute.NewTraining::class
+    )
 
     val isOverlayActive = currentDestination?.hierarchy?.any { dest ->
         overlayRoutes.any { routeClass -> dest.hasRoute(routeClass) }
@@ -104,7 +108,19 @@ fun AppNavigation(
                 }
 
                 composable<MainRoute.Training> {
-                    Training()
+                    Training(
+                        onNavigateToNewTraining = {
+                            navController.navigate(MainRoute.NewTraining)
+                        }
+                    )
+                }
+
+                composable<MainRoute.NewTraining> {
+                    NewTraining(
+                        onDismiss = {
+                            navController.popBackStack()
+                        }
+                    )
                 }
             }
         }
