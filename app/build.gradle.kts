@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.hilt.work)
     ksp(libs.androidx.hilt.compiler.v100)
+    ksp(libs.kotlinMetadataJvm)
 
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)

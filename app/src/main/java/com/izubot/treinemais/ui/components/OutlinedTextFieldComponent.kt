@@ -36,7 +36,7 @@ fun OutlinedTextFieldComponent(
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     onValueChange: (String) -> Unit,
     labelText: String,
-    leadingIcon: ImageVector,
+    leadingIcon: ImageVector? = null,
     color: TextFieldColors,
     placeholderText: String,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -68,10 +68,12 @@ fun OutlinedTextFieldComponent(
             placeholder = { Text(placeholderText) },
             singleLine = true,
             leadingIcon = {
-                Icon(
-                    imageVector = leadingIcon,
-                    contentDescription = null // Decorative icon
-                )
+                if (leadingIcon != null) {
+                    Icon(
+                        imageVector = leadingIcon,
+                        contentDescription = null // Decorative icon
+                    )
+                }
             },
             modifier = Modifier.fillMaxWidth(),
             readOnly = readOnly,
