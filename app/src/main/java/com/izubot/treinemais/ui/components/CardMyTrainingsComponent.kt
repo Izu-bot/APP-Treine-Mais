@@ -156,10 +156,10 @@ private fun MockCardContent(isExpanded: Boolean = false) {
         id = "1",
         title = "Peito",
         exercises = listOf(
-            Exercise(id = "1", name = "Supino Reto", sets = 4, reps = "10-12 reps"),
-            Exercise(id = "2", name = "Crucifixo Inclinado", sets = 3, reps = "15 reps"),
-            Exercise(id = "3", name = "Cross Over", sets = 3, reps = "Falha"),
-            Exercise(id = "4", name = "Supino Inclinado", sets = 3, reps = "12 reps")
+            Exercise(id = "1", name = "Supino Reto", sets = "4", reps = "10-12 reps"),
+            Exercise(id = "2", name = "Crucifixo Inclinado", sets = "3", reps = "15 reps"),
+            Exercise(id = "3", name = "Cross Over", sets = "3", reps = "Falha"),
+            Exercise(id = "4", name = "Supino Inclinado", sets = "3", reps = "12 reps")
         )
     )
     

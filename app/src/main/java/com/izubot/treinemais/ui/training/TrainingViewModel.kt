@@ -34,7 +34,7 @@ class TrainingViewModel @Inject constructor() : ViewModel() {
             }
 
             val exercise = listOf(
-                Exercise(id = "1", name = "Supino Reto", sets = 4, reps = "10-12 reps")
+                Exercise(id = "1", name = "Supino Reto", sets = "4", reps = "10-12 reps")
             )
 
             val listTrainings = listOf<Training>(
