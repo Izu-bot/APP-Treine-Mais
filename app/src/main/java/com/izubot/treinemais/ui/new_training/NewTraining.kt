@@ -112,8 +112,10 @@ fun NewTraining(
                             text = stringResource(R.string.new_training_save),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.clickable { /* Salvar treino */ }
+                            color = if (state.isSaving) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.clickable(enabled = !state.isSaving) { 
+                                newTrainingViewModel.saveTraining(onSuccess = onDismiss)
+                            }
                         )
                     }
                 )

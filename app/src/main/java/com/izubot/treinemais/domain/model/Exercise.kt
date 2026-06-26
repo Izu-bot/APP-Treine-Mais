@@ -5,5 +5,6 @@ data class Exercise (
     val name: String,
     val sets: String? = null,
     val reps: String? = null,
+    val weight: String? = null,
     val description: String = ""
 )

@@ -11,9 +11,7 @@ class ExerciseRepositoryImpl @Inject constructor(
     private val exerciseDao: ExerciseDao
 ) : ExerciseRepository {
     override suspend fun insertExercise(exercise: Exercise): Result<Unit> {
-        return runCatching {
-            exerciseDao.insertExercise(exercise.toEntity())
-        }
+        return Result.failure(Exception("Exercícios não devem ser criados isoladamente. Use o TrainingRepository."))
     }
 
     override suspend fun getExercise(id: String): Result<Exercise?> {
@@ -30,14 +28,12 @@ class ExerciseRepositoryImpl @Inject constructor(
 
     override suspend fun deleteExercise(exercise: Exercise): Result<Unit> {
         return runCatching {
-            exerciseDao.deleteExercise(exercise.toEntity())
+            exerciseDao.deleteExercise(exercise.toEntity(trainingId = ""))
         }
     }
 
     override suspend fun updateExercise(exercise: Exercise): Result<Unit> {
-        return runCatching {
-            exerciseDao.upsertExercise(exercise.toEntity())
-        }
+        return Result.failure(Exception("Exercícios não devem ser atualizados isoladamente. Use o TrainingRepository."))
     }
 
     override suspend fun getAllExercise(): Result<List<Exercise>> {

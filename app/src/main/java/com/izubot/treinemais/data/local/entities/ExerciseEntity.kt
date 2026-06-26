@@ -12,8 +12,10 @@ import androidx.room.PrimaryKey
 )
 data class ExerciseEntity(
     @PrimaryKey val id: String,
+    @ColumnInfo(name = "training_id") val trainingId: String,
     @ColumnInfo val name: String,
     @ColumnInfo val sets: Int,
     @ColumnInfo val reps: Int,
+    @ColumnInfo val weight: Int,
     @ColumnInfo val description: String?
 )
