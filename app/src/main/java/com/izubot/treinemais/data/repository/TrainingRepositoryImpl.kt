@@ -6,7 +6,6 @@ import com.izubot.treinemais.data.mappers.toEntity
 import com.izubot.treinemais.domain.model.Training
 import com.izubot.treinemais.domain.repository.TrainingRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -25,14 +24,6 @@ class TrainingRepositoryImpl @Inject constructor(
 
     override fun getTraining(id: String): Flow<Training?> {
         return trainingDao.getTrainingsWithExercises(id).map { it?.toDomain() }
-    }
-
-    override suspend fun getTrainingName(name: String): Result<Training?> {
-        return runCatching {
-            trainingDao.getTrainingsWithExercisesFlow().map { list ->
-                list.find { it.training.name == name }?.toDomain()
-            }.first()
-        }
     }
 
     override suspend fun deleteTraining(training: Training): Result<Unit> {
