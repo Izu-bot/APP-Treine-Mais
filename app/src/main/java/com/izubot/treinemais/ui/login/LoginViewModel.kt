@@ -11,6 +11,7 @@ import com.izubot.treinemais.domain.usecase.ConfirmEmailUseCase
 import com.izubot.treinemais.domain.usecase.LoginUseCase
 import com.izubot.treinemais.domain.usecase.ValidateEmailUseCase
 import com.izubot.treinemais.domain.usecase.ValidatePasswordConfirmationUseCase
+import com.izubot.treinemais.utils.FocusManager
 import com.izubot.treinemais.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -29,7 +30,8 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val validatePasswordConfirmationUseCase: ValidatePasswordConfirmationUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
-    private val dataStorePrefs: DataStorePrefs
+    private val dataStorePrefs: DataStorePrefs,
+    private val focusManager: FocusManager
 ) : ViewModel() {
 
     private val _channel = Channel<UiEvent>()
@@ -83,6 +85,7 @@ class LoginViewModel @Inject constructor(
             loginUseCase(_state.value)
                 .onSuccess { token ->
                     dataStorePrefs.saveTokens(token.accessToken, token.refreshToken)
+                    focusManager.clearFocus()
                     onSuccess()
                 }
                 .onFailure { error ->

@@ -9,6 +9,7 @@ import com.izubot.treinemais.domain.usecase.RegisterUserUseCase
 import com.izubot.treinemais.domain.usecase.ValidateEmailUseCase
 import com.izubot.treinemais.domain.usecase.ValidateNameUseCase
 import com.izubot.treinemais.domain.usecase.ValidatePasswordConfirmationUseCase
+import com.izubot.treinemais.utils.FocusManager
 import com.izubot.treinemais.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -27,6 +28,7 @@ class RegisterViewModel @Inject constructor(
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validateNameUseCase: ValidateNameUseCase,
     private val registerUserUseCase: RegisterUserUseCase,
+    private val focusManager: FocusManager
 ) : ViewModel() {
 
     private val _channel = Channel<UiEvent>()
@@ -111,6 +113,7 @@ class RegisterViewModel @Inject constructor(
             registerUserUseCase(_uiState.value)
                 .onSuccess {
                     _uiState.update { it.copy(isError = false, errorMassage = null) }
+                    focusManager.clearFocus()
                     _channel.send(UiEvent.Success(context.getString(R.string.register_user_success)))
                 }
                 .onFailure { error ->

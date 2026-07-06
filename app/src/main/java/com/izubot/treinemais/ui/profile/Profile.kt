@@ -8,7 +8,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -37,7 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,6 +48,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.PerfilComponent
+import com.izubot.treinemais.ui.utils.clearFocusOnTap
 import com.izubot.treinemais.utils.UiEvent
 import kotlinx.coroutines.flow.collectLatest
 
@@ -62,9 +61,7 @@ fun Profile(
 ) {
     val state by profileViewModel.state.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
-    val focusManage = LocalFocusManager.current
     val context = LocalContext.current
-    val interactionSource = remember { MutableInteractionSource() }
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -103,7 +100,7 @@ fun Profile(
 
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
+            lifecycleOwner.lifecycle.addObserver(observer)
         }
     }
 
@@ -169,12 +166,7 @@ fun Profile(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp)
-                .clickable(
-                    interactionSource = interactionSource,
-                    indication = null
-                ) {
-                    focusManage.clearFocus()
-                },
+                .clearFocusOnTap(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {

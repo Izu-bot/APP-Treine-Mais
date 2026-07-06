@@ -9,6 +9,7 @@ import com.izubot.treinemais.R
 import com.izubot.treinemais.domain.model.Exercise
 import com.izubot.treinemais.domain.repository.ExerciseRepository
 import com.izubot.treinemais.ui.navigation.MainRoute
+import com.izubot.treinemais.utils.FocusManager
 import com.izubot.treinemais.utils.UiEvent
 import com.izubot.treinemais.utils.UiEventManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +27,7 @@ class EditExerciseViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val exerciseRepository: ExerciseRepository,
     private val uiEventManager: UiEventManager,
+    private val focusManager: FocusManager,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -117,6 +119,7 @@ class EditExerciseViewModel @Inject constructor(
 
             result.onSuccess {
                 val msg = if (currentState.id.isBlank()) "Exercício adicionado com sucesso" else "Exercício atualizado com sucesso"
+                focusManager.clearFocus()
                 uiEventManager.sendEvent(UiEvent.Success(msg))
                 onSuccess()
             }
@@ -136,6 +139,7 @@ class EditExerciseViewModel @Inject constructor(
             )
             exerciseRepository.deleteExercise(exercise)
                 .onSuccess {
+                    focusManager.clearFocus()
                     uiEventManager.sendEvent(UiEvent.Success("Exercício excluído com sucesso"))
                     onSuccess()
                 }

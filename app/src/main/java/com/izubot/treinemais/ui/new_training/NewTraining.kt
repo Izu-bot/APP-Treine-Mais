@@ -60,6 +60,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.OutlinedTextFieldComponent
 import com.izubot.treinemais.ui.theme.TreineMaisTheme
+import com.izubot.treinemais.ui.utils.clearFocusOnTap
 import com.izubot.treinemais.utils.UiEvent
 import kotlinx.coroutines.launch
 
@@ -139,11 +140,12 @@ fun NewTraining(
             modifier = modifier
                 .padding(paddingValues)
                 .fillMaxWidth()
+                .clearFocusOnTap()
         ) {
             item {
                 Spacer(modifier = Modifier.height(32.dp))
                 OutlinedTextFieldComponent(
-                    value = state.trainingName ?: "",
+                    value = state.trainingName,
                     onValueChange = { newTrainingViewModel.onTrainingNameChange(it) },
                     textStyle = MaterialTheme.typography.titleMedium,
                     labelText = stringResource(R.string.new_training_name_label),
@@ -325,19 +327,22 @@ fun ExerciseCard(
                     label = stringResource(R.string.new_training_sets),
                     value = exercise.sets,
                     onValueChange = onChangeSets,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    imeAction = ImeAction.Next
                 )
                 ExerciseDetailItem(
                     label = stringResource(R.string.new_training_reps),
                     value = exercise.reps,
                     onValueChange = onChangeReps,
-                    modifier = Modifier.weight(1.2f)
+                    modifier = Modifier.weight(1.2f),
+                    imeAction = ImeAction.Next
                 )
                 ExerciseDetailItem(
                     label = stringResource(R.string.new_training_weight),
                     value = exercise.weight,
                     onValueChange = onChangeWeight,
-                    modifier = Modifier.weight(1.2f)
+                    modifier = Modifier.weight(1.2f),
+                    imeAction = ImeAction.Done
                 )
             }
         }
@@ -349,7 +354,8 @@ fun ExerciseDetailItem(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    imeAction: ImeAction = ImeAction.Done
 ) {
     Column(
         modifier = modifier,
@@ -380,7 +386,7 @@ fun ExerciseDetailItem(
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 ),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = imeAction),
                 cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                 modifier = Modifier.width(32.dp)
             )
