@@ -108,12 +108,11 @@ fun Profile(
     }
 
     LaunchedEffect(Unit) {
-        profileViewModel.channel.collectLatest { evet ->
-            when (evet) {
-                is UiEvent.Toast -> {
-                    Toast.makeText(context, evet.message, Toast.LENGTH_SHORT).show()
-                }
-                else -> Unit
+        profileViewModel.channel.collectLatest { event ->
+            when (event) {
+                is UiEvent.Success -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is UiEvent.Error -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is UiEvent.Info -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
             }
         }
     }

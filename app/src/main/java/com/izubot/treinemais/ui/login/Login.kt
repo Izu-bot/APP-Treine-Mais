@@ -73,10 +73,9 @@ fun Login(
     LaunchedEffect(Unit) {
         loginViewModel.channel.collectLatest { event ->
             when (event) {
-                is UiEvent.Toast -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
-                }
-                else -> Unit
+                is UiEvent.Success -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is UiEvent.Error -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is UiEvent.Info -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -87,7 +87,7 @@ class ProfileViewModel @Inject constructor(
                 saveProfileImage(imagePath)
             } catch (e: Exception) {
                 e.printStackTrace()
-                _channel.send(UiEvent.Toast("Falha ao salvar a imagem"))
+                _channel.send(UiEvent.Error("Falha ao salvar a imagem"))
             }
         }
     }
@@ -153,7 +153,7 @@ class ProfileViewModel @Inject constructor(
         val nextValue = !state.value.isAiEnabled
         viewModelScope.launch {
             saveAiUseCase(nextValue)
-            _channel.send(UiEvent.Toast(if (nextValue) context.getString(R.string.ai_title_activated) else context.getString(R.string.ai_title_deactivated)))
+            _channel.send(UiEvent.Info(if (nextValue) context.getString(R.string.ai_title_activated) else context.getString(R.string.ai_title_deactivated)))
         }
     }
 
@@ -178,7 +178,7 @@ class ProfileViewModel @Inject constructor(
             } finally {
                 sessionManager.triggerSessionExpired()
                 _localState.update { it.copy(isLogout = true, isLoading = false) }
-                _channel.send(UiEvent.Toast(context.getString(R.string.profile_logout_success)))
+                _channel.send(UiEvent.Success(context.getString(R.string.profile_logout_success)))
             }
         }
     }

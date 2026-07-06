@@ -5,7 +5,8 @@ import java.util.UUID
 data class NewTrainingUiState(
     val trainingName: String? = "",
     val exercises: List<ExerciseUiState> = emptyList(),
-    val isSaving: Boolean = false
+    val isSaving: Boolean = false,
+    val message: String = ""
 )
 
 data class ExerciseUiState(

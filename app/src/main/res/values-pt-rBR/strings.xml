@@ -92,6 +92,13 @@
     <string name="training_subtitle">Gerencie sua rotina semanal por grupos musculares.</string>
     <string name="training_empty_message">Nenhum treino encontrado</string>
     <string name="training_add_content_desc">Adicionar treino</string>
+    <string name="training_delete_title">Excluir Treino</string>
+    <string name="training_delete_message">Tem certeza de que deseja excluir este treino? Esta ação não pode ser desfeita.</string>
+    <string name="training_delete_confirm">Excluir</string>
+    <string name="training_delete_cancel">Cancelar</string>
+    <string name="training_delete_success">Treino excluído com sucesso</string>
+    <string name="training_delete_error">Falha ao excluir o treino</string>
+    <string name="training_delete_content_desc">Excluir treino</string>
 
     <!-- Tela de Novo Treino -->
     <string name="new_training_title">Novo Treino</string>
@@ -109,5 +116,9 @@
     <string name="new_training_sets">Séries</string>
     <string name="new_training_reps">Repetições</string>
     <string name="new_training_weight">Peso (kg)</string>
-
+    <string name="new_training_save_success">Treino salvo com sucesso!</string>
+    <string name="new_training_save_error">Falha ao salvar o treino.</string>
+    <string name="new_training_name_empty">O nome do treino não pode estar em branco.</string>
+    <string name="new_training_exercise_empty_fields">Por favor, preencha todos os campos dos exercícios.</string>
+    <string name="new_training_no_exercises">Adicione pelo menos um exercício ao treino.</string>
 </resources>

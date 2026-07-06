@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "Training",
-    indices = [Index(value = ["id"], unique = true)]
 )
 data class TrainingEntity (
     @PrimaryKey val id: String,

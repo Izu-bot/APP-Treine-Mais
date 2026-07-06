@@ -33,12 +33,14 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -58,19 +60,19 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.OutlinedTextFieldComponent
 import com.izubot.treinemais.ui.theme.TreineMaisTheme
+import com.izubot.treinemais.utils.UiEvent
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewTraining(
+    snackbarHostState: SnackbarHostState,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     newTrainingViewModel: NewTrainingViewModel = hiltViewModel<NewTrainingViewModel>()
 ) {
     val state by newTrainingViewModel.state.collectAsState()
 
-    
-    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     
     val exerciseRemovedMsg = stringResource(R.string.new_training_exercise_removed)
@@ -88,6 +90,16 @@ fun NewTraining(
         cursorColor = MaterialTheme.colorScheme.primary,
         focusedTextColor = MaterialTheme.colorScheme.onSurface,
     )
+
+    LaunchedEffect(key1 = Unit) {
+        newTrainingViewModel.channel.collect { event ->
+            when (event) {
+                is UiEvent.Success -> snackbarHostState.showSnackbar(event.message)
+                is UiEvent.Error -> snackbarHostState.showSnackbar(event.message)
+                is UiEvent.Info -> snackbarHostState.showSnackbar(event.message)
+            }
+        }
+    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -176,7 +188,7 @@ fun NewTraining(
                             val result = snackbarHostState.showSnackbar(
                                 message = "${exercise.name} $exerciseRemovedMsg",
                                 actionLabel = undoMsg,
-                                duration = androidx.compose.material3.SnackbarDuration.Short
+                                duration = SnackbarDuration.Short
                             )
                             if (result == SnackbarResult.ActionPerformed) {
                                 newTrainingViewModel.undoRemove(currentIndex, exercise)
@@ -382,6 +394,7 @@ fun NewTrainingDarkPreview() {
     TreineMaisTheme(darkTheme = true, dynamicColor = false) {
         Surface(color = MaterialTheme.colorScheme.background) {
             NewTraining(
+                snackbarHostState = remember { SnackbarHostState() },
                 onDismiss = {}
             )
         }
@@ -394,6 +407,7 @@ fun NewTrainingLightPreview() {
     TreineMaisTheme(darkTheme = false, dynamicColor = false) {
         Surface(color = MaterialTheme.colorScheme.background) {
             NewTraining(
+                snackbarHostState = remember { SnackbarHostState() },
                 onDismiss = {}
             )
         }

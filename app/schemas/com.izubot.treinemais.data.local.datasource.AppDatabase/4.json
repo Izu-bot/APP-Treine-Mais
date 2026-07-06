@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "6a95a12a5a53a3850e0974773a679935",
+    "identityHash": "20f8576dfb761c2f89655f10d98998cc",
     "entities": [
       {
         "tableName": "user",
@@ -113,22 +113,11 @@
           "columnNames": [
             "id"
           ]
-        },
-        "indices": [
-          {
-            "name": "index_Training_id",
-            "unique": true,
-            "columnNames": [
-              "id"
-            ],
-            "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_Training_id` ON `${TABLE_NAME}` (`id`)"
-          }
-        ]
+        }
       },
       {
         "tableName": "Exercise",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `training_id` TEXT NOT NULL, `name` TEXT NOT NULL, `sets` INTEGER NOT NULL, `reps` INTEGER NOT NULL, `weight` INTEGER NOT NULL, `description` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `training_id` TEXT NOT NULL, `name` TEXT NOT NULL, `sets` INTEGER NOT NULL, `reps` INTEGER NOT NULL, `weight` INTEGER NOT NULL, `description` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`training_id`) REFERENCES `Training`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -180,20 +169,33 @@
         },
         "indices": [
           {
-            "name": "index_Exercise_id",
-            "unique": true,
+            "name": "index_Exercise_training_id",
+            "unique": false,
             "columnNames": [
-              "id"
+              "training_id"
             ],
             "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_Exercise_id` ON `${TABLE_NAME}` (`id`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Exercise_training_id` ON `${TABLE_NAME}` (`training_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Training",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "training_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
           }
         ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6a95a12a5a53a3850e0974773a679935')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '20f8576dfb761c2f89655f10d98998cc')"
     ]
   }
 }
