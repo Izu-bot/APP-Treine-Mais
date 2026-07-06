@@ -13,10 +13,13 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,6 +36,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.izubot.treinemais.data.local.helpers.SessionManager
+import com.izubot.treinemais.ui.edit_exercise.EditExercise
 import com.izubot.treinemais.ui.home.Home
 import com.izubot.treinemais.ui.new_training.NewTraining
 import com.izubot.treinemais.ui.profile.Profile
@@ -45,13 +49,18 @@ fun AppNavigation(
     onSessionExpired: () -> Unit = {},
     navController: NavHostController = rememberNavController()
 ) {
+    val mainSnackBarHostState = remember { SnackbarHostState() }
+    val overlaySnackBarHostState = remember { SnackbarHostState() }
+    
+    val snackBarHost = @Composable { SnackbarHost(mainSnackBarHostState) }
     val currentBackStack by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStack?.destination
 
     // Lista de rotas que NÃO devem mostrar a BottomBar (Overlays)
     val overlayRoutes = listOf(
         MainRoute.Profile::class,
-        MainRoute.NewTraining::class
+        MainRoute.NewTraining::class,
+        MainRoute.EditExercise::class
     )
 
     val isOverlayActive = currentDestination?.hierarchy?.any { dest ->
@@ -69,6 +78,7 @@ fun AppNavigation(
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
+            snackbarHost = snackBarHost,
             bottomBar = {
                 if (!isOverlayActive) {
                     AppBottomNavigation(
@@ -109,14 +119,31 @@ fun AppNavigation(
 
                 composable<MainRoute.Training> {
                     Training(
+                        snackbarHostState = mainSnackBarHostState,
                         onNavigateToNewTraining = {
                             navController.navigate(MainRoute.NewTraining)
+                        },
+                        onExerciseClick = { exerciseId, trainingId ->
+                            navController.navigate(MainRoute.EditExercise(exerciseId, trainingId))
+                        },
+                        onAddExercise = { trainingId ->
+                            navController.navigate(MainRoute.EditExercise(exerciseId = null, trainingId = trainingId))
                         }
                     )
                 }
 
                 composable<MainRoute.NewTraining> {
                     NewTraining(
+                        snackbarHostState = overlaySnackBarHostState,
+                        onDismiss = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+
+                composable<MainRoute.EditExercise> {
+                    EditExercise(
+                        snackbarHostState = overlaySnackBarHostState,
                         onDismiss = {
                             navController.popBackStack()
                         }

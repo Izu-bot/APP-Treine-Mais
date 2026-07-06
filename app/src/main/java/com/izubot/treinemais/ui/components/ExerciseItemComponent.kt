@@ -78,7 +78,7 @@ fun ExerciseItemPreview() {
             exercise = Exercise(
                 id = "1",
                 name = "Supino Reto",
-                sets = 4,
+                sets = "4",
                 reps = "10-12 reps"
             )
         )

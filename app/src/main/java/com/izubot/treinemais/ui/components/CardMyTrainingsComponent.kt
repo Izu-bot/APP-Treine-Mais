@@ -5,10 +5,13 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
@@ -18,10 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.izubot.treinemais.R
 import com.izubot.treinemais.domain.model.Exercise
 import com.izubot.treinemais.domain.model.Training
 import com.izubot.treinemais.ui.theme.TreineMaisTheme
@@ -31,6 +36,8 @@ fun CardMyTrainingsComponent(
     training: Training,
     isExpanded: Boolean,
     onToggleCard: (String) -> Unit,
+    onDeleteTraining: (Training) -> Unit,
+    onAddExercise: (String) -> Unit,
     modifier: Modifier = Modifier,
     onExerciseClick: (Exercise) -> Unit = {},
 ) {
@@ -102,18 +109,33 @@ fun CardMyTrainingsComponent(
                 }
                 
                 // Badge
-                Surface(
-                    color = MaterialTheme.colorScheme.tertiaryContainer,
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Text(
-                        text = "${training.exercises.size} Exercícios",
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                        style = MaterialTheme.typography.labelMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onTertiaryContainer
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(
+                        onClick = { onDeleteTraining(training) },
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.DeleteOutline,
+                            contentDescription = stringResource(R.string.training_delete_content_desc),
+                            tint = MaterialTheme.colorScheme.error
                         )
-                    )
+                    }
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Surface(
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Text(
+                            text = "${training.exercises.size} Exercícios",
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onTertiaryContainer
+                            )
+                        )
+                    }
                 }
             }
 
@@ -124,6 +146,36 @@ fun CardMyTrainingsComponent(
                         exercise = exercise,
                         onClick = { onExerciseClick(exercise) }
                     )
+                }
+
+                if (isExpanded) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        IconButton(
+                            onClick = { onAddExercise(training.id) },
+                            modifier = Modifier
+                                .size(48.dp)
+                                .background(
+                                    color = androidx.compose.ui.graphics.Color.Transparent,
+                                    shape = androidx.compose.foundation.shape.CircleShape
+                                )
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.outline,
+                                    shape = androidx.compose.foundation.shape.CircleShape
+                                ),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Adicionar Exercício",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -156,10 +208,10 @@ private fun MockCardContent(isExpanded: Boolean = false) {
         id = "1",
         title = "Peito",
         exercises = listOf(
-            Exercise(id = "1", name = "Supino Reto", sets = 4, reps = "10-12 reps"),
-            Exercise(id = "2", name = "Crucifixo Inclinado", sets = 3, reps = "15 reps"),
-            Exercise(id = "3", name = "Cross Over", sets = 3, reps = "Falha"),
-            Exercise(id = "4", name = "Supino Inclinado", sets = 3, reps = "12 reps")
+            Exercise(id = "1", name = "Supino Reto", sets = "4", reps = "10-12 reps"),
+            Exercise(id = "2", name = "Crucifixo Inclinado", sets = "3", reps = "15 reps"),
+            Exercise(id = "3", name = "Cross Over", sets = "3", reps = "Falha"),
+            Exercise(id = "4", name = "Supino Inclinado", sets = "3", reps = "12 reps")
         )
     )
     
@@ -167,7 +219,9 @@ private fun MockCardContent(isExpanded: Boolean = false) {
         CardMyTrainingsComponent(
             training = mockTraining,
             isExpanded = isExpanded,
-            onToggleCard = {}
+            onToggleCard = {},
+            onDeleteTraining = {},
+            onAddExercise = {}
         )
     }
 }

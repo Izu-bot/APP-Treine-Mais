@@ -86,7 +86,7 @@ class LoginViewModel @Inject constructor(
                     onSuccess()
                 }
                 .onFailure { error ->
-                    _channel.send(UiEvent.Toast(context.getString(R.string.login_error_message)))
+                    _channel.send(UiEvent.Error(context.getString(R.string.login_error_message)))
                     Log.d("Login", "Login error: ${error.message}")
                 }
 
@@ -98,11 +98,11 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             confirmEmailUseCase(token)
                 .onSuccess {
-                    _channel.send(UiEvent.Toast(context.getString(R.string.login_email_verificate)))
+                    _channel.send(UiEvent.Success(context.getString(R.string.login_email_verificate)))
                 }
                 .onFailure { error ->
                     Log.d("Login", "$error")
-                    _channel.send(UiEvent.Toast(context.getString(R.string.login_error_email)))
+                    _channel.send(UiEvent.Error(context.getString(R.string.login_error_email)))
                 }
         }
     }

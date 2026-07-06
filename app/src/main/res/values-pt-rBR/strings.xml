@@ -5,7 +5,7 @@
     <string name="subtitle_splash">Monitore sua força</string>
     <string name="init">Iniciando</string>
     <string name="welcome_call_to_action">Treine com propósito</string>
-    <string name="welcome_subtitle">Acompanhe seu progresso, defina metas e supere seus limites diários</string>
+    <string name="welcome_subtitle">Acompanhe seu progresso, defina metas e supere os seus limites diários</string>
     <string name="welcome_sign_in">Já tenho uma conta</string>
     <string name="welcome_sign_up">Criar uma nova conta</string>
     <string name="welcome_image_content_descriptor">Imagem de uma mulher se exercitando.</string>
@@ -36,7 +36,7 @@
     <string name="register_gender_feminine">Feminino</string>
     <string name="register_gender_other">Outro</string>
     <string name="register_goals">Quais são seus objetivos?</string>
-    <string name="register_goals_explication">Isso nos ajudará a personalizar sua experiência no aplicativo.</string>
+    <string name="register_goals_explication">Isso nos ajudará a personalizar a sua experiência no aplicativo.</string>
     <string name="register_goals_mass_gain">Ganho de massa</string>
     <string name="register_goals_fat_loss">Perda de gordura</string>
     <string name="register_goals_health">Saúde</string>
@@ -48,7 +48,7 @@
     <string name="register_invalid_name">O nome deve ter no mínimo 3 caracteres</string>
     <string name="register_error_generic">Algo deu errado</string>
     <string name="confirm_email">Confirmar Email</string>
-    <string name="confirm_email_subtitle">Verifique seu email para confirmar sua conta</string>
+    <string name="confirm_email_subtitle">Verifique seu email para confirmar a sua conta</string>
     <string name="go_to_gmail">Ir para o Gmail</string>
     <string name="todays_training">Treino de hoje</string>
     <string name="title_profile">Perfil</string>
@@ -62,11 +62,11 @@
     <string name="profile_privacy_policy">Política de Privacidade</string>
     <string name="profile_terms_of_use">Termos de Uso</string>
     <string name="profile_settings_theme">Aplicar tema dinâmico do Android</string>
-    <string name="profile_support_theme">O recurso Cores Dinâmicas, adicionado no Android 12, personalize seu dispositivo para que as tonalidades combinem com o esquema de cores do seu papel de parede</string>
+    <string name="profile_support_theme">O recurso Cores Dinâmicas, adicionado no Android 12, personalize o seu dispositivo para que as tonalidades combinem com o esquema de cores do seu papel de parede</string>
     <string name="profile_notification">Notificações</string>
     <string name="profile_support_notification">Receba lembretes de treino</string>
     <string name="profile_intelligence_artificial">Ativar Inteligência Artificial</string>
-    <string name="profile_support_ai">Permita Treine+ usar inteligência artificial para sugerir treinos e personalizar sua experiência</string>
+    <string name="profile_support_ai">Permita Treine+ usar inteligência artificial para sugerir treinos e personalizar a sua experiência</string>
     <string name="notification_title">Bem-vindo ao Treine+</string>
     <string name="notification_message">Notificações habilitadas</string>
     <string name="ai_title_activated">Inteligência artificial ativada</string>
@@ -87,4 +87,38 @@
     <string name="profile_logout_confirm">Confirmar</string>
     <string name="profile_logout_success">Sessão encerrada com sucesso</string>
 
+    <!-- Tela de Treinos -->
+    <string name="training_title">Meus Treinos</string>
+    <string name="training_subtitle">Gerencie sua rotina semanal por grupos musculares.</string>
+    <string name="training_empty_message">Nenhum treino encontrado</string>
+    <string name="training_add_content_desc">Adicionar treino</string>
+    <string name="training_delete_title">Excluir Treino</string>
+    <string name="training_delete_message">Tem certeza de que deseja excluir este treino? Esta ação não pode ser desfeita.</string>
+    <string name="training_delete_confirm">Excluir</string>
+    <string name="training_delete_cancel">Cancelar</string>
+    <string name="training_delete_success">Treino excluído com sucesso</string>
+    <string name="training_delete_error">Falha ao excluir o treino</string>
+    <string name="training_delete_content_desc">Excluir treino</string>
+
+    <!-- Tela de Novo Treino -->
+    <string name="new_training_title">Novo Treino</string>
+    <string name="new_training_save">Salvar</string>
+    <string name="new_training_back_desc">Voltar</string>
+    <string name="new_training_name_label">Nome do treino</string>
+    <string name="new_training_name_placeholder">Ex: Full Body Explosivo</string>
+    <string name="new_training_exercises_title">Exercícios</string>
+    <string name="new_training_exercises_subtitle">Defina séries, repetições e peso</string>
+    <string name="new_training_add_exercise_desc">Adicionar Exercício</string>
+    <string name="new_training_exercise_name_placeholder">Nome do exercício</string>
+    <string name="new_training_remove_exercise_desc">Remover</string>
+    <string name="new_training_exercise_removed">Exercício removido</string>
+    <string name="new_training_undo">Desfazer</string>
+    <string name="new_training_sets">Séries</string>
+    <string name="new_training_reps">Repetições</string>
+    <string name="new_training_weight">Peso (kg)</string>
+    <string name="new_training_save_success">Treino salvo com sucesso!</string>
+    <string name="new_training_save_error">Falha ao salvar o treino.</string>
+    <string name="new_training_name_empty">O nome do treino não pode estar em branco.</string>
+    <string name="new_training_exercise_empty_fields">Por favor, preencha todos os campos dos exercícios.</string>
+    <string name="new_training_no_exercises">Adicione pelo menos um exercício ao treino.</string>
 </resources>

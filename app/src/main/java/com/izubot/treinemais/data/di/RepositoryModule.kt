@@ -3,11 +3,15 @@ package com.izubot.treinemais.data.di
 import com.izubot.treinemais.data.remote.datasource.AuthRemoteDataSource
 import com.izubot.treinemais.data.remote.datasource.AuthRemoteDataSourceImpl
 import com.izubot.treinemais.data.repository.AuthRepositoryImpl
+import com.izubot.treinemais.data.repository.ExerciseRepositoryImpl
 import com.izubot.treinemais.data.repository.PrefsRepositoryImpl
 import com.izubot.treinemais.data.repository.SyncRepositoryImpl
+import com.izubot.treinemais.data.repository.TrainingRepositoryImpl
 import com.izubot.treinemais.domain.repository.AuthRepository
+import com.izubot.treinemais.domain.repository.ExerciseRepository
 import com.izubot.treinemais.domain.repository.PrefsRepository
 import com.izubot.treinemais.domain.repository.SyncRepository
+import com.izubot.treinemais.domain.repository.TrainingRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -41,4 +45,16 @@ abstract class RepositoryModule {
     abstract fun bindSyncRepository(
         impl: SyncRepositoryImpl
     ): SyncRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTrainingRepository(
+        impl: TrainingRepositoryImpl
+    ): TrainingRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindExerciseRepository(
+        impl: ExerciseRepositoryImpl
+    ): ExerciseRepository
 }
