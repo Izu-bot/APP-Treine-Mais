@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
@@ -61,11 +62,11 @@ class MainActivity : ComponentActivity() {
         deepLinkIntent = intent
 
         setContent {
-//            val isLoggedIn by dataStorePrefs.isLoggedIn.collectAsStateWithLifecycle(initialValue = null)
+            val isLoggedIn by dataStorePrefs.isLoggedIn.collectAsStateWithLifecycle(initialValue = null)
 
             val isDynamicTheme by dataStorePrefs.themeCache.collectAsState()
 
-            val isLoggedIn by remember { mutableStateOf(true) }
+//            val isLoggedIn by remember { mutableStateOf(true) }
 
             TreineMaisTheme(
                 dynamicColor = isDynamicTheme
