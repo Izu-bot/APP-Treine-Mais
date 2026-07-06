@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "20f8576dfb761c2f89655f10d98998cc",
+    "identityHash": "1be42345977f0e8441c38968eb880b5c",
     "entities": [
       {
         "tableName": "user",
@@ -117,7 +117,7 @@
       },
       {
         "tableName": "Exercise",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `training_id` TEXT NOT NULL, `name` TEXT NOT NULL, `sets` INTEGER NOT NULL, `reps` INTEGER NOT NULL, `weight` INTEGER NOT NULL, `description` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`training_id`) REFERENCES `Training`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `training_id` TEXT NOT NULL DEFAULT '', `name` TEXT NOT NULL, `sets` INTEGER NOT NULL, `reps` INTEGER NOT NULL, `weight` INTEGER NOT NULL, `description` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`training_id`) REFERENCES `Training`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -129,7 +129,8 @@
             "fieldPath": "trainingId",
             "columnName": "training_id",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "name",
@@ -195,7 +196,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '20f8576dfb761c2f89655f10d98998cc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1be42345977f0e8441c38968eb880b5c')"
     ]
   }
 }

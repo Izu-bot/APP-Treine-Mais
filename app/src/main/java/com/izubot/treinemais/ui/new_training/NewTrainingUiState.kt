@@ -3,7 +3,7 @@ package com.izubot.treinemais.ui.new_training
 import java.util.UUID
 
 data class NewTrainingUiState(
-    val trainingName: String? = "",
+    val trainingName: String = "",
     val exercises: List<ExerciseUiState> = emptyList(),
     val isSaving: Boolean = false,
     val message: String = ""

@@ -131,7 +131,6 @@ fun Training(
 
             if (state.isLoading) {
                 CircularProgressIndicator(
-                    progress = { state.progress },
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     color = MaterialTheme.colorScheme.primary
                 )

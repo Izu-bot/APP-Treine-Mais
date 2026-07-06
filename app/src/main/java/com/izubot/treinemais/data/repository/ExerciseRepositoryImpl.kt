@@ -10,10 +10,6 @@ import javax.inject.Inject
 class ExerciseRepositoryImpl @Inject constructor(
     private val exerciseDao: ExerciseDao
 ) : ExerciseRepository {
-    override suspend fun insertExercise(exercise: Exercise): Result<Unit> {
-        return Result.failure(Exception("Exercícios não devem ser criados isoladamente sem um trainingId. Use o TrainingRepository ou forneça o trainingId."))
-    }
-
     suspend fun insertExerciseWithTrainingId(exercise: Exercise, trainingId: String): Result<Unit> {
         return runCatching {
             exerciseDao.insertExercise(exercise.toEntity(trainingId))

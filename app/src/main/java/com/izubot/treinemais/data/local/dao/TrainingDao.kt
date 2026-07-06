@@ -31,8 +31,8 @@ interface TrainingDao {
     }
 
     @Transaction
-    @Query("SELECT * FROM training")
-    suspend fun getTrainingsWithExercises(): List<TrainingWithExercise>
+    @Query("SELECT * FROM training WHERE id = :id")
+    fun getTrainingsWithExercises(id: String): Flow<TrainingWithExercise?>
 
     @Transaction
     @Query("SELECT * FROM training")

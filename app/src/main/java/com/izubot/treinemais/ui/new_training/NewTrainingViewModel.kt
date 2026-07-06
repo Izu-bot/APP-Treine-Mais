@@ -72,7 +72,7 @@ class NewTrainingViewModel @Inject constructor(
 
     fun saveTraining(onSuccess: () -> Unit) {
         val currentState = _uiState.value
-        val trainingName = currentState.trainingName?.trim() ?: ""
+        val trainingName = currentState.trainingName.trim()
 
         if (trainingName.isBlank()) {
             viewModelScope.launch {

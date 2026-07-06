@@ -8,3 +8,5 @@ class Migration3To4Spec : AutoMigrationSpec {
         // Se necessário, tratar dados após a migração
     }
 }
+
+

@@ -8,6 +8,5 @@ data class TrainingUiState (
     val expandedCardIds: Set<String> = emptySet(),
     val errorMessage: String? = null,
     val messageTrainingsEmpty: String? = null,
-    val progress: Float = 0f,
     val isListEmpty: Boolean = true
 )
