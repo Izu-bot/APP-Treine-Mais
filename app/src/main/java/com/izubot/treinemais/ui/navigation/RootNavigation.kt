@@ -14,10 +14,8 @@ import com.izubot.treinemais.data.local.helpers.SessionManager
 import com.izubot.treinemais.ui.splash.Splash
 import com.izubot.treinemais.utils.FocusAction
 import com.izubot.treinemais.utils.FocusManager
-import com.izubot.treinemais.utils.FocusManagerViewModel
 import kotlinx.serialization.Serializable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Serializable sealed class RootRoute {
     @Serializable data object Splash : RootRoute()
@@ -29,9 +27,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 fun RootNavigation(
     isLoggedIn: Boolean?,
     sessionManager: SessionManager,
+    focusManager: FocusManager,
     deepLinkIntent: Intent? = null,
     navController: NavHostController = rememberNavController(),
-    focusManager: FocusManager = hiltViewModel<FocusManagerViewModel>().focusManager
 ) {
     val localFocusManager = LocalFocusManager.current
 

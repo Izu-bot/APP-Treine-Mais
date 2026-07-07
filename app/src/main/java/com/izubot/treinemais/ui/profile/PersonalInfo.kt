@@ -36,7 +36,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import androidx.compose.ui.platform.LocalLocale
+import androidx.compose.ui.text.intl.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -165,7 +165,7 @@ fun PersonalInfo(
         ) {
             OutlinedTextFieldComponent(
                 value = if (state.birthDate == null) "Não informado"
-                    else state.birthDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy", LocalLocale.current.platformLocale)),
+                    else state.birthDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.current.platformLocale)),
                 onValueChange = {},
                 readOnly = true,
                 isPasswordField = false,

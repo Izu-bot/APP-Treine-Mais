@@ -17,7 +17,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -54,11 +56,13 @@ fun OutlinedTextFieldComponent(
 ) {
     val focusManager = LocalFocusManager.current
     
-    val defaultKeyboardActions = KeyboardActions(
-        onNext = { focusManager.moveFocus(androidx.compose.ui.focus.FocusDirection.Next) },
-        onDone = { focusManager.clearFocus() },
-        onPrevious = { focusManager.moveFocus(androidx.compose.ui.focus.FocusDirection.Previous) }
-    )
+    val defaultKeyboardActions = remember {
+        KeyboardActions(
+            onNext = { focusManager.moveFocus(FocusDirection.Next) },
+            onDone = { focusManager.clearFocus() },
+            onPrevious = { focusManager.moveFocus(FocusDirection.Previous) }
+        )
+    }
 
     Column(
         modifier = modifier
