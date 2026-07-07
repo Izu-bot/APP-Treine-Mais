@@ -17,11 +17,15 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -39,7 +43,7 @@ fun OutlinedTextFieldComponent(
     leadingIcon: ImageVector? = null,
     color: TextFieldColors,
     placeholderText: String,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    keyboardActions: KeyboardActions? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     errorMessage: Int? = null,
     isPasswordField: Boolean = false,
@@ -50,6 +54,16 @@ fun OutlinedTextFieldComponent(
     isError: Boolean = false,
     readOnly: Boolean = false
 ) {
+    val focusManager = LocalFocusManager.current
+    
+    val defaultKeyboardActions = remember {
+        KeyboardActions(
+            onNext = { focusManager.moveFocus(FocusDirection.Next) },
+            onDone = { focusManager.clearFocus() },
+            onPrevious = { focusManager.moveFocus(FocusDirection.Previous) }
+        )
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -99,7 +113,7 @@ fun OutlinedTextFieldComponent(
                     )
                 }
             },
-            keyboardActions = keyboardActions,
+            keyboardActions = keyboardActions ?: defaultKeyboardActions,
             keyboardOptions = keyboardOptions
         )
         if (isPasswordField && isUiLogin) {
@@ -115,9 +129,3 @@ fun OutlinedTextFieldComponent(
         }
     }
 }
-
-/*
-* TODO
-*  Falta colocar as interações do teclado
-*  Colocar também a mudança de foco
-* */

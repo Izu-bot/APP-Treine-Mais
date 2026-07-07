@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.DatePicker
@@ -26,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.OutlinedTextFieldComponent
@@ -33,7 +36,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Locale
+import androidx.compose.ui.text.intl.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -132,7 +135,7 @@ fun PersonalInfo(
         )
 
         OutlinedTextFieldComponent(
-            value = if (state.gender == null) "Não informado" else state.gender.toString(),
+            value = state.gender ?: "Não informado",
             onValueChange = {},
             isPasswordField = false,
             labelText = stringResource(R.string.profile_gender),
@@ -151,6 +154,10 @@ fun PersonalInfo(
                 cursorColor = MaterialTheme.colorScheme.onPrimary,
                 focusedTextColor = MaterialTheme.colorScheme.onPrimary,
             ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.None
+            ),
+            keyboardActions = KeyboardActions.Default
         )
 
         Box(
@@ -158,7 +165,7 @@ fun PersonalInfo(
         ) {
             OutlinedTextFieldComponent(
                 value = if (state.birthDate == null) "Não informado"
-                    else state.birthDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.getDefault())),
+                    else state.birthDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.current.platformLocale)),
                 onValueChange = {},
                 readOnly = true,
                 isPasswordField = false,
@@ -177,6 +184,10 @@ fun PersonalInfo(
                     cursorColor = MaterialTheme.colorScheme.onPrimary,
                     focusedTextColor = MaterialTheme.colorScheme.onPrimary,
                 ),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.None
+                ),
+                keyboardActions = KeyboardActions.Default
             )
 
             Box(

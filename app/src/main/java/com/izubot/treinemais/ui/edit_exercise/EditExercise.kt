@@ -22,6 +22,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.izubot.treinemais.R
+import com.izubot.treinemais.ui.components.OutlinedTextFieldComponent
+import com.izubot.treinemais.ui.utils.clearFocusOnTap
 import com.izubot.treinemais.utils.UiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,15 +84,25 @@ fun EditExercise(
                 modifier = modifier
                     .padding(padding)
                     .padding(16.dp)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .clearFocusOnTap(),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                OutlinedTextField(
+                OutlinedTextFieldComponent(
                     value = state.name,
                     onValueChange = viewModel::onNameChange,
-                    label = { Text(stringResource(R.string.new_training_exercise_name_placeholder)) },
+                    labelText = stringResource(R.string.new_training_exercise_name_placeholder),
+                    placeholderText = "",
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = 12.dp,
+                    color = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text
+                    )
                 )
 
                 Row(
@@ -101,19 +113,22 @@ fun EditExercise(
                         label = stringResource(R.string.new_training_sets),
                         value = state.sets,
                         onValueChange = viewModel::onSetsChange,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        imeAction = ImeAction.Next
                     )
                     EditDetailItem(
                         label = stringResource(R.string.new_training_reps),
                         value = state.reps,
                         onValueChange = viewModel::onRepsChange,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        imeAction = ImeAction.Next
                     )
                     EditDetailItem(
                         label = stringResource(R.string.new_training_weight),
                         value = state.weight,
                         onValueChange = viewModel::onWeightChange,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        imeAction = ImeAction.Done
                     )
                 }
 
@@ -141,7 +156,8 @@ fun EditDetailItem(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    imeAction: ImeAction = ImeAction.Next
 ) {
     Column(
         modifier = modifier,
@@ -171,7 +187,7 @@ fun EditDetailItem(
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 ),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = imeAction),
                 cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                 modifier = Modifier.width(40.dp)
             )

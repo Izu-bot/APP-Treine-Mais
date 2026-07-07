@@ -9,7 +9,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.work.Constraints
@@ -22,6 +21,7 @@ import com.izubot.treinemais.data.local.helpers.SessionManager
 import com.izubot.treinemais.data.worker.SyncWorker
 import com.izubot.treinemais.ui.navigation.RootNavigation
 import com.izubot.treinemais.ui.theme.TreineMaisTheme
+import com.izubot.treinemais.utils.FocusManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -34,6 +34,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var sessionManager: SessionManager
+
+    @Inject
+    lateinit var focusManager: FocusManager
 
     private var deepLinkIntent by mutableStateOf<Intent?>(null)
 
@@ -74,7 +77,8 @@ class MainActivity : ComponentActivity() {
                 RootNavigation(
                     isLoggedIn = isLoggedIn,
                     sessionManager = sessionManager,
-                    deepLinkIntent = deepLinkIntent
+                    deepLinkIntent = deepLinkIntent,
+                    focusManager = focusManager
                 )
             }
         }

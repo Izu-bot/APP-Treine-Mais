@@ -3,7 +3,6 @@ package com.izubot.treinemais.ui.login
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,12 +29,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -46,6 +42,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.izubot.treinemais.R
 import com.izubot.treinemais.ui.components.ButtonComponent
 import com.izubot.treinemais.ui.components.OutlinedTextFieldComponent
+import com.izubot.treinemais.ui.utils.clearFocusOnTap
 import com.izubot.treinemais.utils.UiEvent
 import kotlinx.coroutines.flow.collectLatest
 
@@ -58,9 +55,6 @@ fun Login(
     loginViewModel: LoginViewModel = hiltViewModel<LoginViewModel>()
 ) {
     val state by loginViewModel.state.collectAsState()
-    val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val interactionSource = remember { MutableInteractionSource() }
     val context = LocalContext.current
 
 
@@ -84,13 +78,7 @@ fun Login(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp, vertical = 12.dp)
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null
-            ) {
-                keyboardController?.hide()
-                focusManager.clearFocus()
-            },
+            .clearFocusOnTap(),
     ) {
         // Header
         Box(

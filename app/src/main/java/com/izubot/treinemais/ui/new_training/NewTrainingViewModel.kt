@@ -7,6 +7,7 @@ import com.izubot.treinemais.R
 import com.izubot.treinemais.domain.model.Exercise
 import com.izubot.treinemais.domain.model.Training
 import com.izubot.treinemais.domain.repository.TrainingRepository
+import com.izubot.treinemais.utils.FocusManager
 import com.izubot.treinemais.utils.UiEvent
 import com.izubot.treinemais.utils.UiEventManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +26,8 @@ import javax.inject.Inject
 class NewTrainingViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val trainingRepository: TrainingRepository,
-    private val uiEventManager: UiEventManager
+    private val uiEventManager: UiEventManager,
+    private val focusManager: FocusManager
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NewTrainingUiState())
     val state: StateFlow<NewTrainingUiState> = _uiState.asStateFlow()
@@ -119,6 +121,7 @@ class NewTrainingViewModel @Inject constructor(
 
             trainingRepository.insertTraining(domainTraining)
                 .onSuccess {
+                    focusManager.clearFocus()
                     uiEventManager.sendEvent(UiEvent.Success(context.getString(R.string.new_training_save_success)))
                     onSuccess()
                 }
