@@ -14,7 +14,7 @@ class TrainingHistoryRepositoryImpl @Inject constructor(
     private val historyDao: TrainingHistoryDao
 ) : TrainingHistoryRepository {
 
-    override suspend fun getBetweenDates(
+    override fun getBetweenDates(
         startDate: String,
         endDate: String
     ): Flow<List<DayProgress>> {
@@ -37,7 +37,7 @@ class TrainingHistoryRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun markDayAsCompleted(date: String) {
+    override fun markDayAsCompleted(date: String) {
         historyDao.insertHistory(TrainingHistoryEntity(date = date, isCompleted = true))
     }
 }

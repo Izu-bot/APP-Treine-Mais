@@ -1,6 +1,5 @@
 package com.izubot.treinemais.domain.usecase
 
-import androidx.compose.animation.with
 import com.izubot.treinemais.domain.model.DayProgress
 import com.izubot.treinemais.domain.repository.TrainingHistoryRepository
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +11,7 @@ import javax.inject.Inject
 class GetWeeklyProgressUseCase @Inject constructor(
     private val trainingHistoryRepository: TrainingHistoryRepository
 ) {
-    suspend operator fun invoke(): Flow<List<DayProgress>> {
+    operator fun invoke(): Flow<List<DayProgress>> {
         val today = LocalDate.now()
 
         val startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))

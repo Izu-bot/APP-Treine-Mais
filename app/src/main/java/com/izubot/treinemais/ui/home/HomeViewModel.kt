@@ -10,6 +10,7 @@ import com.izubot.treinemais.utils.FocusManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -97,12 +98,6 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getWeeklyProgress() {
-        viewModelScope.launch {
-            getWeeklyProgressUseCase().collect { progresses ->
-                _localState.update {
-                    it.copy(weeklyProgress = progresses)
-                }
-            }
-        }
+        getWeeklyProgressUseCase().launchIn(viewModelScope)
     }
 }

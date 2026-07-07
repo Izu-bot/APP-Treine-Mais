@@ -13,5 +13,5 @@ interface TrainingHistoryDao {
     fun getHistoryBetweenDates(startDate: String, endDate: String): Flow<List<TrainingHistoryEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertHistory(history: TrainingHistoryEntity)
+    fun insertHistory(history: TrainingHistoryEntity)
 }

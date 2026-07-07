@@ -73,7 +73,8 @@ fun RootNavigation(
                         }
                     },
                     modifier = Modifier.padding(innerPadding),
-                    isLoggedIn = isLoggedIn
+                    isLoggedIn = isLoggedIn,
+                    hasCompletedOnboarding = hasCompletedOnboarding
                 )
             }
         }
