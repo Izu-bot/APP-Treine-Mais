@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,62 +46,67 @@ fun Splash(
         }
     }
 
-    Column(
+    Surface(
         modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        color = MaterialTheme.colorScheme.background
     ) {
         Column(
-            modifier = Modifier.weight(1f),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
 
-            Image(
-                painter = painterResource(R.mipmap.ic_launcher_foreground),
-                contentDescription = stringResource(R.string.app_name),
-                modifier = Modifier.size(180.dp)
-            )
+                Image(
+                    painter = painterResource(R.mipmap.ic_launcher_foreground),
+                    contentDescription = stringResource(R.string.app_name),
+                    modifier = Modifier.size(180.dp)
+                )
+                Text(
+                    text = stringResource(R.string.app_name).uppercase(),
+                    fontWeight = FontWeight.ExtraBold,
+                    style = MaterialTheme.typography.displaySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    letterSpacing = 6.sp,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    text = stringResource(R.string.subtitle_splash).uppercase(),
+                    fontWeight = FontWeight.W500,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary,
+                    letterSpacing = 4.sp,
+                    textAlign = TextAlign.Center,
+                )
+                Spacer(modifier = Modifier.height(160.dp))
+            }
+
             Text(
-                text = stringResource(R.string.app_name).uppercase(),
-                fontWeight = FontWeight.ExtraBold,
-                style = MaterialTheme.typography.displaySmall,
-                color = MaterialTheme.colorScheme.primary,
-                letterSpacing = 6.sp,
-                textAlign = TextAlign.Center,
-            )
-            Text(
-                text = stringResource(R.string.subtitle_splash).uppercase(),
-                fontWeight = FontWeight.W500,
+                text = stringResource(R.string.init).uppercase(),
+                fontWeight = FontWeight.SemiBold,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.secondary,
                 letterSpacing = 4.sp,
                 textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 10.dp),
             )
-            Spacer(modifier = Modifier.height(160.dp))
-        }
 
-        Text(
-            text = stringResource(R.string.init).uppercase(),
-            fontWeight = FontWeight.SemiBold,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.secondary,
-            letterSpacing = 4.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(bottom = 10.dp),
-        )
-
-        /*
+            /*
         * TODO
         *  Make progress
         *  Só é possivel fazer quando tiver a lógica de conexão com a API
         * */
-        LinearProgressIndicator(
-            trackColor = MaterialTheme.colorScheme.onPrimary,
-            color = MaterialTheme.colorScheme.primary,
-            gapSize = 8.dp,
-            modifier = Modifier
-                .width(80.dp)
-                .padding(bottom = 12.dp)
-        )
+            LinearProgressIndicator(
+                trackColor = MaterialTheme.colorScheme.onPrimary,
+                color = MaterialTheme.colorScheme.primary,
+                gapSize = 8.dp,
+                modifier = Modifier
+                    .width(80.dp)
+                    .padding(bottom = 12.dp)
+            )
+        }
     }
 }

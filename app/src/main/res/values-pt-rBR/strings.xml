@@ -109,7 +109,7 @@
     <string name="new_training_exercises_title">Exercícios</string>
     <string name="new_training_exercises_subtitle">Defina séries, repetições e peso</string>
     <string name="new_training_add_exercise_desc">Adicionar Exercício</string>
-    <string name="new_training_exercise_name_placeholder">Nome do exercício</string>
+    <string name="new_training_exercise_name_placeholder">Ex: Supino Reto</string>
     <string name="new_training_remove_exercise_desc">Remover</string>
     <string name="new_training_exercise_removed">Exercício removido</string>
     <string name="new_training_undo">Desfazer</string>
@@ -121,4 +121,21 @@
     <string name="new_training_name_empty">O nome do treino não pode estar em branco.</string>
     <string name="new_training_exercise_empty_fields">Por favor, preencha todos os campos dos exercícios.</string>
     <string name="new_training_no_exercises">Adicione pelo menos um exercício ao treino.</string>
+
+    <!-- Tela Inicial -->
+    <string name="home_weekly_progress">Seu progresso semanal</string>
+    <string name="home_choose_training">Escolha um treino para começar</string>
+    <string name="home_abandon_training_title">Abandonar Treino?</string>
+    <string name="home_abandon_training_message">Se você sair agora, todo o progresso registrado neste treino será perdido.</string>
+    <string name="home_abandon_training_confirm">Sair e Perder</string>
+    <string name="home_abandon_training_dismiss">Continuar Treinando</string>
+    <string name="home_complete_training">Concluir Treino</string>
+    <string name="home_fast_fill_default">Padrão: %1$skg</string>
+    <string name="home_no_trainings_message">Você ainda não possui treinos cadastrados. Vá até a aba de Treinos para criar um!</string>
+    <string name="training_exercises_count">%1$d Exercícios</string>
+
+    <!-- Tela Onboarding -->
+    <string name="onboarding_title">Bem-vindo ao Treine+</string>
+    <string name="onboarding_description">Sua agenda portátil de treinos. Registre suas sessões, acompanhe sua frequência e ajuste sua rotina a qualquer momento, em qualquer lugar.</string>
+    <string name="onboarding_button_start">Começar agora</string>
 </resources>

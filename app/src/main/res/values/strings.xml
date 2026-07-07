@@ -109,7 +109,7 @@
     <string name="new_training_exercises_title">Exercises</string>
     <string name="new_training_exercises_subtitle">Set sets, reps, and weight</string>
     <string name="new_training_add_exercise_desc">Add Exercise</string>
-    <string name="new_training_exercise_name_placeholder">Exercise name</string>
+    <string name="new_training_exercise_name_placeholder">Ex: Bench Press</string>
     <string name="new_training_remove_exercise_desc">Remove</string>
     <string name="new_training_exercise_removed">Exercise removed</string>
     <string name="new_training_undo">Undo</string>
@@ -121,4 +121,21 @@
     <string name="new_training_name_empty">Training name cannot be empty.</string>
     <string name="new_training_exercise_empty_fields">Please fill in all exercise fields.</string>
     <string name="new_training_no_exercises">Add at least one exercise to the training.</string>
+
+    <!-- Home Screen -->
+    <string name="home_weekly_progress">Your weekly progress</string>
+    <string name="home_choose_training">Choose a training to start</string>
+    <string name="home_abandon_training_title">Abandon Training?</string>
+    <string name="home_abandon_training_message">If you leave now, all progress recorded in this training will be lost.</string>
+    <string name="home_abandon_training_confirm">Exit and Lose</string>
+    <string name="home_abandon_training_dismiss">Continue Training</string>
+    <string name="home_complete_training">Complete Training</string>
+    <string name="home_fast_fill_default">Default: %1$skg</string>
+    <string name="home_no_trainings_message">You don\'t have any trainings yet. Go to the Trainings tab to create one!</string>
+    <string name="training_exercises_count">%1$d Exercises</string>
+
+    <!-- Onboarding Screen -->
+    <string name="onboarding_title">Welcome to Treine+</string>
+    <string name="onboarding_description">Your portable workout agenda. Register your training sessions, track your consistency, and adjust your routine anytime, anywhere.</string>
+    <string name="onboarding_button_start">Get Started</string>
 </resources>

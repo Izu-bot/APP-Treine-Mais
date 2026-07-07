@@ -33,6 +33,7 @@ class DataStorePrefs(
         private val THEME_MODE = booleanPreferencesKey("theme_mode")
         private val NOTIFICATION_ENABLED = booleanPreferencesKey("notification_enabled")
         private val AI_ENABLED = booleanPreferencesKey("ai_enabled")
+        private val HAS_COMPLETED_ONBOARDING = booleanPreferencesKey("has_completed_onboarding")
     }
 
     private val aead: Aead by lazy {
@@ -95,6 +96,10 @@ class DataStorePrefs(
     val aiCache: StateFlow<Boolean> = context.dataStore.data
         .map { it[AI_ENABLED] ?: false }
         .stateIn(scope, SharingStarted.WhileSubscribed(5000), false)
+
+    val hasCompletedOnboarding: Flow<Boolean> = context.dataStore.data
+        .map { it[HAS_COMPLETED_ONBOARDING] ?: false }
+
     suspend fun saveThemePrefs(themeMode: Boolean) {
         context.dataStore.edit { it[THEME_MODE] = themeMode }
     }
@@ -105,6 +110,10 @@ class DataStorePrefs(
 
     suspend fun saveAiPref(isEnabled: Boolean) {
         context.dataStore.edit { it[AI_ENABLED] = isEnabled }
+    }
+
+    suspend fun saveOnboardingCompleted() {
+        context.dataStore.edit { it[HAS_COMPLETED_ONBOARDING] = true }
     }
 
 }
