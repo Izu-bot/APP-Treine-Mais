@@ -38,7 +38,7 @@ jobs:
           # Preço: $2/$10 por MTok (intro) vs $5/$25 do Opus 4.8
           claude_args: |
             --model claude-sonnet-5
-            --max-turns 3
+            --max-turns 6
           
           prompt: |
             Você é um revisor de código sênior focado em ajudar o desenvolvedor a evoluir.
