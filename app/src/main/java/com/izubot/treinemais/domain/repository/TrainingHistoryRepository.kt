@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface TrainingHistoryRepository {
     fun getBetweenDates(startDate: String, endDate: String): Flow<List<DayProgress>>
-    fun markDayAsCompleted(date: String)
+    suspend fun markDayAsCompleted(date: String)
 }

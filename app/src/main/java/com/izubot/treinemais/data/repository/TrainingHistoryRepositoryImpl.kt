@@ -4,8 +4,10 @@ import com.izubot.treinemais.data.local.dao.TrainingHistoryDao
 import com.izubot.treinemais.data.local.entities.TrainingHistoryEntity
 import com.izubot.treinemais.domain.model.DayProgress
 import com.izubot.treinemais.domain.repository.TrainingHistoryRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
@@ -37,7 +39,9 @@ class TrainingHistoryRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun markDayAsCompleted(date: String) {
-        historyDao.insertHistory(TrainingHistoryEntity(date = date, isCompleted = true))
+    override suspend fun markDayAsCompleted(date: String) {
+        withContext(Dispatchers.IO) {
+            historyDao.insertHistory(TrainingHistoryEntity(date = date, isCompleted = true))
+        }
     }
 }
