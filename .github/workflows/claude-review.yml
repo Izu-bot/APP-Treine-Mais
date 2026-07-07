@@ -2,68 +2,33 @@ name: Claude PR Review
 on:
   pull_request:
     types: [opened, synchronize]
-    # Ignorar PRs que mudam apenas docs, markdown, etc.
-    paths-ignore:
-      - '**.md'
-      - '**.txt'
-      - 'docs/**'
-      - '.github/**'
 
 jobs:
   claude-code-review:
     runs-on: ubuntu-latest
-    # Não executar em PRs de dependabot (já tem análise automática)
-    if: github.actor != 'dependabot[bot]'
-    
     permissions:
       id-token: write
       contents: read
       pull-requests: write
       issues: write
-      
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
       - name: Claude PR Review
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          
-          # OTIMIZAÇÃO 1: Usar Sonnet 5 em vez de Opus 4.8
-          # Sonnet 5 é 70% mais barato e suficiente para code review
-          # Preço: $2/$10 por MTok (intro) vs $5/$25 do Opus 4.8
-          claude_args: |
-            --model claude-sonnet-5
-            --max-turns 6
-          
+          track_progress: true
+          use_sticky_comment: true
           prompt: |
             Você é um revisor de código sênior focado em ajudar o desenvolvedor a evoluir.
-            
-            Faça uma revisão FOCADA e OBJETIVA deste PR:
-            
-            IMPORTANTE - Classifique e priorize:
-            - 🔴 CRÍTICO: bugs, segurança, performance ruins
-            - 🟡 SUGESTÃO: melhorias de código, padrões
-            - 💡 NITPICK: estilo, convenções menores
-            
-            Para CADA problema:
-            1. Explique O PORQUÊ, não só o QUE mudar
-            2. Cite link de documentação ou padrão relevante
-            3. Se possível, sugira a solução específica
-            
-            Se o código está bem feito, aponte os pontos positivos também.
-            
-            Respeite os pontos acima - evite avisos desnecessários.
-            Responda SEMPRE em português.
-
-      # OTIMIZAÇÃO 2: Configurar summary com os resultados
-      - name: Print Claude Review Summary
-        if: always()
-        run: |
-          echo "✅ Claude PR Review concluído"
-          echo "Modelo: Claude Sonnet 5 (otimizado para custo)"
-          echo "Custo estimado: 70% menor que Opus 4.8"
+            Ao revisar este PR:
+            - Explique o PORQUÊ dos problemas, não só o que mudar
+            - Inclua links aonde o desenvolvedor possa buscar as soluções
+            - Classifique claramente: CRÍTICO / SUGESTÃO / NITPICK
+            - Evite alarmes falsos — só aponte problemas reais com justificativa sólida
+            - Se algo estiver bem feito, diga também
+            Responda em português.
