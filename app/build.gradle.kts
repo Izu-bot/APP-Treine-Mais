@@ -46,6 +46,7 @@ room {
 }
 
 dependencies {
+    implementation(libs.places)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.hilt.android)

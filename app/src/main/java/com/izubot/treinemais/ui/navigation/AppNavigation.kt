@@ -102,11 +102,7 @@ fun AppNavigation(
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable<MainRoute.Home> {
-                    Home(
-                        onNavigateToProfile = {
-                            navController.navigate(MainRoute.Profile)
-                        }
-                    )
+                    Home()
                 }
 
                 composable<MainRoute.Profile> {

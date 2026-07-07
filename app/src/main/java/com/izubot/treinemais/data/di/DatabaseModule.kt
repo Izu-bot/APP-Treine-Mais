@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.izubot.treinemais.data.local.dao.ExerciseDao
 import com.izubot.treinemais.data.local.dao.TrainingDao
+import com.izubot.treinemais.data.local.dao.TrainingHistoryDao
 import com.izubot.treinemais.data.local.dao.UserDao
 import com.izubot.treinemais.data.local.datasource.AppDatabase
 import com.izubot.treinemais.data.local.migrations.DatabaseMigrations
@@ -39,4 +40,6 @@ object DatabaseModule {
     @Provides
     fun provideExerciseDao(database: AppDatabase): ExerciseDao { return database.exerciseDao() }
 
+    @Provides
+    fun provideTrainingHistoryDao(database: AppDatabase): TrainingHistoryDao { return database.trainingHistoryDao() }
 }

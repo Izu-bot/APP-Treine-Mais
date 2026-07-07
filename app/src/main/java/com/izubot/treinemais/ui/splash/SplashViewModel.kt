@@ -3,11 +3,12 @@ package com.izubot.treinemais.ui.splash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
+import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class SplashViewModel @Inject constructor() : ViewModel() {
@@ -21,7 +22,7 @@ class SplashViewModel @Inject constructor() : ViewModel() {
 
     private fun prepareAppData() {
         viewModelScope.launch {
-            delay(1000)
+            delay(1500.milliseconds)
             _isReady.value = true
         }
     }

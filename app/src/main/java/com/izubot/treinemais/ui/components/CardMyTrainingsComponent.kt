@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -71,7 +72,10 @@ fun CardMyTrainingsComponent(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
                     Box(
                         modifier = Modifier
                             .size(48.dp)
@@ -95,7 +99,10 @@ fun CardMyTrainingsComponent(
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
                         ),
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false)
                     )
                     
                     Icon(
@@ -108,6 +115,8 @@ fun CardMyTrainingsComponent(
                     )
                 }
                 
+                Spacer(modifier = Modifier.width(8.dp))
+
                 // Badge
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(
@@ -121,19 +130,20 @@ fun CardMyTrainingsComponent(
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
 
                     Surface(
                         color = MaterialTheme.colorScheme.tertiaryContainer,
                         shape = RoundedCornerShape(16.dp)
                     ) {
                         Text(
-                            text = "${training.exercises.size} Exercícios",
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                            style = MaterialTheme.typography.labelMedium.copy(
+                            text = stringResource(R.string.training_exercises_count, training.exercises.size),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+                            style = MaterialTheme.typography.labelSmall.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onTertiaryContainer
-                            )
+                            ),
+                            maxLines = 1
                         )
                     }
                 }

@@ -1,56 +1,106 @@
 package com.izubot.treinemais.ui.home
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.izubot.treinemais.R
-import com.izubot.treinemais.domain.usecase.GetUserUseCase
+import com.izubot.treinemais.domain.model.Training
+import com.izubot.treinemais.domain.repository.TrainingHistoryRepository
+import com.izubot.treinemais.domain.repository.TrainingRepository
+import com.izubot.treinemais.domain.usecase.GetWeeklyProgressUseCase
+import com.izubot.treinemais.utils.FocusManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalTime
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    @param:ApplicationContext private val context: Context,
-    private val getUserNameUseCase: GetUserUseCase
+    private val getWeeklyProgressUseCase: GetWeeklyProgressUseCase,
+    private val trainingRepository: TrainingRepository,
+    private val historyRepository: TrainingHistoryRepository,
+    private val focusManager: FocusManager
 ) : ViewModel() {
 
     private val _localState = MutableStateFlow(HomeUiState())
-    val state = _localState
+    val state = _localState.asStateFlow()
+
+    val focusActions = focusManager.focusActions
 
     init {
-        greet()
-        getUser()
+        getWeeklyProgress()
+        getTrainings()
     }
 
-    private fun getUser() {
+    private fun getTrainings() {
         viewModelScope.launch {
-            getUserNameUseCase().collect { user ->
-                _localState.update {
-                    it.copy(
-                        nameUser = user?.fullName ?: "",
-                        imageUri = user?.localPhotoPath ?: ""
-                    )
-                }
+            trainingRepository.getAllTrainings().collect { list ->
+                _localState.update { it.copy(trainings = list) }
             }
         }
     }
 
-    fun greet() {
-        val currentHour = LocalTime.now()
+    fun selectTraining(training: Training) {
+        viewModelScope.launch {
+            focusManager.clearFocus()
+            val initialWeights = training.exercises.associate { exercise ->
+                val numSets = exercise.sets?.toIntOrNull() ?: 1
+                exercise.id to List(numSets) { "" }
+            }
 
-        val resourceId =  when (currentHour.hour) {
-            in 6..11 -> context.getString(R.string.welcome_good_morning)
-            in 12..17 -> context.getString(R.string.welcome_good_afternoon)
-            else -> context.getString(R.string.welcome_good_night)
+            _localState.update { 
+                it.copy(
+                    selectedTraining = training,
+                    exerciseWeights = initialWeights,
+                    isTrainingCompleted = false
+                ) 
+            }
         }
+    }
 
-        _localState.update {
-            it.copy(greeting = resourceId)
+    fun onWeightChange(exerciseId: String, setIndex: Int, weight: String) {
+        val currentWeightsMap = _localState.value.exerciseWeights
+        val exerciseWeights = currentWeightsMap[exerciseId] ?: return
+        
+        if (setIndex in exerciseWeights.indices) {
+            val updatedWeights = exerciseWeights.toMutableList().apply {
+                this[setIndex] = weight
+            }
+            _localState.update { currentState ->
+                currentState.copy(
+                    exerciseWeights = currentState.exerciseWeights + (exerciseId to updatedWeights)
+                )
+            }
+        }
+    }
+
+    fun completeTraining() {
+        viewModelScope.launch {
+            focusManager.clearFocus()
+            
+            // Persist completion to database
+            historyRepository.markDayAsCompleted(LocalDate.now().toString())
+
+            _localState.update { currentState ->
+                currentState.copy(
+                    selectedTraining = null,
+                    isTrainingCompleted = true
+                )
+            }
+        }
+    }
+
+    fun resetTrainingSelection() {
+        focusManager.clearFocus()
+        _localState.update { it.copy(selectedTraining = null) }
+    }
+
+    private fun getWeeklyProgress() {
+        viewModelScope.launch {
+            getWeeklyProgressUseCase().collect { list ->
+                _localState.update { it.copy(weeklyProgress = list) }
+            }
         }
     }
 }
