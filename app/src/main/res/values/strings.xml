@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App General -->
     <string name="app_name">Treine+</string>
     <string name="app_version">Version %1$s</string>
+
+    <!-- Splash Screen -->
     <string name="subtitle_splash">Track your strength</string>
     <string name="init">Starting</string>
+
+    <!-- Welcome Screen -->
     <string name="welcome_call_to_action">Train with purpose</string>
     <string name="welcome_subtitle">Track your progress, set goals, and surpass you daily limits</string>
     <string name="welcome_sign_in">I already have an account</string>
     <string name="welcome_sign_up">Create a new account</string>
     <string name="welcome_image_content_descriptor">Image of a woman exercising.</string>
     <string name="arrow_back_welcome">Back to welcome</string>
+
+    <!-- Login Screen -->
     <string name="title_login">Access</string>
     <string name="welcome_login">Welcome back!</string>
     <string name="welcome_login_subtitle">Continue your training from where you left off"</string>
@@ -19,6 +26,11 @@
     <string name="login_email_placeholder">Enter your email</string>
     <string name="login_password_placeholder">Enter your password</string>
     <string name="login_forgot_password">Forgot your password?</string>
+    <string name="login_email_verificate">Email verified successfully</string>
+    <string name="login_error_email">Error checking email</string>
+    <string name="login_error_message">Failed to log in, please try again</string>
+
+    <!-- Register Screen -->
     <string name="register_create_account">Create your account"</string>
     <string name="register_access_credentials">Your access credentials</string>
     <string name="register_placeholder_email">email@example.com</string>
@@ -47,10 +59,32 @@
     <string name="register_validate_name">The name cannot be empty</string>
     <string name="register_invalid_name">The name must be longer than 3 characters</string>
     <string name="register_error_generic">Something went wrong</string>
+    <string name="register_user_success">User successfully registered</string>
+    <string name="register_user_error">Failed to register user</string>
+
+    <!-- Confirm Email Screen -->
     <string name="confirm_email">Confirm Email</string>
     <string name="confirm_email_subtitle">Check your email to confirm your account</string>
     <string name="go_to_gmail">Go to Gmail</string>
+
+    <!-- Home Screen -->
+    <string name="welcome_good_morning">Good morning</string>
+    <string name="welcome_good_afternoon">Good afternoon</string>
+    <string name="welcome_good_night">Good night</string>
     <string name="todays_training">Today\'s training</string>
+    <string name="home_weekly_progress">Your weekly progress</string>
+    <string name="home_choose_training">Choose a training to start</string>
+    <string name="home_abandon_training_title">Abandon Training?</string>
+    <string name="home_abandon_training_message">If you leave now, all progress recorded in this training will be lost.</string>
+    <string name="home_abandon_training_confirm">Exit and Lose</string>
+    <string name="home_abandon_training_dismiss">Continue Training</string>
+    <string name="home_complete_training">Complete Training</string>
+    <string name="home_fast_fill_default">Default: %1$skg</string>
+    <string name="home_apply_all">Apply to all: %1$skg</string>
+    <string name="home_no_trainings_message">You don\'t have any trainings yet. Go to the Trainings tab to create one!</string>
+    <string name="training_exercises_count">%1$d Exercises</string>
+
+    <!-- Profile Screen -->
     <string name="title_profile">Profile</string>
     <string name="personal_information">Personal information</string>
     <string name="profile_name">Name</string>
@@ -67,25 +101,19 @@
     <string name="profile_support_notification">Receive workout reminders</string>
     <string name="profile_intelligence_artificial">Activate Artificial Intelligence</string>
     <string name="profile_support_ai">Allow Treine+ to use artificial intelligence to suggest workouts and personalize your experience</string>
-    <string name="notification_title">Welcome to Train More!</string>
-    <string name="notification_message">Notifications have been enabled</string>
-    <string name="ai_title_activated">Artificial intelligence activated</string>
-    <string name="ai_title_deactivated">Artificial intelligence deactivated</string>
     <string name="profile_notification_disabled">Disable notifications in the app settings</string>
-    <string name="login_email_verificate">Email verified successfully</string>
-    <string name="login_error_email">Error checking email</string>
-    <string name="login_error_message">Failed to log in, please try again</string>
-    <string name="register_user_success">User successfully registered</string>
-    <string name="register_user_error">Failed to register user</string>
-    <string name="welcome_good_morning">Good morning</string>
-    <string name="welcome_good_afternoon">Good afternoon</string>
-    <string name="welcome_good_night">Good night</string>
     <string name="profile_logout">Close session</string>
     <string name="profile_logout_title">Exit Treine+</string>
     <string name="profile_logout_message">Are you sure you want to log out?</string>
     <string name="profile_logout_cancel">Cancel</string>
     <string name="profile_logout_confirm">Confirm</string>
     <string name="profile_logout_success">Session successfully concluded</string>
+
+    <!-- Notifications & AI Alerts -->
+    <string name="notification_title">Welcome to Train More!</string>
+    <string name="notification_message">Notifications have been enabled</string>
+    <string name="ai_title_activated">Artificial intelligence activated</string>
+    <string name="ai_title_deactivated">Artificial intelligence deactivated</string>
 
     <!-- Training Screen -->
     <string name="training_title">My Trainings</string>
@@ -121,18 +149,6 @@
     <string name="new_training_name_empty">Training name cannot be empty.</string>
     <string name="new_training_exercise_empty_fields">Please fill in all exercise fields.</string>
     <string name="new_training_no_exercises">Add at least one exercise to the training.</string>
-
-    <!-- Home Screen -->
-    <string name="home_weekly_progress">Your weekly progress</string>
-    <string name="home_choose_training">Choose a training to start</string>
-    <string name="home_abandon_training_title">Abandon Training?</string>
-    <string name="home_abandon_training_message">If you leave now, all progress recorded in this training will be lost.</string>
-    <string name="home_abandon_training_confirm">Exit and Lose</string>
-    <string name="home_abandon_training_dismiss">Continue Training</string>
-    <string name="home_complete_training">Complete Training</string>
-    <string name="home_fast_fill_default">Default: %1$skg</string>
-    <string name="home_no_trainings_message">You don\'t have any trainings yet. Go to the Trainings tab to create one!</string>
-    <string name="training_exercises_count">%1$d Exercises</string>
 
     <!-- Onboarding Screen -->
     <string name="onboarding_title">Welcome to Treine+</string>

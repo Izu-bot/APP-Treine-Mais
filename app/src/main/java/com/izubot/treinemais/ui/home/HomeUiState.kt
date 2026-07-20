@@ -9,5 +9,6 @@ data class HomeUiState (
     val trainings: List<Training>? = null,
     val selectedTraining: Training? = null,
     val exerciseWeights: Map<String, List<String>> = emptyMap(),
-    val isTrainingCompleted: Boolean = false
+    val isTrainingCompleted: Boolean = false,
+    val confirmedExerciseIds: Set<String> = emptySet()
 )

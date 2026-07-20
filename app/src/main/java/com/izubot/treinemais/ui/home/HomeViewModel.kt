@@ -53,23 +53,48 @@ class HomeViewModel @Inject constructor(
                 it.copy(
                     selectedTraining = training,
                     exerciseWeights = initialWeights,
-                    isTrainingCompleted = false
+                    isTrainingCompleted = false,
+                    confirmedExerciseIds = emptySet()
                 ) 
             }
         }
     }
 
+    fun confirmExercise(exerciseId: String) {
+        _localState.update { currentState ->
+            val weights = currentState.exerciseWeights[exerciseId]
+            if (weights != null && weights.all { it.isNotBlank() }) {
+                currentState.copy(
+                    confirmedExerciseIds = currentState.confirmedExerciseIds + exerciseId
+                )
+            } else {
+                currentState
+            }
+        }
+    }
+
+    fun unlockExercise(exerciseId: String) {
+        _localState.update { currentState ->
+            currentState.copy(
+                confirmedExerciseIds = currentState.confirmedExerciseIds - exerciseId
+            )
+        }
+    }
+
     fun onWeightChange(exerciseId: String, setIndex: Int, weight: String) {
-        val currentWeightsMap = _localState.value.exerciseWeights
+        val currentState = _localState.value
+        if (currentState.confirmedExerciseIds.contains(exerciseId)) return
+
+        val currentWeightsMap = currentState.exerciseWeights
         val exerciseWeights = currentWeightsMap[exerciseId] ?: return
         
         if (setIndex in exerciseWeights.indices) {
             val updatedWeights = exerciseWeights.toMutableList().apply {
                 this[setIndex] = weight
             }
-            _localState.update { currentState ->
-                currentState.copy(
-                    exerciseWeights = currentState.exerciseWeights + (exerciseId to updatedWeights)
+            _localState.update { state ->
+                state.copy(
+                    exerciseWeights = state.exerciseWeights + (exerciseId to updatedWeights)
                 )
             }
         }

@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Geral App -->
     <string name="app_name">Treine+</string>
     <string name="app_version">Versão %1$s</string>
+
+    <!-- Tela de Splash -->
     <string name="subtitle_splash">Monitore sua força</string>
     <string name="init">Iniciando</string>
+
+    <!-- Tela de Boas-vindas -->
     <string name="welcome_call_to_action">Treine com propósito</string>
     <string name="welcome_subtitle">Acompanhe seu progresso, defina metas e supere os seus limites diários</string>
     <string name="welcome_sign_in">Já tenho uma conta</string>
     <string name="welcome_sign_up">Criar uma nova conta</string>
     <string name="welcome_image_content_descriptor">Imagem de uma mulher se exercitando.</string>
     <string name="arrow_back_welcome">Voltar para a tela de boas-vindas</string>
+
+    <!-- Tela de Login -->
     <string name="title_login">Acessar</string>
     <string name="welcome_login">Bem-vindo(a) de volta!</string>
     <string name="welcome_login_subtitle">Continue seu treino de onde parou</string>
@@ -19,6 +26,11 @@
     <string name="login_email_placeholder">Digite seu e-mail</string>
     <string name="login_password_placeholder">Digite sua senha</string>
     <string name="login_forgot_password">Esqueceu sua senha?</string>
+    <string name="login_email_verificate">E-mail verificado com sucesso</string>
+    <string name="login_error_email">Erro ao verificar e-mail</string>
+    <string name="login_error_message">Não foi possível efetuar o login. Tente novamente.</string>
+
+    <!-- Tela de Cadastro -->
     <string name="register_create_account">Crie sua conta</string>
     <string name="register_access_credentials">Suas credenciais de acesso</string>
     <string name="register_placeholder_email">email@exemplo.com</string>
@@ -47,10 +59,32 @@
     <string name="register_validate_name">O nome não pode estar em branco</string>
     <string name="register_invalid_name">O nome deve ter no mínimo 3 caracteres</string>
     <string name="register_error_generic">Algo deu errado</string>
+    <string name="register_user_success">Usuário registrado com sucesso</string>
+    <string name="register_user_error">Falha ao tentar registrar usuário</string>
+
+    <!-- Tela de Confirmação de Email -->
     <string name="confirm_email">Confirmar Email</string>
     <string name="confirm_email_subtitle">Verifique seu email para confirmar a sua conta</string>
     <string name="go_to_gmail">Ir para o Gmail</string>
+
+    <!-- Tela Inicial (Home) -->
+    <string name="welcome_good_morning">Bom dia</string>
+    <string name="welcome_good_afternoon">Boa tarde</string>
+    <string name="welcome_good_night">Boa noite</string>
     <string name="todays_training">Treino de hoje</string>
+    <string name="home_weekly_progress">Seu progresso semanal</string>
+    <string name="home_choose_training">Escolha um treino para começar</string>
+    <string name="home_abandon_training_title">Abandonar Treino?</string>
+    <string name="home_abandon_training_message">Se você sair agora, todo o progresso registrado neste treino será perdido.</string>
+    <string name="home_abandon_training_confirm">Sair e Perder</string>
+    <string name="home_abandon_training_dismiss">Continuar Treinando</string>
+    <string name="home_complete_training">Concluir Treino</string>
+    <string name="home_fast_fill_default">Padrão: %1$skg</string>
+    <string name="home_apply_all">Aplicar a todos: %1$skg</string>
+    <string name="home_no_trainings_message">Você ainda não possui treinos cadastrados. Vá até a aba de Treinos para criar um!</string>
+    <string name="training_exercises_count">%1$d Exercícios</string>
+
+    <!-- Tela de Perfil -->
     <string name="title_profile">Perfil</string>
     <string name="personal_information">Informações pessoais</string>
     <string name="profile_name">Nome</string>
@@ -67,25 +101,19 @@
     <string name="profile_support_notification">Receba lembretes de treino</string>
     <string name="profile_intelligence_artificial">Ativar Inteligência Artificial</string>
     <string name="profile_support_ai">Permita Treine+ usar inteligência artificial para sugerir treinos e personalizar a sua experiência</string>
-    <string name="notification_title">Bem-vindo ao Treine+</string>
-    <string name="notification_message">Notificações habilitadas</string>
-    <string name="ai_title_activated">Inteligência artificial ativada</string>
-    <string name="ai_title_deactivated">Inteligência artificial desativada</string>
     <string name="profile_notification_disabled">Desativar notificações nas configurações do aplicativo</string>
-    <string name="login_email_verificate">E-mail verificado com sucesso</string>
-    <string name="login_error_email">Erro ao verificar e-mail</string>
-    <string name="login_error_message">Não foi possível efetuar o login. Tente novamente.</string>
-    <string name="register_user_success">Usuário registrado com sucesso</string>
-    <string name="register_user_error">Falha ao tentar registrar usuário</string>
-    <string name="welcome_good_morning">Bom dia</string>
-    <string name="welcome_good_afternoon">Boa tarde</string>
-    <string name="welcome_good_night">Boa noite</string>
     <string name="profile_logout">Encerrar sessão</string>
     <string name="profile_logout_title">Sair do Treine+</string>
     <string name="profile_logout_message">Tem certeza de que deseja sair?</string>
     <string name="profile_logout_cancel">Cancelar</string>
     <string name="profile_logout_confirm">Confirmar</string>
     <string name="profile_logout_success">Sessão encerrada com sucesso</string>
+
+    <!-- Notificações e Alertas de IA -->
+    <string name="notification_title">Bem-vindo ao Treine+</string>
+    <string name="notification_message">Notificações habilitadas</string>
+    <string name="ai_title_activated">Inteligência artificial ativada</string>
+    <string name="ai_title_deactivated">Inteligência artificial desativada</string>
 
     <!-- Tela de Treinos -->
     <string name="training_title">Meus Treinos</string>
@@ -121,18 +149,6 @@
     <string name="new_training_name_empty">O nome do treino não pode estar em branco.</string>
     <string name="new_training_exercise_empty_fields">Por favor, preencha todos os campos dos exercícios.</string>
     <string name="new_training_no_exercises">Adicione pelo menos um exercício ao treino.</string>
-
-    <!-- Tela Inicial -->
-    <string name="home_weekly_progress">Seu progresso semanal</string>
-    <string name="home_choose_training">Escolha um treino para começar</string>
-    <string name="home_abandon_training_title">Abandonar Treino?</string>
-    <string name="home_abandon_training_message">Se você sair agora, todo o progresso registrado neste treino será perdido.</string>
-    <string name="home_abandon_training_confirm">Sair e Perder</string>
-    <string name="home_abandon_training_dismiss">Continuar Treinando</string>
-    <string name="home_complete_training">Concluir Treino</string>
-    <string name="home_fast_fill_default">Padrão: %1$skg</string>
-    <string name="home_no_trainings_message">Você ainda não possui treinos cadastrados. Vá até a aba de Treinos para criar um!</string>
-    <string name="training_exercises_count">%1$d Exercícios</string>
 
     <!-- Tela Onboarding -->
     <string name="onboarding_title">Bem-vindo ao Treine+</string>
