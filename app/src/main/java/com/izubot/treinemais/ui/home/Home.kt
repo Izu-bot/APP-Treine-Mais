@@ -27,6 +27,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -62,6 +63,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -138,7 +140,9 @@ fun Home(
                             focusManager.clearFocus()
                             homeViewModel.completeTraining()
                         },
-                        onClearFocus = { focusManager.clearFocus() }
+                        onClearFocus = { focusManager.clearFocus() },
+                        state = state,
+                        homeViewModel = homeViewModel
                     )
                 }
             }
@@ -202,6 +206,8 @@ fun QuickTrainingSelection(
 
 @Composable
 fun ActiveTrainingLogger(
+    state: HomeUiState,
+    homeViewModel: HomeViewModel,
     training: Training,
     exerciseWeights: Map<String, List<String>>,
     onWeightChange: (String, Int, String) -> Unit,
@@ -290,17 +296,21 @@ fun ActiveTrainingLogger(
                         exercise = exercise,
                         weights = exerciseWeights[exercise.id] ?: emptyList(),
                         isEnabled = previousExercisesCompleted,
+                        isConfirmed = state.confirmedExerciseIds.contains(exercise.id),
                         onWeightChange = { setIndex, weight ->
                             onWeightChange(exercise.id, setIndex, weight)
                         },
+                        onConfirm = { homeViewModel.confirmExercise(exercise.id) },
                         onFastFill = { weight ->
-                            val currentWeights = exerciseWeights[exercise.id] ?: emptyList()
-                            val firstEmptyIndex = currentWeights.indexOfFirst { it.isBlank() }
-                            if (firstEmptyIndex != -1) {
-                                onWeightChange(exercise.id, firstEmptyIndex, weight)
+                            val numSets = exercise.sets?.toIntOrNull() ?: 0
+                            repeat(numSets) { i ->
+                                onWeightChange(exercise.id, i, weight)
                             }
+
+                            homeViewModel.confirmExercise(exercise.id)
                         },
-                        onDone = { onClearFocus() }
+                        onDone = { onClearFocus() },
+                        onUnlock = { homeViewModel.unlockExercise(exercise.id) }
                     )
                     HorizontalDivider(modifier = Modifier.padding(top = 8.dp))
                 }
@@ -324,11 +334,13 @@ fun ExerciseLogItem(
     exercise: Exercise,
     weights: List<String>,
     isEnabled: Boolean,
+    isConfirmed: Boolean,
     onWeightChange: (Int, String) -> Unit,
+    onConfirm: () -> Unit,
     onFastFill: (String) -> Unit,
-    onDone: () -> Unit
+    onDone: () -> Unit,
+    onUnlock: () -> Unit
 ) {
-    val isCompleted = weights.all { it.isNotBlank() }
     val scrollState = rememberScrollState()
     val defaultWeight = exercise.weight ?: ""
 
@@ -349,13 +361,13 @@ fun ExerciseLogItem(
                 modifier = Modifier.weight(1f)
             )
 
-            if (isEnabled && !isCompleted && defaultWeight.isNotBlank()) {
+            if (isEnabled && !isConfirmed && defaultWeight.isNotBlank()) {
                 AssistChip(
                     onClick = { onFastFill(defaultWeight) },
                     label = {
                         Text(
                             stringResource(
-                                R.string.home_fast_fill_default,
+                                R.string.home_apply_all,
                                 defaultWeight
                             )
                         )
@@ -366,7 +378,7 @@ fun ExerciseLogItem(
                 )
             }
 
-            if (isCompleted) {
+            if (isConfirmed) {
                 Icon(
                     Icons.Default.Check,
                     contentDescription = null,
@@ -391,7 +403,7 @@ fun ExerciseLogItem(
                     Modifier.width(80.dp)
                 }
 
-                if (isCompleted) {
+                if (isConfirmed) {
                     Box(
                         modifier = fieldWidth
                             .height(56.dp)
@@ -402,6 +414,7 @@ fun ExerciseLogItem(
                                 MaterialTheme.colorScheme.outlineVariant,
                                 RoundedCornerShape(8.dp)
                             )
+                            .clickable { onUnlock() }
                             .padding(horizontal = 12.dp),
                         contentAlignment = Alignment.CenterStart
                     ) {
@@ -432,10 +445,13 @@ fun ExerciseLogItem(
                         suffix = { Text("kg", style = MaterialTheme.typography.labelSmall) },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number,
-                            imeAction = androidx.compose.ui.text.input.ImeAction.Done
+                            imeAction = ImeAction.Done
                         ),
-                        keyboardActions = androidx.compose.foundation.text.KeyboardActions(
-                            onDone = { onDone() }
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                onConfirm()
+                                onDone()
+                            }
                         ),
                         singleLine = true,
                         enabled = isEnabled,
