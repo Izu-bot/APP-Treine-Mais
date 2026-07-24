@@ -21,11 +21,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -106,8 +105,9 @@ fun OutlinedTextFieldComponent(
             isError = isError,
             supportingText = {
                 if (isError) {
+                    val resId = if (errorMessage != null && errorMessage != 0) errorMessage else R.string.error_generic
                     Text(
-                        text = stringResource(errorMessage ?: R.string.register_error_generic),
+                        text = stringResource(resId),
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodySmall
                     )

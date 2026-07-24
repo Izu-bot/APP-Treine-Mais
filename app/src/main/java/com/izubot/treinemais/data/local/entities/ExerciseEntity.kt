@@ -23,6 +23,6 @@ data class ExerciseEntity(
     @ColumnInfo val name: String,
     @ColumnInfo val sets: Int,
     @ColumnInfo val reps: Int,
-    @ColumnInfo val weight: Int,
+    @ColumnInfo val weight: Double,
     @ColumnInfo val description: String?
 )

@@ -150,9 +150,13 @@
     <string name="new_training_name_empty">Training name cannot be empty.</string>
     <string name="new_training_exercise_empty_fields">Please fill in all exercise fields.</string>
     <string name="new_training_no_exercises">Add at least one exercise to the training.</string>
+    <string name="new_training_exercise_invalid_range">Values must be between 1 and 20.</string>
 
     <!-- Onboarding Screen -->
     <string name="onboarding_title">Welcome to Treine+</string>
     <string name="onboarding_description">Your portable workout agenda. Register your training sessions, track your consistency, and adjust your routine anytime, anywhere.</string>
     <string name="onboarding_button_start">Get Started</string>
+
+    <!-- Generics -->
+    <string name="error_generic">Something went wrong.</string>
 </resources>
