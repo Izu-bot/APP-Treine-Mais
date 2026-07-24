@@ -21,7 +21,7 @@ fun Exercise.toEntity(trainingId: String) : ExerciseEntity {
         name = name,
         sets = sets?.toIntOrNull() ?: 0,
         reps = reps?.toIntOrNull() ?: 0,
-        weight = weight?.toIntOrNull() ?: 0,
+        weight = weight?.toDoubleOrNull() ?: 0.0,
         description = description
     )
 }

@@ -112,7 +112,7 @@ class NewTrainingViewModel @Inject constructor(
 
             val isSetsInvalid = setsValue == null || setsValue <= 0 || setsValue > 20
             val isRepsInvalid = repsValue == null || repsValue <= 0 || repsValue > 20
-            val isWeightInvalid = weightValue == null || weightValue <= 0 || weightValue > 20
+            val isWeightInvalid = weightValue == null || weightValue <= 0
 
             if (isNameEmpty || isSetsEmpty || isRepsEmpty || isWeightEmpty) {
                 hasError = true

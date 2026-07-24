@@ -181,7 +181,8 @@ fun NewTraining(
                         newTrainingViewModel.updateExercise(exercise.id) { it.copy(reps = newReps) }
                     },
                     onChangeWeight = { newWeight ->
-                        newTrainingViewModel.updateExercise(exercise.id) { it.copy(weight = newWeight) }
+                        val normalizedWeight = newWeight.replace(",", ".")
+                        newTrainingViewModel.updateExercise(exercise.id) { it.copy(weight = normalizedWeight) }
                     },
                     onRemove = {
                         val currentIndex = state.exercises.indexOf(exercise)
