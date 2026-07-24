@@ -4,9 +4,11 @@ import java.util.UUID
 
 data class NewTrainingUiState(
     val trainingName: String = "",
+    val trainingNameError: Boolean = false,
     val exercises: List<ExerciseUiState> = emptyList(),
     val isSaving: Boolean = false,
-    val message: String = ""
+    val message: Int = 0,
+    val error: Boolean = false
 )
 
 data class ExerciseUiState(
@@ -14,5 +16,7 @@ data class ExerciseUiState(
     val name: String = "",
     val sets: String = "",
     val reps: String = "",
-    val weight: String = ""
+    val weight: String = "",
+    val error: Boolean = false,
+    val message: Int = 0
 )

@@ -75,7 +75,7 @@ fun NewTraining(
     val state by newTrainingViewModel.state.collectAsState()
 
     val scope = rememberCoroutineScope()
-    
+
     val exerciseRemovedMsg = stringResource(R.string.new_training_exercise_removed)
     val undoMsg = stringResource(R.string.new_training_undo)
 
@@ -126,7 +126,7 @@ fun NewTraining(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
                             color = if (state.isSaving) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.clickable(enabled = !state.isSaving) { 
+                            modifier = Modifier.clickable(enabled = !state.isSaving) {
                                 newTrainingViewModel.saveTraining(onSuccess = onDismiss)
                             }
                         )
@@ -158,6 +158,8 @@ fun NewTraining(
                         imeAction = ImeAction.Next,
                         keyboardType = KeyboardType.Text
                     ),
+                    isError = state.trainingNameError,
+                    errorMessage = state.message
                 )
             }
 
@@ -185,7 +187,7 @@ fun NewTraining(
                         val currentIndex = state.exercises.indexOf(exercise)
 
                         newTrainingViewModel.removeExercise(exercise)
-                        
+
                         scope.launch {
                             val result = snackbarHostState.showSnackbar(
                                 message = "${exercise.name} $exerciseRemovedMsg",
@@ -258,13 +260,17 @@ fun ExerciseCard(
     onRemove: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val contentColor = if (exercise.error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+    val iconColor = if (exercise.error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+    val borderColor = if (exercise.error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outlineVariant
+
     Surface(
         modifier = modifier
             .padding(horizontal = 12.dp, vertical = 6.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+        border = BorderStroke(1.dp, borderColor)
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -277,7 +283,7 @@ fun ExerciseCard(
                 Icon(
                     imageVector = Icons.Default.FitnessCenter,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = iconColor,
                     modifier = Modifier.size(24.dp)
                 )
 
@@ -286,7 +292,7 @@ fun ExerciseCard(
                     onValueChange = onChangeName,
                     modifier = Modifier.weight(1f),
                     textStyle = MaterialTheme.typography.titleMedium.copy(
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = contentColor,
                         fontWeight = FontWeight.Bold
                     ),
                     keyboardOptions = KeyboardOptions(
@@ -299,11 +305,12 @@ fun ExerciseCard(
                             Text(
                                 text = stringResource(R.string.new_training_exercise_name_placeholder),
                                 style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                                color = contentColor.copy(alpha = 0.6f)
                             )
                         }
                         innerTextField()
-                    }
+                    },
+
                 )
 
                 IconButton(

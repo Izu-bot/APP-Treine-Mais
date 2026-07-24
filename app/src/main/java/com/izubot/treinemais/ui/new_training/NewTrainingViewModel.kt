@@ -35,18 +35,18 @@ class NewTrainingViewModel @Inject constructor(
     val channel = _channel.receiveAsFlow()
 
     fun onTrainingNameChange(newName: String) {
-        _uiState.update { it.copy(trainingName = newName) }
+        _uiState.update { it.copy(trainingName = newName, error = false, trainingNameError = false, message = 0) }
     }
 
     fun addExercise() {
-        _uiState.update { it.copy(exercises = it.exercises + ExerciseUiState())}
+        _uiState.update { it.copy(exercises = it.exercises + ExerciseUiState(), error = false) }
     }
 
     fun undoRemove(index: Int, exercise: ExerciseUiState) {
         _uiState.update { currentState ->
             val newList = currentState.exercises.toMutableList()
             newList.add(index, exercise)
-            currentState.copy(exercises = newList)
+            currentState.copy(exercises = newList, error = false)
         }
     }
 
@@ -54,7 +54,7 @@ class NewTrainingViewModel @Inject constructor(
         _uiState.update { currentState ->
             currentState.copy( exercises = currentState.exercises.filter {
                 it.id != exercise.id
-            })
+            }, error = false)
         }
     }
 
@@ -62,13 +62,13 @@ class NewTrainingViewModel @Inject constructor(
         _uiState.update { currentState ->
             val updateList = currentState.exercises.map { exercise ->
                 if (exercise.id == exerciseId) {
-                    fieldUpdate(exercise)
+                    fieldUpdate(exercise).copy(error = false, message = 0)
                 } else {
                     exercise
                 }
             }
 
-            currentState.copy(exercises = updateList)
+            currentState.copy(exercises = updateList, error = false, trainingNameError = false, message = 0)
         }
     }
 
@@ -80,6 +80,13 @@ class NewTrainingViewModel @Inject constructor(
             viewModelScope.launch {
                 _channel.send(UiEvent.Error(context.getString(R.string.new_training_name_empty)))
             }
+
+            _uiState.update { it.copy(
+                error = true,
+                trainingNameError = true,
+                message = R.string.new_training_name_empty)
+            }
+
             return
         }
 
@@ -87,14 +94,39 @@ class NewTrainingViewModel @Inject constructor(
             viewModelScope.launch {
                 _channel.send(UiEvent.Error(context.getString(R.string.new_training_no_exercises)))
             }
+
+            _uiState.update { it.copy(error = true, message = R.string.new_training_no_exercises) }
             return
         }
 
-        val hasEmptyExercise = currentState.exercises.any {
-            it.name.isBlank() || it.sets.isBlank() || it.reps.isBlank() || it.weight.isBlank()
+        var hasError = false
+        val validatedExercises = currentState.exercises.map { exercise ->
+            val isNameEmpty = exercise.name.isBlank()
+            val isSetsEmpty = exercise.sets.isBlank()
+            val isRepsEmpty = exercise.reps.isBlank()
+            val isWeightEmpty = exercise.weight.isBlank()
+
+            val setsValue = exercise.sets.toIntOrNull()
+            val repsValue = exercise.reps.toIntOrNull()
+            val weightValue = exercise.weight.toDoubleOrNull()
+
+            val isSetsInvalid = setsValue == null || setsValue <= 0 || setsValue > 20
+            val isRepsInvalid = repsValue == null || repsValue <= 0 || repsValue > 20
+            val isWeightInvalid = weightValue == null || weightValue <= 0 || weightValue > 20
+
+            if (isNameEmpty || isSetsEmpty || isRepsEmpty || isWeightEmpty) {
+                hasError = true
+                exercise.copy(error = true, message = R.string.new_training_exercise_empty_fields)
+            } else if (isSetsInvalid || isRepsInvalid || isWeightInvalid) {
+                hasError = true
+                exercise.copy(error = true, message = R.string.new_training_exercise_invalid_range)
+            } else {
+                exercise.copy(error = false, message = 0)
+            }
         }
 
-        if (hasEmptyExercise) {
+        if (hasError) {
+            _uiState.update { it.copy(exercises = validatedExercises, error = true) }
             viewModelScope.launch {
                 _channel.send(UiEvent.Error(context.getString(R.string.new_training_exercise_empty_fields)))
             }
@@ -107,7 +139,7 @@ class NewTrainingViewModel @Inject constructor(
             val domainTraining = Training(
                 id = UUID.randomUUID().toString(),
                 title = trainingName,
-                exercises = currentState.exercises.map { uiExercise ->
+                exercises = validatedExercises.map { uiExercise ->
                     Exercise(
                         id = uiExercise.id,
                         name = uiExercise.name,
