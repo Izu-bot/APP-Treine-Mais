@@ -105,7 +105,7 @@ fun OutlinedTextFieldComponent(
             isError = isError,
             supportingText = {
                 if (isError) {
-                    val resId = if (errorMessage != null && errorMessage != 0) errorMessage else R.string.register_error_generic
+                    val resId = if (errorMessage != null && errorMessage != 0) errorMessage else R.string.error_generic
                     Text(
                         text = stringResource(resId),
                         color = MaterialTheme.colorScheme.error,

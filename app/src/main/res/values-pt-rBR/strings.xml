@@ -156,4 +156,7 @@
     <string name="onboarding_title">Bem-vindo ao Treine+</string>
     <string name="onboarding_description">Sua agenda portátil de treinos. Registre suas sessões, acompanhe sua frequência e ajuste sua rotina a qualquer momento, em qualquer lugar.</string>
     <string name="onboarding_button_start">Começar agora</string>
+
+    <!-- Genérico -->
+    <string name="error_generic">Alguma coisa deu errado.</string>
 </resources>

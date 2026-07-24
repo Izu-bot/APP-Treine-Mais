@@ -62,12 +62,26 @@ class NewTrainingViewModel @Inject constructor(
         _uiState.update { currentState ->
             val updateList = currentState.exercises.map { exercise ->
                 if (exercise.id == exerciseId) {
-                    fieldUpdate(exercise).copy(error = false, message = 0)
+                    val updated = fieldUpdate(exercise)
+
+                    val sets = updated.sets.toIntOrNull()
+                    val reps = updated.reps.toIntOrNull()
+                    val weight = updated.weight.replace(",", ".").toDoubleOrNull()
+
+                    val isSetsInvalid = updated.sets.isNotBlank() && (sets == null || sets <= 0 || sets > 20)
+                    val isRepsInvalid = updated.reps.isNotBlank() && (reps == null || reps <= 0 || reps > 20)
+                    val isWeightInvalid = updated.weight.isNotBlank() && (weight == null || weight <= 0)
+
+                    val hasRangeError = isSetsInvalid || isRepsInvalid || isWeightInvalid
+
+                    updated.copy(
+                        error = hasRangeError,
+                        message = if (hasRangeError) R.string.new_training_exercise_invalid_range else 0
+                    )
                 } else {
                     exercise
                 }
             }
-
             currentState.copy(exercises = updateList, error = false, trainingNameError = false, message = 0)
         }
     }
@@ -99,39 +113,31 @@ class NewTrainingViewModel @Inject constructor(
             return
         }
 
-        var hasError = false
+        var hasExerciseError = false
         val validatedExercises = currentState.exercises.map { exercise ->
-            val isNameEmpty = exercise.name.isBlank()
-            val isSetsEmpty = exercise.sets.isBlank()
-            val isRepsEmpty = exercise.reps.isBlank()
-            val isWeightEmpty = exercise.weight.isBlank()
+            val isEmpty = exercise.name.isBlank() || exercise.sets.isBlank() ||
+                    exercise.reps.isBlank() || exercise.weight.isBlank()
 
-            val setsValue = exercise.sets.toIntOrNull()
-            val repsValue = exercise.reps.toIntOrNull()
-            val weightValue = exercise.weight.toDoubleOrNull()
-
-            val isSetsInvalid = setsValue == null || setsValue <= 0 || setsValue > 20
-            val isRepsInvalid = repsValue == null || repsValue <= 0 || repsValue > 20
-            val isWeightInvalid = weightValue == null || weightValue <= 0
-
-            if (isNameEmpty || isSetsEmpty || isRepsEmpty || isWeightEmpty) {
-                hasError = true
+            if (isEmpty) {
+                hasExerciseError = true
                 exercise.copy(error = true, message = R.string.new_training_exercise_empty_fields)
-            } else if (isSetsInvalid || isRepsInvalid || isWeightInvalid) {
-                hasError = true
-                exercise.copy(error = true, message = R.string.new_training_exercise_invalid_range)
+            } else if (exercise.error) {
+                hasExerciseError = true
+                exercise
             } else {
-                exercise.copy(error = false, message = 0)
+                exercise
             }
         }
 
-        if (hasError) {
+        if (hasExerciseError) {
             _uiState.update { it.copy(exercises = validatedExercises, error = true) }
+
             viewModelScope.launch {
                 _channel.send(UiEvent.Error(context.getString(R.string.new_training_exercise_empty_fields)))
             }
             return
         }
+
 
         viewModelScope.launch {
             _uiState.update { it.copy(isSaving = true) }
@@ -139,7 +145,7 @@ class NewTrainingViewModel @Inject constructor(
             val domainTraining = Training(
                 id = UUID.randomUUID().toString(),
                 title = trainingName,
-                exercises = validatedExercises.map { uiExercise ->
+                exercises = currentState.exercises.map { uiExercise ->
                     Exercise(
                         id = uiExercise.id,
                         name = uiExercise.name,

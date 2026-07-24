@@ -181,8 +181,7 @@ fun NewTraining(
                         newTrainingViewModel.updateExercise(exercise.id) { it.copy(reps = newReps) }
                     },
                     onChangeWeight = { newWeight ->
-                        val normalizedWeight = newWeight.replace(",", ".")
-                        newTrainingViewModel.updateExercise(exercise.id) { it.copy(weight = normalizedWeight) }
+                        newTrainingViewModel.updateExercise(exercise.id) { it.copy(weight = newWeight) }
                     },
                     onRemove = {
                         val currentIndex = state.exercises.indexOf(exercise)
@@ -290,7 +289,7 @@ fun ExerciseCard(
 
                 BasicTextField(
                     value = exercise.name,
-                    onValueChange = onChangeName,
+                    onValueChange = { if (it.length <= 100) onChangeName(it) },
                     modifier = Modifier.weight(1f),
                     textStyle = MaterialTheme.typography.titleMedium.copy(
                         color = contentColor,
@@ -310,9 +309,7 @@ fun ExerciseCard(
                             )
                         }
                         innerTextField()
-                    },
-
-                )
+                    })
 
                 IconButton(
                     onClick = onRemove,

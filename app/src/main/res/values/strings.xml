@@ -156,4 +156,7 @@
     <string name="onboarding_title">Welcome to Treine+</string>
     <string name="onboarding_description">Your portable workout agenda. Register your training sessions, track your consistency, and adjust your routine anytime, anywhere.</string>
     <string name="onboarding_button_start">Get Started</string>
+
+    <!-- Generics -->
+    <string name="error_generic">Something went wrong.</string>
 </resources>
