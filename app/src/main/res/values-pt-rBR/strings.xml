@@ -150,6 +150,7 @@
     <string name="new_training_name_empty">O nome do treino não pode estar em branco.</string>
     <string name="new_training_exercise_empty_fields">Por favor, preencha todos os campos dos exercícios.</string>
     <string name="new_training_no_exercises">Adicione pelo menos um exercício ao treino.</string>
+    <string name="new_training_exercise_invalid_range">Os valores devem estar entre 1 e 20.</string>
 
     <!-- Tela Onboarding -->
     <string name="onboarding_title">Bem-vindo ao Treine+</string>
