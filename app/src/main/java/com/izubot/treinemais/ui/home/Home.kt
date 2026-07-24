@@ -66,7 +66,9 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -424,6 +426,12 @@ fun ExerciseLogItem(
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        val widthDp = with(LocalDensity.current) {
+            LocalWindowInfo.current.containerSize.width.toDp()
+        }
+
+        val availableWidth = widthDp - 64.dp
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -434,7 +442,7 @@ fun ExerciseLogItem(
                 val fieldWidth = if (weights.size <= 4) {
                     Modifier.weight(1f)
                 } else {
-                    Modifier.width(80.dp)
+                    Modifier.width(availableWidth / 4.8f)
                 }
 
                 if (isConfirmed) {
@@ -535,7 +543,7 @@ fun WeeklyTrackerCard(weeklyProgress: List<DayProgress>) {
 fun DayItem(day: DayProgress) {
     val configuration = LocalConfiguration.current
     val locale = configuration.locales[0]
-    val dayLetter = day.date.dayOfWeek.getDisplayName(TextStyle.NARROW, locale)
+    val dayLetter = day.date.dayOfWeek.getDisplayName(TextStyle.SHORT, locale)
     val isCompleted = day.isCompleted
     val isToday = day.isToday
 
