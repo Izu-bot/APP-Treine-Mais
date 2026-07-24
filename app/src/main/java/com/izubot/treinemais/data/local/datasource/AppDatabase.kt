@@ -22,11 +22,12 @@ import com.izubot.treinemais.data.local.migrations.Migration3To4Spec
         ExerciseEntity::class,
         TrainingHistoryEntity::class
     ],
-    version = 5,
+    version = 6,
     autoMigrations = [
         AutoMigration(from = 2, to = 3),
         AutoMigration(from = 3, to = 4, spec = Migration3To4Spec::class),
-        AutoMigration(from = 4, to = 5, spec = Migration3To4Spec::class)
+        AutoMigration(from = 4, to = 5, spec = Migration3To4Spec::class),
+        AutoMigration(from = 5, to = 6, spec = Migration3To4Spec::class)
     ],
     exportSchema = true
 )
