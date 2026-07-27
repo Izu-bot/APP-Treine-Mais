@@ -39,9 +39,16 @@ class TrainingHistoryRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun markDayAsCompleted(date: String) {
-        withContext(Dispatchers.IO) {
-            historyDao.insertHistory(TrainingHistoryEntity(date = date, isCompleted = true))
+    override suspend fun markDayAsCompleted(date: String, trainingId: String): Long {
+        return withContext(Dispatchers.IO) {
+            historyDao.insertHistory(
+                TrainingHistoryEntity(
+                    trainingId = trainingId,
+                    date = date,
+                    timestamp = System.currentTimeMillis(),
+                    isCompleted = true
+                )
+            )
         }
     }
 }

@@ -6,10 +6,12 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.izubot.treinemais.data.converter.Converters
 import com.izubot.treinemais.data.local.dao.ExerciseDao
+import com.izubot.treinemais.data.local.dao.ExerciseHistoryDao
 import com.izubot.treinemais.data.local.dao.TrainingDao
 import com.izubot.treinemais.data.local.dao.TrainingHistoryDao
 import com.izubot.treinemais.data.local.dao.UserDao
 import com.izubot.treinemais.data.local.entities.ExerciseEntity
+import com.izubot.treinemais.data.local.entities.ExerciseHistoryEntity
 import com.izubot.treinemais.data.local.entities.TrainingEntity
 import com.izubot.treinemais.data.local.entities.TrainingHistoryEntity
 import com.izubot.treinemais.data.local.entities.User
@@ -20,14 +22,16 @@ import com.izubot.treinemais.data.local.migrations.Migration3To4Spec
         User::class,
         TrainingEntity::class,
         ExerciseEntity::class,
-        TrainingHistoryEntity::class
+        TrainingHistoryEntity::class,
+        ExerciseHistoryEntity::class,
     ],
-    version = 6,
+    version = 7,
     autoMigrations = [
         AutoMigration(from = 2, to = 3),
         AutoMigration(from = 3, to = 4, spec = Migration3To4Spec::class),
         AutoMigration(from = 4, to = 5, spec = Migration3To4Spec::class),
-        AutoMigration(from = 5, to = 6, spec = Migration3To4Spec::class)
+        AutoMigration(from = 5, to = 6, spec = Migration3To4Spec::class),
+        AutoMigration(from = 6, to = 7, spec = Migration3To4Spec::class)
     ],
     exportSchema = true
 )
@@ -38,4 +42,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun trainingDao(): TrainingDao
     abstract fun exerciseDao(): ExerciseDao
     abstract fun trainingHistoryDao(): TrainingHistoryDao
+    abstract fun exerciseHistoryDao(): ExerciseHistoryDao
 }

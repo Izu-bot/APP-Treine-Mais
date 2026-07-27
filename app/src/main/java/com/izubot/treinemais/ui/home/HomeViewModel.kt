@@ -2,7 +2,9 @@ package com.izubot.treinemais.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.izubot.treinemais.domain.model.ExerciseHistory
 import com.izubot.treinemais.domain.model.Training
+import com.izubot.treinemais.domain.repository.ExerciseHistoryRepository
 import com.izubot.treinemais.domain.repository.TrainingHistoryRepository
 import com.izubot.treinemais.domain.repository.TrainingRepository
 import com.izubot.treinemais.domain.usecase.GetWeeklyProgressUseCase
@@ -20,6 +22,7 @@ class HomeViewModel @Inject constructor(
     private val getWeeklyProgressUseCase: GetWeeklyProgressUseCase,
     private val trainingRepository: TrainingRepository,
     private val historyRepository: TrainingHistoryRepository,
+    private val exerciseHistoryRepository: ExerciseHistoryRepository,
     private val focusManager: FocusManager
 ) : ViewModel() {
 
@@ -102,13 +105,40 @@ class HomeViewModel @Inject constructor(
 
     fun completeTraining() {
         viewModelScope.launch {
-            focusManager.clearFocus()
-            
-            // Persist completion to database
-            historyRepository.markDayAsCompleted(LocalDate.now().toString())
+            val currentState  = _localState.value
+            val training = currentState.selectedTraining ?: return@launch
 
-            _localState.update { currentState ->
-                currentState.copy(
+            focusManager.clearFocus()
+
+            val trainingHistoryId = historyRepository.markDayAsCompleted(
+                date = LocalDate.now().toString(),
+                trainingId = training.id
+            )
+
+            training.exercises.forEach { exercise ->
+                val weights = currentState.exerciseWeights[exercise.id] ?: return@forEach
+
+                val repsInt = exercise.reps?.filter { it.isDigit() }?.toIntOrNull() ?: 0
+
+                weights.forEach { weightStr ->
+                    val weightDouble = weightStr.toDoubleOrNull() ?: 0.0
+                    if (weightDouble > 0) {
+                        val history = ExerciseHistory(
+                            trainingHistoryId = trainingHistoryId,
+                            exerciseId = exercise.id,
+                            exerciseName = exercise.name,
+                            weight = weightDouble,
+                            reps = repsInt,
+                            sets = exercise.sets?.toIntOrNull() ?: 1,
+                            date = LocalDate.now()
+                        )
+                        exerciseHistoryRepository.insertExerciseTraining(history)
+                    }
+                }
+            }
+
+            _localState.update { state ->
+                state.copy(
                     selectedTraining = null,
                     isTrainingCompleted = true
                 )
