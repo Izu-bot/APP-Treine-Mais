@@ -3,6 +3,7 @@ package com.izubot.treinemais.data.di
 import com.izubot.treinemais.data.remote.datasource.AuthRemoteDataSource
 import com.izubot.treinemais.data.remote.datasource.AuthRemoteDataSourceImpl
 import com.izubot.treinemais.data.repository.AuthRepositoryImpl
+import com.izubot.treinemais.data.repository.ExerciseHistoryRepositoryImpl
 import com.izubot.treinemais.data.repository.ExerciseRepositoryImpl
 import com.izubot.treinemais.data.repository.PrefsRepositoryImpl
 import com.izubot.treinemais.data.repository.SyncRepositoryImpl
@@ -10,6 +11,7 @@ import com.izubot.treinemais.data.repository.TrainingHistoryRepositoryImpl
 import com.izubot.treinemais.data.repository.TrainingRepositoryImpl
 import com.izubot.treinemais.data.repository.UserRepositoryImpl
 import com.izubot.treinemais.domain.repository.AuthRepository
+import com.izubot.treinemais.domain.repository.ExerciseHistoryRepository
 import com.izubot.treinemais.domain.repository.ExerciseRepository
 import com.izubot.treinemais.domain.repository.PrefsRepository
 import com.izubot.treinemais.domain.repository.SyncRepository
@@ -73,4 +75,10 @@ abstract class RepositoryModule {
     abstract fun bindTrainingHistoryRepository(
         impl: TrainingHistoryRepositoryImpl
     ): TrainingHistoryRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindExerciseHistoryRepository(
+        impl: ExerciseHistoryRepositoryImpl
+    ): ExerciseHistoryRepository
 }
