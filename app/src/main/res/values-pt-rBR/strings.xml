@@ -4,6 +4,11 @@
     <string name="app_name">Treine+</string>
     <string name="app_version">Versão %1$s</string>
 
+    <!-- Routes -->
+    <string name="home_route">Home</string>
+    <string name="training_route">Treinos</string>
+    <string name="progress_route">Progresso</string>
+
     <!-- Tela de Splash -->
     <string name="subtitle_splash">Monitore sua força</string>
     <string name="init">Iniciando</string>
@@ -159,4 +164,12 @@
 
     <!-- Genérico -->
     <string name="error_generic">Alguma coisa deu errado.</string>
+
+    <!-- Progress Screen -->
+    <string name="progress_title">Seu Progresso</string>
+    <string name="progress_filter_weight">Peso</string>
+    <string name="progress_best_repetition">Melhor Repetição</string>
+    <string name="progress_subtitle">Visão Atual</string>
+    <string name="progress_search_placeholder">Pesquise por exercícios…</string>
+    <string name="progress_error_generic">Alguma coisa deu errado.</string>"
 </resources>

@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ShowChart
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.ShowChart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -25,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -35,11 +38,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.izubot.treinemais.R
 import com.izubot.treinemais.data.local.helpers.SessionManager
 import com.izubot.treinemais.ui.edit_exercise.EditExercise
 import com.izubot.treinemais.ui.home.Home
 import com.izubot.treinemais.ui.new_training.NewTraining
 import com.izubot.treinemais.ui.profile.Profile
+import com.izubot.treinemais.ui.progress.Progress
 import com.izubot.treinemais.ui.training.Training
 import kotlinx.coroutines.flow.collectLatest
 
@@ -145,6 +150,12 @@ fun AppNavigation(
                         }
                     )
                 }
+
+                composable<MainRoute.Progress> {
+                    Progress(
+                        snackbarHostState = overlaySnackBarHostState
+                    )
+                }
             }
         }
     }
@@ -169,8 +180,8 @@ private fun AppBottomNavigation(
                     it.hasRoute(item.route::class)
                 } == true,
                 onClick = { onNavigate(item.route) },
-                icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
-                label = { Text(item.label) },
+                icon = { Icon(imageVector = item.icon, contentDescription = stringResource(item.label)) },
+                label = { Text(stringResource(item.label)) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.primary,
@@ -186,8 +197,9 @@ private fun AppBottomNavigation(
 enum class AppBottomNavItem(
     val route: Any,
     val icon: ImageVector,
-    val label: String
+    val label: Int
 ) {
-    HOME(MainRoute.Home, Icons.Default.Home, "Home"),
-    TRAINING(MainRoute.Training, Icons.Default.FitnessCenter, "Trainings"),
+    HOME(MainRoute.Home, Icons.Default.Home, R.string.home_route),
+    TRAINING(MainRoute.Training, Icons.Default.FitnessCenter, R.string.training_route),
+    PROGRESS(MainRoute.Progress, Icons.AutoMirrored.Filled.ShowChart, R.string.progress_route)
 }
