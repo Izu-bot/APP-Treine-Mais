@@ -11,5 +11,6 @@ data class ProgressUiState(
     val allExercises: List<Exercise> = emptyList(),
     val filteredExercises: List<Exercise> = emptyList(),
     val weightEntries: List<WeightEntry> = emptyList(),
-    val isExerciseSelected: Boolean = false
+    val isExerciseSelected: Boolean = false,
+    val maxLoad: Double = 0.0
 )

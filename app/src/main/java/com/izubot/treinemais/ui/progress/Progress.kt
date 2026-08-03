@@ -2,9 +2,13 @@ package com.izubot.treinemais.ui.progress
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,7 +21,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -161,16 +164,51 @@ fun Progress(
                 }
             }
 
-            Text(
-                text = stringResource(R.string.progress_subtitle),
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Start,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.outline,
-                modifier = Modifier.padding(top = 8.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.progress_subtitle),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    if (state.isExerciseSelected) {
+                        Text(
+                            text = state.selectedExercise!!.name,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
+                }
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                Column(
+                    modifier = Modifier.weight(0.4f),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Text(
+                        text = stringResource(R.string.progress_max_load),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                    if (state.isExerciseSelected) {
+                        Text(
+                            text = "${state.maxLoad.toInt()} kg",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Área de exibição do progresso
             if (state.isLoading) {
@@ -186,21 +224,7 @@ fun Progress(
                         .padding(top = 16.dp)
                 ) {
                     Text(
-                        text = state.selectedExercise?.name ?: "",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    // Placeholder para o gráfico
-                    Text(
-                        text = "Gráfico de evolução e estatísticas aparecerão aqui.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-
-                    Text(
-                        text = "Registros encontrados: ${state.weightEntries.size}",
+                        text = "Maior peso ${state.maxLoad.toInt()}",
                         style = MaterialTheme.typography.labelSmall,
                         modifier = Modifier.padding(top = 8.dp)
                     )

@@ -7,6 +7,7 @@ import com.izubot.treinemais.R
 import com.izubot.treinemais.domain.model.Exercise
 import com.izubot.treinemais.domain.repository.ExerciseHistoryRepository
 import com.izubot.treinemais.domain.repository.ExerciseRepository
+import com.izubot.treinemais.utils.Calculate1RM
 import com.izubot.treinemais.utils.UiEvent
 import com.izubot.treinemais.utils.UiEventManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -111,10 +112,13 @@ class ProgressViewModel @Inject constructor(
     private fun loadExerciseHistory(exerciseId: String) {
         viewModelScope.launch {
             exerciseHistoryRepository.getWeightEvolution(exerciseId).collect { entries ->
+                val rm = entries.maxOfOrNull { Calculate1RM(it.weight, it.reps) } ?: 0.0
+
                 _state.update { it.copy(
                     weightEntries = entries,
                     isLoading = false,
-                    isExerciseSelected = true
+                    isExerciseSelected = true,
+                    maxLoad = rm
                 ) }
             }
         }
