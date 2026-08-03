@@ -8,7 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ShowChart
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.ShowChart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -153,7 +152,7 @@ fun AppNavigation(
 
                 composable<MainRoute.Progress> {
                     Progress(
-                        snackbarHostState = overlaySnackBarHostState
+                        snackbarHostState = mainSnackBarHostState
                     )
                 }
             }

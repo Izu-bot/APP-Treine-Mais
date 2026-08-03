@@ -1,8 +1,6 @@
 package com.izubot.treinemais.ui.progress
 
 import android.content.Context
-import android.util.Log
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.izubot.treinemais.R

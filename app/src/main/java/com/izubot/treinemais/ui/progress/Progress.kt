@@ -108,7 +108,7 @@ fun Progress(
                         IconButton(onClick = { viewModel.onSearchTriggered() }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                contentDescription = "Search"
+                                contentDescription = stringResource(R.string.progress_search_action)
                             )
                         }
                     }
