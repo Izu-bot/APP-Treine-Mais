@@ -173,4 +173,5 @@
     <string name="progress_search_placeholder">Search for exercise…</string>
     <string name="progress_error_generic">Something went wrong.</string>"
     <string name="progress_search_action">Search</string>
+    <string name="progress_max_load">Maximum load</string>
 </resources>
