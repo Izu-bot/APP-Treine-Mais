@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface ExerciseHistoryDao {
     @Query(
         """
-            SELECT eh.weight, th.date
+            SELECT eh.weight, th.date, eh.reps
             FROM exercise_history eh
             INNER JOIN training_history th ON eh.training_history_id = th.id
             WHERE eh.exerciseId = :exerciseId
