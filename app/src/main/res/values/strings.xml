@@ -172,5 +172,5 @@
     <string name="progress_subtitle">Current View</string>
     <string name="progress_search_placeholder">Search for exercise…</string>
     <string name="progress_error_generic">Something went wrong.</string>"
-    
+    <string name="progress_search_action">Search</string>
 </resources>
