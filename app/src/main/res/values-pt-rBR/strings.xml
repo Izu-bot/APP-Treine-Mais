@@ -171,6 +171,44 @@
     <string name="progress_best_repetition">Melhor Repetição</string>
     <string name="progress_subtitle">Visão Atual</string>
     <string name="progress_search_placeholder">Pesquise por exercícios…</string>
-    <string name="progress_error_generic">Alguma coisa deu errado.</string>"
+    <string name="progress_error_generic">Alguma coisa deu errado.</string>
     <string name="progress_search_action">Pesquisar</string>
+    <string name="progress_max_load">Carga Máxima</string>
+    <string name="progress_monthly_workouts">Treinos no Mês</string>
+    <string name="progress_monthly_workouts_change_positive">+%1$d que o anterior</string>
+    <string name="progress_monthly_workouts_change_negative">%1$d que o anterior</string>
+    <string name="progress_weekly_average">Média Semanal</string>
+    <string name="progress_workouts_per_week">treinos / semana</string>
+    <string name="progress_chart_title_frequency">Frequência (Últimos 6 Meses)</string>
+    <string name="progress_chart_title_training_volume">Volume do Treino: %1$s</string>
+    <string name="progress_chart_title_exercise_evolution">Evolução: %1$s</string>
+    <string name="progress_no_data">Sem dados para o período selecionado.</string>
+    <string name="progress_select_training">Selecione um Treino</string>
+    <string name="progress_filter_all">Geral</string>
+    <string name="progress_exercises_of_training">Exercícios de %1$s</string>
+    <string name="progress_training_volume">Último Volume</string>
+    <string name="progress_exercise_volume">Estimativa 1RM</string>
+    <string name="progress_monthly_volume">Volume Mensal</string>
+    <string name="progress_record_volume">Recorde de Volume</string>
+    <string name="progress_record_weight">Peso Máximo</string>
+    <string name="progress_total_kg">total kg movidos</string>
+    <string name="progress_best_session">sua melhor marca</string>
+    <string name="progress_max_weight_record">recorde absoluto</string>
+    <string name="progress_last_session">última sessão</string>
+    <string name="progress_estimated_1rm">estimativa de 1RM</string>
+
+    <string-array name="month_names_short">
+        <item>JAN</item>
+        <item>FEV</item>
+        <item>MAR</item>
+        <item>ABR</item>
+        <item>MAI</item>
+        <item>JUN</item>
+        <item>JUL</item>
+        <item>AGO</item>
+        <item>SET</item>
+        <item>OUT</item>
+        <item>NOV</item>
+        <item>DEZ</item>
+    </string-array>
 </resources>

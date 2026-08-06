@@ -2,14 +2,29 @@ package com.izubot.treinemais.ui.progress
 
 import com.izubot.treinemais.data.local.dto.WeightEntry
 import com.izubot.treinemais.domain.model.Exercise
+import com.izubot.treinemais.domain.model.Training
 
 data class ProgressUiState(
     val isLoading: Boolean = false,
-    val searchQuery: String = "",
-    val selectedFilters: Set<String> = emptySet(),
+    val selectedTraining: Training? = null,
     val selectedExercise: Exercise? = null,
-    val allExercises: List<Exercise> = emptyList(),
-    val filteredExercises: List<Exercise> = emptyList(),
+    val allTrainings: List<Training> = emptyList(),
+    val exercisesOfSelectedTraining: List<Exercise> = emptyList(),
     val weightEntries: List<WeightEntry> = emptyList(),
-    val isExerciseSelected: Boolean = false
+    val maxLoad: Double = 0.0,
+    val chartPoints: List<Float> = emptyList(),
+    val chartLabels: List<String> = emptyList(),
+    val percentageChange: Double = 0.0,
+    val monthlyWorkouts: Int = 0,
+    val monthlyWorkoutsChange: Int = 0,
+    val weeklyAverage: Double = 0.0,
+    val viewMode: ViewMode = ViewMode.GENERAL,
+    val lastVolume: Double = 0.0,
+    val recordVolume: Double = 0.0,
+    val recordWeight: Double = 0.0,
+    val totalMonthlyVolume: Double = 0.0,
 )
+
+enum class ViewMode {
+    GENERAL, TRAINING, EXERCISE
+}

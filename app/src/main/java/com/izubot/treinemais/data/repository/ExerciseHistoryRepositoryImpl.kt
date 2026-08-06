@@ -20,4 +20,32 @@ class ExerciseHistoryRepositoryImpl @Inject constructor(
     override fun getWeightEvolution(exerciseId: String): Flow<List<WeightEntry>> {
         return exerciseHistoryDao.getWeightEvolution(exerciseId)
     }
+
+    override suspend fun maxWeightByExercise(exerciseId: String): Double {
+        return exerciseHistoryDao.maxWeightByExercise(exerciseId)
+    }
+
+    override suspend fun getLastExerciseVolume(exerciseId: String): Double {
+        return exerciseHistoryDao.getLastExerciseVolume(exerciseId)
+    }
+
+    override suspend fun getExerciseVolumeRecord(exerciseId: String): Double {
+        return exerciseHistoryDao.getExerciseVolumeRecord(exerciseId)
+    }
+
+    override suspend fun getTotalVolumeBetweenDates(startDate: String, endDate: String): Double {
+        return exerciseHistoryDao.getTotalVolumeBetweenDates(startDate, endDate)
+    }
+
+    override suspend fun getLastTrainingVolume(trainingId: String): Double {
+        return exerciseHistoryDao.getLastTrainingVolume(trainingId)
+    }
+
+    override suspend fun getTrainingVolumeRecord(trainingId: String): Double {
+        return exerciseHistoryDao.getTrainingVolumeRecord(trainingId)
+    }
+
+    override fun getTrainingVolumeEvolution(trainingId: String): Flow<List<WeightEntry>> {
+        return exerciseHistoryDao.getTrainingVolumeEvolution(trainingId)
+    }
 }
