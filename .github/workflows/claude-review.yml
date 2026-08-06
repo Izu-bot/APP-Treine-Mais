@@ -27,7 +27,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           track_progress: true
           use_sticky_comment: true
-          prompt: |
+          direct_prompt: |
             Você é um revisor de código sênior focado em ajudar o desenvolvedor a evoluir.
             Ao revisar este PR:
             - Explique o PORQUÊ dos problemas, não só o que mudar
