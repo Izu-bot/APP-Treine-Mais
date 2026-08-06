@@ -16,6 +16,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingDown
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
@@ -55,6 +58,7 @@ fun Progress(
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
+        viewModel.resetState()
         viewModel.channel.collect { event ->
             when (event) {
                 is UiEvent.Success -> snackbarHostState.showSnackbar(event.message)
@@ -88,21 +92,53 @@ fun Progress(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 StatCard(
-                    title = stringResource(R.string.progress_monthly_workouts),
-                    value = state.monthlyWorkouts.toString(),
-                    subtitle = if (state.monthlyWorkoutsChange >= 0) {
-                        stringResource(R.string.progress_monthly_workouts_change_positive, state.monthlyWorkoutsChange)
-                    } else {
-                        stringResource(R.string.progress_monthly_workouts_change_negative, state.monthlyWorkoutsChange)
+                    title = when (state.viewMode) {
+                      ViewMode.GENERAL -> stringResource(R.string.progress_monthly_workouts)
+                      ViewMode.TRAINING -> stringResource(R.string.progress_training_volume)
+                      ViewMode.EXERCISE -> stringResource(R.string.progress_exercise_volume)
                     },
-                    icon = Icons.Default.CalendarMonth,
+                    value = when (state.viewMode) {
+                        ViewMode.GENERAL -> state.monthlyWorkouts.toString()
+                        ViewMode.TRAINING -> String.format(Locale.US, "%.0f kg", state.lastVolume)
+                        ViewMode.EXERCISE -> String.format(Locale.US, "%.1f kg", state.maxLoad)
+                    },
+                    subtitle = when (state.viewMode) {
+                        ViewMode.GENERAL -> if (state.monthlyWorkoutsChange >= 0) {
+                            stringResource(R.string.progress_monthly_workouts_change_positive, state.monthlyWorkoutsChange)
+                        } else {
+                            stringResource(R.string.progress_monthly_workouts_change_negative, state.monthlyWorkoutsChange)
+                        }
+                        ViewMode.TRAINING -> stringResource(R.string.progress_last_session)
+                        ViewMode.EXERCISE -> stringResource(R.string.progress_estimated_1rm)
+                    },
+                    icon = when (state.viewMode) {
+                        ViewMode.GENERAL -> Icons.Default.CalendarMonth
+                        ViewMode.TRAINING -> Icons.Default.CalendarMonth
+                        ViewMode.EXERCISE -> Icons.AutoMirrored.Filled.TrendingUp
+                    },
                     modifier = Modifier.weight(1f)
                 )
                 StatCard(
-                    title = stringResource(R.string.progress_weekly_average),
-                    value = String.format(Locale.US, "%.1f", state.weeklyAverage),
-                    subtitle = stringResource(R.string.progress_workouts_per_week),
-                    icon = Icons.AutoMirrored.Filled.TrendingUp,
+                    title = when (state.viewMode) {
+                        ViewMode.GENERAL -> stringResource(R.string.progress_monthly_volume)
+                        ViewMode.TRAINING -> stringResource(R.string.progress_record_volume)
+                        ViewMode.EXERCISE -> stringResource(R.string.progress_record_weight)
+                    },
+                    value = when (state.viewMode) {
+                        ViewMode.GENERAL -> String.format(Locale.US, "%.0f kg", state.totalMonthlyVolume)
+                        ViewMode.TRAINING -> String.format(Locale.US, "%.0f kg", state.recordVolume)
+                        ViewMode.EXERCISE -> String.format(Locale.US, "%.1f kg", state.recordWeight)
+                    },
+                    subtitle = when (state.viewMode) {
+                        ViewMode.GENERAL -> stringResource(R.string.progress_total_kg)
+                        ViewMode.TRAINING -> stringResource(R.string.progress_best_session)
+                        ViewMode.EXERCISE -> stringResource(R.string.progress_max_weight_record)
+                    },
+                    icon = when (state.viewMode) {
+                        ViewMode.GENERAL -> Icons.Default.LocalFireDepartment
+                        ViewMode.TRAINING -> Icons.Default.EmojiEvents
+                        ViewMode.EXERCISE -> Icons.Default.FitnessCenter
+                    },
                     modifier = Modifier.weight(1f)
                 )
             }

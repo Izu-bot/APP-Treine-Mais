@@ -42,8 +42,6 @@ fun LoadEvolutionChart(
             val width = size.width
             val height = size.height
 
-            val spacing = if (points.size > 1) width / (points.size - 1) else width
-
             val gridLines = 3
             for (i in 0..gridLines) {
                 val y = (height / gridLines) * i
@@ -55,7 +53,25 @@ fun LoadEvolutionChart(
                 )
             }
 
-            if (points.size < 2) return@Canvas
+            if (points.isEmpty()) return@Canvas
+
+            if (points.size == 1) {
+                val x = width / 2
+                val y = height - (points[0] * (height * 0.8f) + (height * 0.1f))
+                drawCircle(
+                    color = primaryColor,
+                    radius = 5.dp.toPx(),
+                    center = Offset(x, y)
+                )
+                drawCircle(
+                    color = primaryColor.copy(alpha = 0.3f),
+                    radius = 10.dp.toPx(),
+                    center = Offset(x, y)
+                )
+                return@Canvas
+            }
+
+            val spacing = width / (points.size - 1)
 
             val strokePath = Path().apply {
                 for (i in points.indices) {

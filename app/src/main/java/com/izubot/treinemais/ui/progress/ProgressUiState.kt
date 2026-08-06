@@ -18,7 +18,11 @@ data class ProgressUiState(
     val monthlyWorkouts: Int = 0,
     val monthlyWorkoutsChange: Int = 0,
     val weeklyAverage: Double = 0.0,
-    val viewMode: ViewMode = ViewMode.GENERAL
+    val viewMode: ViewMode = ViewMode.GENERAL,
+    val lastVolume: Double = 0.0,
+    val recordVolume: Double = 0.0,
+    val recordWeight: Double = 0.0,
+    val totalMonthlyVolume: Double = 0.0,
 )
 
 enum class ViewMode {

@@ -186,6 +186,16 @@
     <string name="progress_select_training">Select a Training</string>
     <string name="progress_filter_all">All</string>
     <string name="progress_exercises_of_training">Exercises of %1$s</string>
+    <string name="progress_training_volume">Last Volume</string>
+    <string name="progress_exercise_volume">1RM Estimate</string>
+    <string name="progress_monthly_volume">Monthly Volume</string>
+    <string name="progress_record_volume">Record Volume</string>
+    <string name="progress_record_weight">Max Weight</string>
+    <string name="progress_total_kg">total kg moved</string>
+    <string name="progress_best_session">your best session</string>
+    <string name="progress_max_weight_record">absolute record</string>
+    <string name="progress_last_session">last session</string>
+    <string name="progress_estimated_1rm">estimated 1RM</string>
 
     <string-array name="month_names_short">
         <item>JAN</item>
