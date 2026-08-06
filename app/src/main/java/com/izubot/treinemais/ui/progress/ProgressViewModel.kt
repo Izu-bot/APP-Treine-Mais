@@ -16,12 +16,15 @@ import com.izubot.treinemais.utils.UiEvent
 import com.izubot.treinemais.utils.UiEventManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +40,9 @@ class ProgressViewModel @Inject constructor(
 
     private val _channel = Channel<UiEvent>()
     val channel = _channel.receiveAsFlow()
+
+    // Gerencia a observação ativa de fluxos (Flow) para evitar vazamento de corotinas
+    private var observationJob: Job? = null
 
     private val monthNames by lazy {
         context.resources.getStringArray(R.array.month_names_short).toList()
@@ -57,8 +63,9 @@ class ProgressViewModel @Inject constructor(
     }
 
     private fun loadGeneralStats() {
-        viewModelScope.launch {
-            val now = java.time.LocalDate.now()
+        observationJob?.cancel()
+        observationJob = viewModelScope.launch {
+            val now = LocalDate.now()
             val startOfLast6Months = now.minusMonths(5).withDayOfMonth(1)
 
             trainingHistoryRepository.getBetweenDates(
@@ -69,8 +76,9 @@ class ProgressViewModel @Inject constructor(
                 calculateMonthlyStats(history, now)
             }
         }
+        
         viewModelScope.launch {
-            val now = java.time.LocalDate.now()
+            val now = LocalDate.now()
             val startOfMonth = now.withDayOfMonth(1).toString()
             val endOfMonth = now.withDayOfMonth(now.lengthOfMonth()).toString()
             val totalVolume =
@@ -79,10 +87,7 @@ class ProgressViewModel @Inject constructor(
         }
     }
 
-    private fun calculateMonthlyStats(
-        history: List<DayProgress>,
-        now: java.time.LocalDate
-    ) {
+    private fun calculateMonthlyStats(history: List<DayProgress>, now: LocalDate) {
         val currentMonth = now.monthValue
         val lastMonth = now.minusMonths(1).monthValue
         val year = now.year
@@ -95,8 +100,7 @@ class ProgressViewModel @Inject constructor(
             it.isCompleted && it.date.monthValue == lastMonth && it.date.year == lastMonthYear
         }
 
-        val weeklyAvg =
-            history.count { it.isCompleted }.toDouble() / 24.0
+        val weeklyAvg = history.count { it.isCompleted }.toDouble() / 24.0
 
         _state.update {
             it.copy(
@@ -108,42 +112,23 @@ class ProgressViewModel @Inject constructor(
     }
 
     private fun processFrequencyData(history: List<DayProgress>) {
-        val now = java.time.LocalDate.now()
-
-        // Agrupa por Ano-Mês para evitar conflitos entre anos (ex: Dez/24 e Jan/25)
+        val now = LocalDate.now()
         val groupedByMonth = history.filter { it.isCompleted }
-            .groupBy { "${it.date.year}-${String.format(java.util.Locale.US, "%02d", it.date.monthValue)}" }
-            .mapValues { it.value.size }
+            .groupBy { "${it.date.year}-${String.format(Locale.US, "%02d", it.date.monthValue)}" }
+            .mapValues { it.value.size.toDouble() }
 
-        val labels = mutableListOf<String>()
-        val points = mutableListOf<Float>()
-
-        // Garante a exibição dos últimos 6 meses em ordem cronológica
+        val monthlyData = mutableMapOf<String, Double>()
         for (i in 5 downTo 0) {
             val date = now.minusMonths(i.toLong())
-            val monthKey = "${date.year}-${String.format(java.util.Locale.US, "%02d", date.monthValue)}"
-
-            labels.add(monthNames[date.monthValue - 1])
-            val count = groupedByMonth[monthKey] ?: 0
-            points.add(count.toFloat())
+            val monthKey = "${date.year}-${String.format(Locale.US, "%02d", date.monthValue)}"
+            monthlyData[monthKey] = groupedByMonth[monthKey] ?: 0.0
         }
 
-        val max = points.maxOrNull()?.coerceAtLeast(1f) ?: 1f
-        val normalizedPoints = points.map { it / max }
-
-        _state.update {
-            it.copy(
-                chartPoints = normalizedPoints,
-                chartLabels = labels,
-                viewMode = ViewMode.GENERAL,
-                percentageChange = 0.0
-            )
-        }
+        updateChartState(monthlyData, ViewMode.GENERAL)
     }
 
     fun onTrainingSelected(training: Training?) {
         if (training == null) {
-            // Quando nada está selecionado, mostramos a frequência geral do usuário
             loadGeneralStats()
             _state.update {
                 it.copy(
@@ -156,7 +141,6 @@ class ProgressViewModel @Inject constructor(
             return
         }
 
-        // Quando um treino é selecionado, mudamos o modo de visualização
         _state.update {
             it.copy(
                 selectedTraining = training,
@@ -166,8 +150,8 @@ class ProgressViewModel @Inject constructor(
             )
         }
 
-        viewModelScope.launch {
-            // Carregamos os dados de volume (último e recorde) para os cards de estatísticas
+        observationJob?.cancel()
+        observationJob = viewModelScope.launch {
             val lastVol = exerciseHistoryRepository.getLastTrainingVolume(training.id)
             val recordVol = exerciseHistoryRepository.getTrainingVolumeRecord(training.id)
             _state.update {
@@ -177,7 +161,6 @@ class ProgressViewModel @Inject constructor(
                 )
             }
 
-            // Buscamos a evolução do volume total deste treino para o gráfico
             exerciseHistoryRepository.getTrainingVolumeEvolution(training.id).collect { entries ->
                 processTrainingChartData(entries)
             }
@@ -195,9 +178,7 @@ class ProgressViewModel @Inject constructor(
 
         viewModelScope.launch {
             val maxWeight = exerciseHistoryRepository.maxWeightByExercise(exercise.id)
-
             val lastVol = exerciseHistoryRepository.getLastExerciseVolume(exercise.id)
-
             val bestVol = exerciseHistoryRepository.getExerciseVolumeRecord(exercise.id)
 
             _state.update {
@@ -213,7 +194,8 @@ class ProgressViewModel @Inject constructor(
     }
 
     private fun loadExerciseHistory(exerciseId: String) {
-        viewModelScope.launch {
+        observationJob?.cancel()
+        observationJob = viewModelScope.launch {
             exerciseHistoryRepository.getWeightEvolution(exerciseId).collect { entries ->
                 val rm = entries.maxOfOrNull { Calculate1RM(it.weight, it.reps) } ?: 0.0
 
@@ -236,53 +218,15 @@ class ProgressViewModel @Inject constructor(
             return
         }
 
-        // Mapeia e agrupa por Ano-Mês (YYYY-MM) para garantir a ordenação correta
-        val sortedMap = entries
+        val monthlyData = entries
             .filter { it.date.length >= 7 }
-            .map { entry ->
-                val weight1RM = Calculate1RM(entry.weight, entry.reps)
-                val yearMonth = entry.date.substring(0, 7) // Ex: "2026-08"
-                yearMonth to weight1RM
+            .groupBy { it.date.substring(0, 7) }
+            .mapValues { group -> 
+                group.value.maxOf { Calculate1RM(it.weight, it.reps) } 
             }
-            .groupBy { it.first }
-            .mapValues { group -> group.value.maxOf { it.second } }
             .toSortedMap()
 
-        if (sortedMap.isEmpty()) {
-            _state.update { it.copy(chartPoints = emptyList(), chartLabels = emptyList()) }
-            return
-        }
-
-        val monthlyValues = sortedMap.values.toList()
-        val monthKeys = sortedMap.keys.toList()
-
-        // Extrai o mês da chave YYYY-MM para pegar o nome
-        val labels = monthKeys.map { key ->
-            val monthIndex = key.substringAfter("-").toIntOrNull() ?: 1
-            monthNames.getOrElse(monthIndex - 1) { "???" }
-        }
-
-        // Se houver apenas 1 ponto, centralizamos ele verticalmente (0.5f)
-        val normalizedPoints = if (monthlyValues.size == 1) {
-            listOf(0.5f)
-        } else {
-            val maxWeight = monthlyValues.maxOrNull() ?: 1.0
-            val minWeight = monthlyValues.minOrNull() ?: 0.0
-            val range = (maxWeight - minWeight).coerceAtLeast(1.0)
-            monthlyValues.map { weight -> ((weight - minWeight) / range).toFloat() }
-        }
-
-        val first = monthlyValues.first()
-        val last = monthlyValues.last()
-        val change = if (first > 0) ((last - first) / first) * 100 else 0.0
-
-        _state.update {
-            it.copy(
-                chartPoints = normalizedPoints,
-                chartLabels = labels,
-                percentageChange = change,
-            )
-        }
+        updateChartState(monthlyData, ViewMode.EXERCISE)
     }
 
     private fun processTrainingChartData(entries: List<WeightEntry>) {
@@ -291,47 +235,52 @@ class ProgressViewModel @Inject constructor(
             return
         }
 
-        // Agrupa o volume total por Ano-Mês (YYYY-MM)
-        val sortedMap = entries
+        val monthlyData = entries
             .filter { it.date.length >= 7 }
-            .map { entry ->
-                val yearMonth = entry.date.substring(0, 7)
-                yearMonth to entry.weight
-            }
-            .groupBy { it.first }
-            .mapValues { group -> group.value.sumOf { it.second } }
+            .groupBy { it.date.substring(0, 7) }
+            .mapValues { group -> group.value.sumOf { it.weight } }
             .toSortedMap()
 
-        if (sortedMap.isEmpty()) {
+        updateChartState(monthlyData, ViewMode.TRAINING)
+    }
+
+    private fun updateChartState(monthlyData: Map<String, Double>, mode: ViewMode) {
+        if (monthlyData.isEmpty()) {
             _state.update { it.copy(chartPoints = emptyList(), chartLabels = emptyList()) }
             return
         }
 
-        val monthlyValues = sortedMap.values.toList()
-        val monthKeys = sortedMap.keys.toList()
+        val values = monthlyData.values.toList()
+        val keys = monthlyData.keys.toList()
 
-        val labels = monthKeys.map { key ->
+        // Labels (Nomes dos meses)
+        val labels = keys.map { key ->
             val monthIndex = key.substringAfter("-").toIntOrNull() ?: 1
             monthNames.getOrElse(monthIndex - 1) { "???" }
         }
 
-        val normalizedPoints = if (monthlyValues.size == 1) {
+        // Normalização (0.0 a 1.0)
+        val normalizedPoints = if (values.size == 1) {
             listOf(0.5f)
         } else {
-            val maxValue = monthlyValues.maxOrNull() ?: 1.0
-            val minValue = monthlyValues.minOrNull() ?: 0.0
-            val range = (maxValue - minValue).coerceAtLeast(1.0)
-            monthlyValues.map { vol -> ((vol - minValue) / range).toFloat() }
+            val max = values.maxOrNull() ?: 1.0
+            val min = values.minOrNull() ?: 0.0
+            val range = (max - min).coerceAtLeast(1.0)
+            values.map { ((it - min) / range).toFloat() }
         }
 
-        val first = monthlyValues.first()
-        val last = monthlyValues.last()
-        val change = if (first > 0) ((last - first) / first) * 100 else 0.0
+        // Variação percentual (apenas para treinos e exercícios)
+        val change = if (values.size >= 2) {
+            val first = values.first()
+            val last = values.last()
+            if (first > 0) ((last - first) / first) * 100 else 0.0
+        } else 0.0
 
         _state.update {
             it.copy(
                 chartPoints = normalizedPoints,
                 chartLabels = labels,
+                viewMode = mode,
                 percentageChange = change
             )
         }
