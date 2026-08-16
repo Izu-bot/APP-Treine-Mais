@@ -197,6 +197,20 @@
     <string name="progress_last_session">última sessão</string>
     <string name="progress_estimated_1rm">estimativa de 1RM</string>
 
+    <!-- Pesquisa de Feedback -->
+    <string name="feedback_title">Ajude-nos a melhorar o Treine+</string>
+    <string name="feedback_subtitle">Seu feedback é essencial para tornar o app ainda melhor.</string>
+    <string name="feedback_question_1">Qual funcionalidade você sente falta no Treine+?</string>
+    <string name="feedback_question_2">Notou algum travamento ou lentidão? (Onde?)</string>
+    <string name="feedback_question_3">Teve dificuldade em encontrar algo no app?</string>
+    <string name="feedback_question_4">Você recomendaria o Treine+ para um amigo?</string>
+    <string name="feedback_option_yes">Sim</string>
+    <string name="feedback_option_no">Não</string>
+    <string name="feedback_button_send">Enviar Feedback</string>
+    <string name="feedback_placeholder_answer">Digite sua resposta aqui…</string>
+    <string name="feedback_email_subject">Feedback do App Treine+</string>
+    <string name="feedback_email_body_intro">Aqui está o meu feedback sobre o aplicativo:\n\n</string>
+
     <string-array name="month_names_short">
         <item>JAN</item>
         <item>FEV</item>

@@ -43,15 +43,20 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -80,10 +85,12 @@ import com.izubot.treinemais.domain.model.DayProgress
 import com.izubot.treinemais.domain.model.Exercise
 import com.izubot.treinemais.domain.model.Training
 import com.izubot.treinemais.utils.FocusAction
+import com.izubot.treinemais.utils.UiEvent
 import java.time.format.TextStyle
 
 @Composable
 fun Home(
+    snackbarHostState: SnackbarHostState,
     homeViewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
 ) {
     val state by homeViewModel.state.collectAsState()
@@ -95,6 +102,25 @@ fun Home(
                 is FocusAction.Clear -> focusManager.clearFocus()
             }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        homeViewModel.channel.collect { event ->
+            when (event) {
+                is UiEvent.Success -> snackbarHostState.showSnackbar(event.message)
+                is UiEvent.Error -> snackbarHostState.showSnackbar(event.message)
+                is UiEvent.Info -> snackbarHostState.showSnackbar(event.message)
+            }
+        }
+    }
+
+    if (state.showFeedbackBottomSheet) {
+        FeedbackBottomSheet(
+            onDismiss = { homeViewModel.onFeedbackDismissed() },
+            onSubmit = { feature, performance, navigation, recommend ->
+                homeViewModel.onFeedbackSubmitted(feature, performance, navigation, recommend)
+            }
+        )
     }
 
     Column(
@@ -536,6 +562,145 @@ fun WeeklyTrackerCard(weeklyProgress: List<DayProgress>) {
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FeedbackBottomSheet(
+    onDismiss: () -> Unit,
+    onSubmit: (String, String, String, String) -> Unit
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var featureAnswer by remember { mutableStateOf("") }
+    var performanceAnswer by remember { mutableStateOf("") }
+    var navigationAnswer by remember { mutableStateOf("") }
+    var recommendAnswer by remember { mutableStateOf("") }
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = MaterialTheme.colorScheme.surface,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.feedback_title),
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = stringResource(R.string.feedback_subtitle),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            HorizontalDivider()
+
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                modifier = Modifier.weight(1f, fill = false)
+            ) {
+                item {
+                    FeedbackQuestionField(
+                        question = stringResource(R.string.feedback_question_1),
+                        value = featureAnswer,
+                        onValueChange = { featureAnswer = it }
+                    )
+                }
+                item {
+                    FeedbackQuestionField(
+                        question = stringResource(R.string.feedback_question_2),
+                        value = performanceAnswer,
+                        onValueChange = { performanceAnswer = it }
+                    )
+                }
+                item {
+                    FeedbackQuestionField(
+                        question = stringResource(R.string.feedback_question_3),
+                        value = navigationAnswer,
+                        onValueChange = { navigationAnswer = it }
+                    )
+                }
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = stringResource(R.string.feedback_question_4),
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            FeedbackOption(
+                                label = stringResource(R.string.feedback_option_yes),
+                                selected = recommendAnswer == "Sim",
+                                onClick = { recommendAnswer = "Sim" }
+                            )
+                            FeedbackOption(
+                                label = stringResource(R.string.feedback_option_no),
+                                selected = recommendAnswer == "Não",
+                                onClick = { recommendAnswer = "Não" }
+                            )
+                        }
+                    }
+                }
+            }
+
+            Button(
+                onClick = {
+                    onSubmit(featureAnswer, performanceAnswer, navigationAnswer, recommendAnswer)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = featureAnswer.isNotBlank() || performanceAnswer.isNotBlank() ||
+                        navigationAnswer.isNotBlank() || recommendAnswer.isNotBlank()
+            ) {
+                Text(stringResource(R.string.feedback_button_send))
+            }
+        }
+    }
+}
+
+@Composable
+fun FeedbackQuestionField(
+    question: String,
+    value: String,
+    onValueChange: (String) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            text = question,
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.SemiBold
+        )
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(stringResource(R.string.feedback_placeholder_answer)) },
+            shape = MaterialTheme.shapes.medium
+        )
+    }
+}
+
+@Composable
+fun FeedbackOption(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickable { onClick() }
+    ) {
+        RadioButton(selected = selected, onClick = onClick)
+        Text(text = label, style = MaterialTheme.typography.bodyMedium)
     }
 }
 

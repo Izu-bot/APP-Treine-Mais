@@ -13,4 +13,7 @@ interface PrefsRepository {
 
     suspend fun saveAi(isEnabled: Boolean): Result<Unit>
     val aiCache: StateFlow<Boolean>
+
+    suspend fun getLastFeedbackTimestamp(): Long?
+    suspend fun saveFeedbackTimestamp(timestamp: Long): Result<Unit>
 }
