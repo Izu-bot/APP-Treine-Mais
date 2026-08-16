@@ -6,6 +6,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.crypto.tink.Aead
@@ -34,6 +35,7 @@ class DataStorePrefs(
         private val NOTIFICATION_ENABLED = booleanPreferencesKey("notification_enabled")
         private val AI_ENABLED = booleanPreferencesKey("ai_enabled")
         private val HAS_COMPLETED_ONBOARDING = booleanPreferencesKey("has_completed_onboarding")
+        private val LAST_FEEDBACK_DATE = longPreferencesKey("last_feedback_date")
     }
 
     private val aead: Aead by lazy {
@@ -45,6 +47,14 @@ class DataStorePrefs(
             .build()
             .keysetHandle
             .getPrimitive(RegistryConfiguration.get(), Aead::class.java)
+    }
+
+    suspend fun updateLastFeedbackTimestamp(timestamp: Long) = context.dataStore.edit {
+        it[LAST_FEEDBACK_DATE] = timestamp
+    }
+
+    val lastFeedbackTimestamp: Flow<Long?> = context.dataStore.data.map {
+        it[LAST_FEEDBACK_DATE]
     }
 
     val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { prefs ->

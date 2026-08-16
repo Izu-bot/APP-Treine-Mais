@@ -197,6 +197,20 @@
     <string name="progress_last_session">last session</string>
     <string name="progress_estimated_1rm">estimated 1RM</string>
 
+    <!-- Feedback Survey -->
+    <string name="feedback_title">Help us improve Treine+</string>
+    <string name="feedback_subtitle">Your feedback is essential to make the app even better.</string>
+    <string name="feedback_question_1">What feature do you miss in Treine+?</string>
+    <string name="feedback_question_2">Did you notice any crashes or slowness? (Where?)</string>
+    <string name="feedback_question_3">Did you have trouble finding something in the app?</string>
+    <string name="feedback_question_4">Would you recommend Treine+ to a friend?</string>
+    <string name="feedback_option_yes">Yes</string>
+    <string name="feedback_option_no">No</string>
+    <string name="feedback_button_send">Send Feedback</string>
+    <string name="feedback_placeholder_answer">Type your answer here...</string>
+    <string name="feedback_email_subject">Treine+ App Feedback</string>
+    <string name="feedback_email_body_intro">Here is my feedback about the app:\n\n</string>
+
     <string-array name="month_names_short">
         <item>JAN</item>
         <item>FEB</item>

@@ -2,6 +2,7 @@
 agp = "9.2.1"
 coilCompose = "3.5.0"
 datastorePreferences = "1.2.1"
+firebaseBom = "34.17.0"
 hiltAndroid = "2.59.2"
 hiltAndroidCompiler = "2.59.2"
 hiltCompiler = "1.0.0"
@@ -17,6 +18,7 @@ activityCompose = "1.13.0"
 composeBom = "2026.05.01"
 lifecycleViewmodelCompose = "2.10.0"
 navVersion = "2.9.8"
+googleServices = "4.5.0"
 roomCompiler = "2.8.4"
 roomRuntime = "2.8.4"
 uiTextGoogleFonts = "1.10.4"
@@ -44,6 +46,8 @@ androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
 coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coilCompose" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -75,3 +79,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 androidx-room = { id = "androidx.room", version.ref = "roomCompiler" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }

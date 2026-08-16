@@ -4,6 +4,7 @@ import com.izubot.treinemais.data.local.datasource.DataStorePrefs
 import com.izubot.treinemais.domain.repository.PrefsRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 
 class PrefsRepositoryImpl @Inject constructor(
     private val dataStorePrefs: DataStorePrefs
@@ -28,5 +29,15 @@ class PrefsRepositoryImpl @Inject constructor(
         }
     }
     override val aiCache: StateFlow<Boolean> = dataStorePrefs.aiCache
+
+    override suspend fun getLastFeedbackTimestamp(): Long? {
+        return dataStorePrefs.lastFeedbackTimestamp.first()
+    }
+
+    override suspend fun saveFeedbackTimestamp(timestamp: Long): Result<Unit> {
+        return runCatching {
+            dataStorePrefs.updateLastFeedbackTimestamp(timestamp)
+        }
+    }
 
 }

@@ -106,7 +106,9 @@ fun AppNavigation(
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable<MainRoute.Home> {
-                    Home()
+                    Home(
+                        snackbarHostState = mainSnackBarHostState
+                    )
                 }
 
                 composable<MainRoute.Profile> {
