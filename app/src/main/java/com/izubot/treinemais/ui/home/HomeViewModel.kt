@@ -178,11 +178,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun showFeedback(lastFeedbackTimestamp: Long?, currentDate: Long): Boolean {
-//        if (lastFeedbackTimestamp == null) return false
-//
-//        val oneWeekInMillis = 7 * 24 * 60 * 60 * 1000L
-//        return (currentDate - lastFeedbackTimestamp) >= oneWeekInMillis
-        return true
+        if (lastFeedbackTimestamp == null) return false
+
+        val oneWeekInMillis = 7 * 24 * 60 * 60 * 1000L
+        return (currentDate - lastFeedbackTimestamp) >= oneWeekInMillis
     }
 
     fun onFeedbackDismissed() {
