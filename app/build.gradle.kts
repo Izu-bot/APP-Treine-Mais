@@ -16,8 +16,8 @@ android {
         applicationId = "com.izubot.treinemais"
         minSdk = 28
         targetSdk = 36
-        versionCode = 6
-        versionName = "1.1.0"
+        versionCode = 8
+        versionName = "1.1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
