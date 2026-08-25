@@ -16,4 +16,6 @@ sealed interface MainRoute {
     data class EditExercise(val exerciseId: String? = null, val trainingId: String): MainRoute
     @Serializable
     data object Progress: MainRoute
+    @Serializable
+    data class TrainingLog(val trainingId: String)
 }
