@@ -212,6 +212,9 @@
     <string name="progress_max_weight_record">absolute record</string>
     <string name="progress_last_session">last session</string>
     <string name="progress_estimated_1rm">estimated 1RM</string>
+    <string name="progress_granularity_weekly">Weekly</string>
+    <string name="progress_granularity_monthly">Monthly</string>
+    <string name="progress_filter_label">Filter</string>
 
     <!-- Feedback Survey -->
     <string name="feedback_title">Help us improve Treine+</string>

@@ -23,8 +23,13 @@ data class ProgressUiState(
     val recordVolume: Double = 0.0,
     val recordWeight: Double = 0.0,
     val totalMonthlyVolume: Double = 0.0,
+    val chartGranularity: ChartGranularity = ChartGranularity.WEEKLY,
 )
 
 enum class ViewMode {
     GENERAL, TRAINING, EXERCISE
+}
+
+enum class ChartGranularity {
+    WEEKLY, MONTHLY
 }

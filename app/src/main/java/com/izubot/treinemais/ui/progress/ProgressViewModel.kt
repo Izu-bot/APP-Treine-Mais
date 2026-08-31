@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.temporal.WeekFields
 import java.util.Locale
 import javax.inject.Inject
 
@@ -43,6 +44,11 @@ class ProgressViewModel @Inject constructor(
 
     // Gerencia a observação ativa de fluxos (Flow) para evitar vazamento de corotinas
     private var observationJob: Job? = null
+
+    // Armazena dados atuais para reprocessamento ao trocar granularidade
+    private var currentHistory: List<DayProgress> = emptyList()
+    private var currentTrainingEntries: List<WeightEntry> = emptyList()
+    private var currentExerciseEntries: List<WeightEntry> = emptyList()
 
     private val monthNames by lazy {
         context.resources.getStringArray(R.array.month_names_short).toList()
@@ -72,6 +78,7 @@ class ProgressViewModel @Inject constructor(
                 startOfLast6Months.toString(),
                 now.toString()
             ).collect { history ->
+                currentHistory = history
                 processFrequencyData(history)
                 calculateMonthlyStats(history, now)
             }
@@ -113,18 +120,38 @@ class ProgressViewModel @Inject constructor(
 
     private fun processFrequencyData(history: List<DayProgress>) {
         val now = LocalDate.now()
-        val groupedByMonth = history.filter { it.isCompleted }
-            .groupBy { "${it.date.year}-${String.format(Locale.US, "%02d", it.date.monthValue)}" }
-            .mapValues { it.value.size.toDouble() }
+        val granularity = _state.value.chartGranularity
 
-        val monthlyData = mutableMapOf<String, Double>()
-        for (i in 5 downTo 0) {
-            val date = now.minusMonths(i.toLong())
-            val monthKey = "${date.year}-${String.format(Locale.US, "%02d", date.monthValue)}"
-            monthlyData[monthKey] = groupedByMonth[monthKey] ?: 0.0
+        if (granularity == ChartGranularity.MONTHLY) {
+            val groupedByMonth = history.filter { it.isCompleted }
+                .groupBy { "${it.date.year}-${String.format(Locale.US, "%02d", it.date.monthValue)}" }
+                .mapValues { it.value.size.toDouble() }
+
+            val monthlyData = mutableMapOf<String, Double>()
+            for (i in 5 downTo 0) {
+                val date = now.minusMonths(i.toLong())
+                val monthKey = "${date.year}-${String.format(Locale.US, "%02d", date.monthValue)}"
+                monthlyData[monthKey] = groupedByMonth[monthKey] ?: 0.0
+            }
+            updateChartState(monthlyData, ViewMode.GENERAL)
+        } else {
+            val weekFields = WeekFields.of(Locale.getDefault())
+            val groupedByWeek = history.filter { it.isCompleted }
+                .groupBy {
+                    val week = it.date.get(weekFields.weekOfWeekBasedYear())
+                    "${it.date.year}-W${String.format(Locale.US, "%02d", week)}"
+                }
+                .mapValues { it.value.size.toDouble() }
+
+            val weeklyData = mutableMapOf<String, Double>()
+            for (i in 9 downTo 0) { // Mostrar as últimas 10 semanas
+                val date = now.minusWeeks(i.toLong())
+                val week = date.get(weekFields.weekOfWeekBasedYear())
+                val weekKey = "${date.year}-W${String.format(Locale.US, "%02d", week)}"
+                weeklyData[weekKey] = groupedByWeek[weekKey] ?: 0.0
+            }
+            updateChartState(weeklyData, ViewMode.GENERAL)
         }
-
-        updateChartState(monthlyData, ViewMode.GENERAL)
     }
 
     fun onTrainingSelected(training: Training?) {
@@ -162,8 +189,24 @@ class ProgressViewModel @Inject constructor(
             }
 
             exerciseHistoryRepository.getTrainingVolumeEvolution(training.id).collect { entries ->
+                currentTrainingEntries = entries
                 processTrainingChartData(entries)
             }
+        }
+    }
+
+    fun onGranularityChanged(granularity: ChartGranularity) {
+        if (_state.value.chartGranularity == granularity) return
+        
+        _state.update { it.copy(chartGranularity = granularity) }
+        refreshChartData()
+    }
+
+    private fun refreshChartData() {
+        when (_state.value.viewMode) {
+            ViewMode.GENERAL -> processFrequencyData(currentHistory)
+            ViewMode.TRAINING -> processTrainingChartData(currentTrainingEntries)
+            ViewMode.EXERCISE -> processExerciseChartData(currentExerciseEntries)
         }
     }
 
@@ -199,6 +242,7 @@ class ProgressViewModel @Inject constructor(
             exerciseHistoryRepository.getWeightEvolution(exerciseId).collect { entries ->
                 val rm = entries.maxOfOrNull { Calculate1RM(it.weight, it.reps) } ?: 0.0
 
+                currentExerciseEntries = entries
                 _state.update {
                     it.copy(
                         weightEntries = entries,
@@ -218,15 +262,43 @@ class ProgressViewModel @Inject constructor(
             return
         }
 
-        val monthlyData = entries
-            .filter { it.date.length >= 7 }
-            .groupBy { it.date.substring(0, 7) }
-            .mapValues { group -> 
-                group.value.maxOf { Calculate1RM(it.weight, it.reps) } 
-            }
-            .toSortedMap()
+        val granularity = _state.value.chartGranularity
+        val now = LocalDate.now()
+        val chartData = if (granularity == ChartGranularity.MONTHLY) {
+            entries
+                .filter { it.date.length >= 7 }
+                .groupBy { it.date.substring(0, 7) }
+                .mapValues { group ->
+                    group.value.maxOf { Calculate1RM(it.weight, it.reps) }
+                }
+        } else {
+            val weekFields = WeekFields.of(Locale.getDefault())
+            val allWeeklyData = entries
+                .filter { it.date.length >= 10 }
+                .groupBy { entry ->
+                    val date = try {
+                        LocalDate.parse(entry.date)
+                    } catch (_: Exception) {
+                        LocalDate.now()
+                    }
+                    val week = date.get(weekFields.weekOfWeekBasedYear())
+                    "${date.year}-W${String.format(Locale.US, "%02d", week)}"
+                }
+                .mapValues { group ->
+                    group.value.maxOf { Calculate1RM(it.weight, it.reps) }
+                }
 
-        updateChartState(monthlyData, ViewMode.EXERCISE)
+            val weeklyWindow = mutableMapOf<String, Double>()
+            for (i in 9 downTo 0) {
+                val date = now.minusWeeks(i.toLong())
+                val week = date.get(weekFields.weekOfWeekBasedYear())
+                val weekKey = "${date.year}-W${String.format(Locale.US, "%02d", week)}"
+                weeklyWindow[weekKey] = allWeeklyData[weekKey] ?: 0.0
+            }
+            weeklyWindow
+        }
+
+        updateChartState(chartData.toSortedMap(), ViewMode.EXERCISE)
     }
 
     private fun processTrainingChartData(entries: List<WeightEntry>) {
@@ -235,28 +307,60 @@ class ProgressViewModel @Inject constructor(
             return
         }
 
-        val monthlyData = entries
-            .filter { it.date.length >= 7 }
-            .groupBy { it.date.substring(0, 7) }
-            .mapValues { group -> group.value.sumOf { it.weight } }
-            .toSortedMap()
+        val granularity = _state.value.chartGranularity
+        val now = LocalDate.now()
+        val chartData = if (granularity == ChartGranularity.MONTHLY) {
+            entries
+                .filter { it.date.length >= 7 }
+                .groupBy { it.date.substring(0, 7) }
+                .mapValues { group -> group.value.sumOf { it.weight } }
+        } else {
+            val weekFields = WeekFields.of(Locale.getDefault())
+            val allWeeklyData = entries
+                .filter { it.date.length >= 10 }
+                .groupBy { entry ->
+                    val date = try {
+                        LocalDate.parse(entry.date)
+                    } catch (_: Exception) {
+                        LocalDate.now()
+                    }
+                    val week = date.get(weekFields.weekOfWeekBasedYear())
+                    "${date.year}-W${String.format(Locale.US, "%02d", week)}"
+                }
+                .mapValues { group -> group.value.sumOf { it.weight } }
 
-        updateChartState(monthlyData, ViewMode.TRAINING)
+            val weeklyWindow = mutableMapOf<String, Double>()
+            for (i in 9 downTo 0) {
+                val date = now.minusWeeks(i.toLong())
+                val week = date.get(weekFields.weekOfWeekBasedYear())
+                val weekKey = "${date.year}-W${String.format(Locale.US, "%02d", week)}"
+                weeklyWindow[weekKey] = allWeeklyData[weekKey] ?: 0.0
+            }
+            weeklyWindow
+        }
+
+        updateChartState(chartData.toSortedMap(), ViewMode.TRAINING)
     }
 
-    private fun updateChartState(monthlyData: Map<String, Double>, mode: ViewMode) {
-        if (monthlyData.isEmpty()) {
+    private fun updateChartState(data: Map<String, Double>, mode: ViewMode) {
+        if (data.isEmpty()) {
             _state.update { it.copy(chartPoints = emptyList(), chartLabels = emptyList()) }
             return
         }
 
-        val values = monthlyData.values.toList()
-        val keys = monthlyData.keys.toList()
+        val values = data.values.toList()
+        val keys = data.keys.toList()
+        val granularity = _state.value.chartGranularity
 
-        // Labels (Nomes dos meses)
+        // Labels (Nomes dos meses ou Semanas)
         val labels = keys.map { key ->
-            val monthIndex = key.substringAfter("-").toIntOrNull() ?: 1
-            monthNames.getOrElse(monthIndex - 1) { "???" }
+            if (granularity == ChartGranularity.MONTHLY) {
+                val monthIndex = key.substringAfter("-").toIntOrNull() ?: 1
+                monthNames.getOrElse(monthIndex - 1) { "???" }
+            } else {
+                // yyyy-Www -> Www
+                key.substringAfter("-")
+            }
         }
 
         // Normalização (0.0 a 1.0)
