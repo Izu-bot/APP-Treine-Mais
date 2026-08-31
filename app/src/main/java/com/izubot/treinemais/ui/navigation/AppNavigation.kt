@@ -1,6 +1,7 @@
 package com.izubot.treinemais.ui.navigation
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -105,7 +106,9 @@ fun AppNavigation(
             NavHost(
                 navController = navController,
                 startDestination = MainRoute.Home,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .consumeWindowInsets(innerPadding)
             ) {
                 composable<MainRoute.Home> {
                     Home(
@@ -165,7 +168,8 @@ fun AppNavigation(
 
                 composable<MainRoute.TrainingLog> {
                     TrainingLog(
-                        snackbarHostState = mainSnackBarHostState
+                        snackbarHostState = mainSnackBarHostState,
+                        onNavigateBack = { navController.popBackStack() }
                     )
                 }
             }

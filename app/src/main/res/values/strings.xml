@@ -88,7 +88,23 @@
     <string name="home_apply_all">Apply to all: %1$skg</string>
     <string name="home_no_trainings_message">You don\'t have any trainings yet. Go to the Trainings tab to create one!</string>
     <string name="training_exercises_count">%1$d Exercises</string>
-    <string name="start_training">Start</string>"
+    <string name="start_training">Start</string>
+
+    <!-- Training Log Screen -->
+    <string name="training_log_saving_progress">Saving your progress…</string>
+    <string name="training_log_completed_title">Workout Completed!</string>
+    <string name="training_log_completed_subtitle">You rock!</string>
+    <string name="training_log_back">Back</string>
+    <string name="training_log_next">Next</string>
+    <string name="training_log_finish">Finish</string>
+    <string name="training_log_add_set">Add Set</string>
+    <string name="training_log_remove_set">Remove</string>
+    <string name="training_log_progress_title">Workout progress</string>
+    <string name="training_log_progress_count">%1$d of %2$d</string>
+    <string name="training_log_set_label">S%1$d</string>
+    <string name="training_log_reps_label">Reps</string>
+    <string name="training_log_weight_label">Weight</string>
+    <string name="training_log_kg_label">Kg</string>
 
     <!-- Profile Screen -->
     <string name="title_profile">Profile</string>
