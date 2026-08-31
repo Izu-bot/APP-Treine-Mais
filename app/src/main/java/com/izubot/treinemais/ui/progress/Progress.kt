@@ -2,6 +2,7 @@ package com.izubot.treinemais.ui.progress
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,13 +18,17 @@ import androidx.compose.material.icons.automirrored.filled.TrendingDown
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -34,6 +39,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -164,7 +172,9 @@ fun Progress(
                     ChartHeader(
                         title = chartTitle,
                         percentage = state.percentageChange,
-                        showPercentage = state.viewMode == ViewMode.EXERCISE
+                        showPercentage = state.viewMode == ViewMode.EXERCISE,
+                        granularity = state.chartGranularity,
+                        onGranularityChange = { viewModel.onGranularityChanged(it) }
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -302,39 +312,98 @@ fun StatCard(
 }
 
 @Composable
-fun ChartHeader(title: String, percentage: Double, showPercentage: Boolean) {
+fun ChartHeader(
+    title: String,
+    percentage: Double,
+    showPercentage: Boolean,
+    granularity: ChartGranularity,
+    onGranularityChange: (ChartGranularity) -> Unit
+) {
     val color = if (percentage >= 0) Color(0xFF00796B) else Color(0xFFD32F2F)
-    val icon = if (percentage >= 0) Icons.AutoMirrored.Filled.TrendingUp else Icons.AutoMirrored.Filled.TrendingDown
+    val icon =
+        if (percentage >= 0) Icons.AutoMirrored.Filled.TrendingUp else Icons.AutoMirrored.Filled.TrendingDown
     val sign = if (percentage >= 0) "+" else ""
+    var showMenu by remember { mutableStateOf(false) }
 
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = title,
-            modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
-        )
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = title,
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
 
-        if (showPercentage) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = color,
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
-                    text = "$sign${percentage.toInt()}%",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = color,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 4.dp)
-                )
+                if (showPercentage) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = color,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text(
+                        text = "$sign${percentage.toInt()}%",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = color,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 4.dp, end = 8.dp)
+                    )
+                }
+
+                Box {
+                    IconButton(onClick = { showMenu = true }, modifier = Modifier.size(24.dp)) {
+                        Icon(
+                            imageVector = Icons.Default.ExpandMore,
+                            contentDescription = stringResource(R.string.progress_filter_label),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.progress_granularity_weekly)) },
+                            onClick = {
+                                onGranularityChange(ChartGranularity.WEEKLY)
+                                showMenu = false
+                            },
+                            trailingIcon = {
+                                if (granularity == ChartGranularity.WEEKLY) {
+                                    Icon(Icons.Default.FitnessCenter, null, modifier = Modifier.size(16.dp))
+                                }
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.progress_granularity_monthly)) },
+                            onClick = {
+                                onGranularityChange(ChartGranularity.MONTHLY)
+                                showMenu = false
+                            },
+                            trailingIcon = {
+                                if (granularity == ChartGranularity.MONTHLY) {
+                                    Icon(Icons.Default.FitnessCenter, null, modifier = Modifier.size(16.dp))
+                                }
+                            }
+                        )
+                    }
+                }
             }
         }
+        
+        Text(
+            text = if (granularity == ChartGranularity.WEEKLY) 
+                stringResource(R.string.progress_granularity_weekly) 
+            else 
+                stringResource(R.string.progress_granularity_monthly),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Medium
+        )
     }
 }
