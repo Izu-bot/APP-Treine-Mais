@@ -1,35 +1,37 @@
 [versions]
-agp = "9.2.1"
-coilCompose = "3.5.0"
+agp = "9.3.2"
+coilCompose = "3.6.0"
 datastorePreferences = "1.2.1"
-firebaseBom = "34.17.0"
-hiltAndroid = "2.59.2"
-hiltAndroidCompiler = "2.59.2"
-hiltCompiler = "1.0.0"
-hiltNavigationCompose = "1.3.0"
-kotlin = "2.3.21"
-kotlinMetadataJvm = "2.4.0"
-coreKtx = "1.17.0"
+firebaseBom = "34.18.0"
+hiltAndroid = "2.60.1"
+hiltAndroidCompiler = "2.60.1"
+hiltCompiler = "1.4.0"
+hiltNavigationCompose = "1.4.0"
+kotlin = "2.4.10"
+kotlinMetadataJvm = "2.4.10"
+coreKtx = "1.19.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
-lifecycleRuntimeKtx = "2.10.0"
+lifecycleRuntimeKtx = "2.11.0"
 activityCompose = "1.13.0"
-composeBom = "2026.05.01"
-lifecycleViewmodelCompose = "2.10.0"
-navVersion = "2.9.8"
+composeBom = "2026.08.00"
+lifecycleViewmodelCompose = "2.11.0"
+navVersion = "2.10.0"
 googleServices = "4.5.0"
 roomCompiler = "2.8.4"
 roomRuntime = "2.8.4"
-uiTextGoogleFonts = "1.10.4"
-uiText = "1.10.4"
+uiTextGoogleFonts = "1.12.0"
+uiText = "1.12.0"
 retrofit = "3.0.0"
-okhttp = "5.4.0"
-kotlinxSerializationJson = "1.10.0"
+okhttp = "5.5.0"
+kotlinxSerializationJson = "1.11.0"
 retrofitKotlinxSerializationJson = "1.0.0"
-hiltCommon = "1.3.0"
+hiltCommon = "1.4.0"
 workRuntimeKtx = "2.11.2"
-places = "5.2.0"
+places = "5.3.0"
+tinkAndroid = "1.23.0"
+ksp = "2.3.11"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
@@ -73,6 +75,7 @@ retrofit-kotlinx-serialization-json = { group = "com.jakewharton.retrofit", name
 androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltCommon" }
 kotlinMetadataJvm = { module = "org.jetbrains.kotlin:kotlin-metadata-jvm", version.ref = "kotlinMetadataJvm" }
 places = { group = "com.google.android.libraries.places", name = "places", version.ref = "places" }
+tink-android = { group = "com.google.crypto.tink", name = "tink-android", version.ref = "tinkAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -80,3 +83,6 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 androidx-room = { id = "androidx.room", version.ref = "roomCompiler" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

@@ -3,21 +3,21 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.google.services)
-    kotlin("plugin.serialization") version "2.0.21"
-    id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
     namespace = "com.izubot.treinemais"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.izubot.treinemais"
         minSdk = 28
-        targetSdk = 36
-        versionCode = 8
-        versionName = "1.1.2"
+        targetSdk = 37
+        versionCode = 9
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -61,7 +61,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
@@ -78,7 +77,7 @@ dependencies {
 
     // Security + DataStore
     implementation(libs.androidx.datastore.preferences)
-    implementation("com.google.crypto.tink:tink-android:1.20.0")
+    implementation(libs.tink.android)
 
     // Room
     implementation(libs.androidx.room.runtime)
