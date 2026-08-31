@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class TrainingLogViewModel @Inject constructor(
@@ -116,12 +117,12 @@ class TrainingLogViewModel @Inject constructor(
             }
 
             // Simula um tempo para a animação de "salvando"
-            delay(1000)
+            delay(1000.milliseconds)
             
             _uiState.update { it.copy(isSaving = false, showTrophy = true) }
             
             // Tempo para o usuário ver o troféu
-            delay(2000)
+            delay(2000.milliseconds)
             
             _uiState.update { it.copy(isTrainingCompleted = true) }
             onComplete()

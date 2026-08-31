@@ -223,7 +223,7 @@
     <string name="feedback_option_yes">Yes</string>
     <string name="feedback_option_no">No</string>
     <string name="feedback_button_send">Send Feedback</string>
-    <string name="feedback_placeholder_answer">Type your answer here...</string>
+    <string name="feedback_placeholder_answer">Type your answer here…</string>
     <string name="feedback_email_subject">Treine+ App Feedback</string>
     <string name="feedback_email_body_intro">Here is my feedback about the app:\n\n</string>
 
