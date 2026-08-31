@@ -1,6 +1,7 @@
 package com.izubot.treinemais.ui.navigation
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,6 +46,7 @@ import com.izubot.treinemais.ui.new_training.NewTraining
 import com.izubot.treinemais.ui.profile.Profile
 import com.izubot.treinemais.ui.progress.Progress
 import com.izubot.treinemais.ui.training.Training
+import com.izubot.treinemais.ui.training_log.TrainingLog
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -64,7 +66,8 @@ fun AppNavigation(
     val overlayRoutes = listOf(
         MainRoute.Profile::class,
         MainRoute.NewTraining::class,
-        MainRoute.EditExercise::class
+        MainRoute.EditExercise::class,
+        MainRoute.TrainingLog::class
     )
 
     val isOverlayActive = currentDestination?.hierarchy?.any { dest ->
@@ -103,11 +106,16 @@ fun AppNavigation(
             NavHost(
                 navController = navController,
                 startDestination = MainRoute.Home,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .consumeWindowInsets(innerPadding)
             ) {
                 composable<MainRoute.Home> {
                     Home(
-                        snackbarHostState = mainSnackBarHostState
+                        snackbarHostState = mainSnackBarHostState,
+                        onNavigateToTrainingLog = { trainingId ->
+                            navController.navigate(MainRoute.TrainingLog(trainingId))
+                        }
                     )
                 }
 
@@ -155,6 +163,13 @@ fun AppNavigation(
                 composable<MainRoute.Progress> {
                     Progress(
                         snackbarHostState = mainSnackBarHostState
+                    )
+                }
+
+                composable<MainRoute.TrainingLog> {
+                    TrainingLog(
+                        snackbarHostState = mainSnackBarHostState,
+                        onNavigateBack = { navController.popBackStack() }
                     )
                 }
             }

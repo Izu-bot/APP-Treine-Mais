@@ -3,6 +3,7 @@ package com.izubot.treinemais.data.di
 import android.content.Context
 import com.izubot.treinemais.data.local.datasource.DataStorePrefs
 import com.izubot.treinemais.data.remote.api.AuthApi
+import com.izubot.treinemais.data.remote.api.SyncApi
 import com.izubot.treinemais.data.remote.interceptors.AuthInterceptor
 import com.izubot.treinemais.data.remote.interceptors.TokenAuthenticator
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -116,6 +117,18 @@ object NetworkModule {
     @Singleton
     fun provideAuthApi(retrofit: Retrofit): AuthApi {
         return retrofit.create(AuthApi::class.java)
+    }
+
+    /**
+     * Creates a SyncApi implementation from the provided Retrofit instance.
+     *
+     * @param retrofit The default Retrofit instance.
+     * @return A SyncApi implementation created by Retrofit.
+     */
+    @Provides
+    @Singleton
+    fun provideSyncApi(retrofit: Retrofit): SyncApi {
+        return retrofit.create(SyncApi::class.java)
     }
 
     /**
