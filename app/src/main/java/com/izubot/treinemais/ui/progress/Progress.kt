@@ -94,16 +94,16 @@ fun Progress(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Cards de Resumo
+            // Cards de Resumo: Visão mensal para estatísticas gerais, baseada na sessão para treino/exercício específico.
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 StatCard(
                     title = when (state.viewMode) {
-                      ViewMode.GENERAL -> stringResource(R.string.progress_monthly_workouts)
-                      ViewMode.TRAINING -> stringResource(R.string.progress_training_volume)
-                      ViewMode.EXERCISE -> stringResource(R.string.progress_exercise_volume)
+                        ViewMode.GENERAL -> stringResource(R.string.progress_monthly_workouts)
+                        ViewMode.TRAINING -> stringResource(R.string.progress_training_volume)
+                        ViewMode.EXERCISE -> stringResource(R.string.progress_exercise_volume)
                     },
                     value = when (state.viewMode) {
                         ViewMode.GENERAL -> state.monthlyWorkouts.toString()
@@ -111,10 +111,12 @@ fun Progress(
                         ViewMode.EXERCISE -> String.format(Locale.US, "%.1f kg", state.maxLoad)
                     },
                     subtitle = when (state.viewMode) {
-                        ViewMode.GENERAL -> if (state.monthlyWorkoutsChange >= 0) {
-                            stringResource(R.string.progress_monthly_workouts_change_positive, state.monthlyWorkoutsChange)
-                        } else {
-                            stringResource(R.string.progress_monthly_workouts_change_negative, state.monthlyWorkoutsChange)
+                        ViewMode.GENERAL -> {
+                            if (state.monthlyWorkoutsChange >= 0) {
+                                stringResource(R.string.progress_monthly_workouts_change_positive, state.monthlyWorkoutsChange)
+                            } else {
+                                stringResource(R.string.progress_monthly_workouts_change_negative, state.monthlyWorkoutsChange)
+                            }
                         }
                         ViewMode.TRAINING -> stringResource(R.string.progress_last_session)
                         ViewMode.EXERCISE -> stringResource(R.string.progress_estimated_1rm)

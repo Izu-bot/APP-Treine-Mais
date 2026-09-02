@@ -17,12 +17,15 @@ data class ProgressUiState(
     val percentageChange: Double = 0.0,
     val monthlyWorkouts: Int = 0,
     val monthlyWorkoutsChange: Int = 0,
+    val weeklyWorkouts: Int = 0,
+    val weeklyWorkoutsChange: Int = 0,
     val weeklyAverage: Double = 0.0,
     val viewMode: ViewMode = ViewMode.GENERAL,
     val lastVolume: Double = 0.0,
     val recordVolume: Double = 0.0,
     val recordWeight: Double = 0.0,
     val totalMonthlyVolume: Double = 0.0,
+    val totalWeeklyVolume: Double = 0.0,
     val chartGranularity: ChartGranularity = ChartGranularity.WEEKLY,
 )
 
