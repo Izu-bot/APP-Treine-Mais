@@ -81,6 +81,7 @@ class ProgressViewModel @Inject constructor(
                 currentHistory = history
                 processFrequencyData(history)
                 calculateMonthlyStats(history, now)
+                calculateWeeklyStats(history, now)
             }
         }
         
@@ -88,9 +89,21 @@ class ProgressViewModel @Inject constructor(
             val now = LocalDate.now()
             val startOfMonth = now.withDayOfMonth(1).toString()
             val endOfMonth = now.withDayOfMonth(now.lengthOfMonth()).toString()
-            val totalVolume =
+            val totalMonthVolume =
                 exerciseHistoryRepository.getTotalVolumeBetweenDates(startOfMonth, endOfMonth)
-            _state.update { it.copy(totalMonthlyVolume = totalVolume) }
+            
+            val weekFields = WeekFields.of(Locale.getDefault())
+            val startOfWeek = now.with(weekFields.dayOfWeek(), 1).toString()
+            val endOfWeek = now.with(weekFields.dayOfWeek(), 7).toString()
+            val totalWeekVolume = 
+                exerciseHistoryRepository.getTotalVolumeBetweenDates(startOfWeek, endOfWeek)
+                
+            _state.update { 
+                it.copy(
+                    totalMonthlyVolume = totalMonthVolume,
+                    totalWeeklyVolume = totalWeekVolume
+                ) 
+            }
         }
     }
 
@@ -118,39 +131,103 @@ class ProgressViewModel @Inject constructor(
         }
     }
 
+    private fun calculateWeeklyStats(history: List<DayProgress>, now: LocalDate) {
+        val weekFields = WeekFields.of(Locale.getDefault())
+        val weekBasedYearField = weekFields.weekBasedYear()
+        
+        val currentWeek = now.get(weekFields.weekOfWeekBasedYear())
+        val currentWeekYear = now.get(weekBasedYearField)
+        
+        val lastWeekDate = now.minusWeeks(1)
+        val lastWeek = lastWeekDate.get(weekFields.weekOfWeekBasedYear())
+        val lastWeekYear = lastWeekDate.get(weekBasedYearField)
+        
+        val currentWeekWorkouts = history.count {
+            it.isCompleted && 
+            it.date.get(weekFields.weekOfWeekBasedYear()) == currentWeek && 
+            it.date.get(weekBasedYearField) == currentWeekYear
+        }
+        val lastWeekWorkouts = history.count {
+            it.isCompleted && 
+            it.date.get(weekFields.weekOfWeekBasedYear()) == lastWeek && 
+            it.date.get(weekBasedYearField) == lastWeekYear
+        }
+
+        _state.update {
+            it.copy(
+                weeklyWorkouts = currentWeekWorkouts,
+                weeklyWorkoutsChange = currentWeekWorkouts - lastWeekWorkouts
+            )
+        }
+    }
+
     private fun processFrequencyData(history: List<DayProgress>) {
+        val chartData = generateChartData(
+            items = history.filter { it.isCompleted },
+            dateProvider = { it.date },
+            valueAggregator = { it.size.toDouble() },
+            granularity = _state.value.chartGranularity
+        )
+        updateChartState(chartData, ViewMode.GENERAL)
+    }
+
+    /**
+     * Gera um Map de datas para valores para o gráfico, preenchendo lacunas com 0.0.
+     * Esta lógica unifica a criação da janela temporal para as visualizações mensal (6 meses) e semanal (10 semanas).
+     */
+    private fun <T> generateChartData(
+        items: List<T>,
+        dateProvider: (T) -> LocalDate?,
+        valueAggregator: (List<T>) -> Double,
+        granularity: ChartGranularity
+    ): Map<String, Double> {
         val now = LocalDate.now()
-        val granularity = _state.value.chartGranularity
+        val weekFields = WeekFields.of(Locale.getDefault())
+        val weekBasedYearField = weekFields.weekBasedYear()
 
-        if (granularity == ChartGranularity.MONTHLY) {
-            val groupedByMonth = history.filter { it.isCompleted }
-                .groupBy { "${it.date.year}-${String.format(Locale.US, "%02d", it.date.monthValue)}" }
-                .mapValues { it.value.size.toDouble() }
-
-            val monthlyData = mutableMapOf<String, Double>()
-            for (i in 5 downTo 0) {
-                val date = now.minusMonths(i.toLong())
-                val monthKey = "${date.year}-${String.format(Locale.US, "%02d", date.monthValue)}"
-                monthlyData[monthKey] = groupedByMonth[monthKey] ?: 0.0
-            }
-            updateChartState(monthlyData, ViewMode.GENERAL)
-        } else {
-            val weekFields = WeekFields.of(Locale.getDefault())
-            val groupedByWeek = history.filter { it.isCompleted }
-                .groupBy {
-                    val week = it.date.get(weekFields.weekOfWeekBasedYear())
-                    "${it.date.year}-W${String.format(Locale.US, "%02d", week)}"
-                }
-                .mapValues { it.value.size.toDouble() }
-
-            val weeklyData = mutableMapOf<String, Double>()
-            for (i in 9 downTo 0) { // Mostrar as últimas 10 semanas
-                val date = now.minusWeeks(i.toLong())
+        // 1. Agrupa os dados existentes pela chave (Mês ou Semana)
+        val groupedData = items.groupBy { item ->
+            val date = dateProvider(item) ?: return@groupBy "INVALID"
+            if (granularity == ChartGranularity.MONTHLY) {
+                "${date.year}-${String.format(Locale.US, "%02d", date.monthValue)}"
+            } else {
                 val week = date.get(weekFields.weekOfWeekBasedYear())
-                val weekKey = "${date.year}-W${String.format(Locale.US, "%02d", week)}"
-                weeklyData[weekKey] = groupedByWeek[weekKey] ?: 0.0
+                val year = date.get(weekBasedYearField)
+                "$year-W${String.format(Locale.US, "%02d", week)}"
             }
-            updateChartState(weeklyData, ViewMode.GENERAL)
+        }.filterKeys { it != "INVALID" }
+            .mapValues { valueAggregator(it.value) }
+
+        // 2. Cria a janela temporal para garantir que o gráfico seja contínuo
+        val result = mutableMapOf<String, Double>()
+        val range = if (granularity == ChartGranularity.MONTHLY) 5 downTo 0 else 9 downTo 0
+
+        for (i in range) {
+            val date = if (granularity == ChartGranularity.MONTHLY)
+                now.minusMonths(i.toLong())
+            else
+                now.minusWeeks(i.toLong())
+
+            val key = if (granularity == ChartGranularity.MONTHLY) {
+                "${date.year}-${String.format(Locale.US, "%02d", date.monthValue)}"
+            } else {
+                val week = date.get(weekFields.weekOfWeekBasedYear())
+                val year = date.get(weekBasedYearField)
+                "$year-W${String.format(Locale.US, "%02d", week)}"
+            }
+            result[key] = groupedData[key] ?: 0.0
+        }
+
+        return result
+    }
+
+    private fun parseDate(dateStr: String): LocalDate? {
+        return try {
+            if (dateStr.length >= 10) LocalDate.parse(dateStr)
+            else if (dateStr.length >= 7) LocalDate.parse("$dateStr-01")
+            else null
+        } catch (_: Exception) {
+            null
         }
     }
 
@@ -262,43 +339,14 @@ class ProgressViewModel @Inject constructor(
             return
         }
 
-        val granularity = _state.value.chartGranularity
-        val now = LocalDate.now()
-        val chartData = if (granularity == ChartGranularity.MONTHLY) {
-            entries
-                .filter { it.date.length >= 7 }
-                .groupBy { it.date.substring(0, 7) }
-                .mapValues { group ->
-                    group.value.maxOf { Calculate1RM(it.weight, it.reps) }
-                }
-        } else {
-            val weekFields = WeekFields.of(Locale.getDefault())
-            val allWeeklyData = entries
-                .filter { it.date.length >= 10 }
-                .groupBy { entry ->
-                    val date = try {
-                        LocalDate.parse(entry.date)
-                    } catch (_: Exception) {
-                        LocalDate.now()
-                    }
-                    val week = date.get(weekFields.weekOfWeekBasedYear())
-                    "${date.year}-W${String.format(Locale.US, "%02d", week)}"
-                }
-                .mapValues { group ->
-                    group.value.maxOf { Calculate1RM(it.weight, it.reps) }
-                }
+        val chartData = generateChartData(
+            items = entries,
+            dateProvider = { parseDate(it.date) },
+            valueAggregator = { group -> group.maxOf { Calculate1RM(it.weight, it.reps) } },
+            granularity = _state.value.chartGranularity
+        )
 
-            val weeklyWindow = mutableMapOf<String, Double>()
-            for (i in 9 downTo 0) {
-                val date = now.minusWeeks(i.toLong())
-                val week = date.get(weekFields.weekOfWeekBasedYear())
-                val weekKey = "${date.year}-W${String.format(Locale.US, "%02d", week)}"
-                weeklyWindow[weekKey] = allWeeklyData[weekKey] ?: 0.0
-            }
-            weeklyWindow
-        }
-
-        updateChartState(chartData.toSortedMap(), ViewMode.EXERCISE)
+        updateChartState(chartData, ViewMode.EXERCISE)
     }
 
     private fun processTrainingChartData(entries: List<WeightEntry>) {
@@ -307,41 +355,22 @@ class ProgressViewModel @Inject constructor(
             return
         }
 
-        val granularity = _state.value.chartGranularity
-        val now = LocalDate.now()
-        val chartData = if (granularity == ChartGranularity.MONTHLY) {
-            entries
-                .filter { it.date.length >= 7 }
-                .groupBy { it.date.substring(0, 7) }
-                .mapValues { group -> group.value.sumOf { it.weight } }
-        } else {
-            val weekFields = WeekFields.of(Locale.getDefault())
-            val allWeeklyData = entries
-                .filter { it.date.length >= 10 }
-                .groupBy { entry ->
-                    val date = try {
-                        LocalDate.parse(entry.date)
-                    } catch (_: Exception) {
-                        LocalDate.now()
-                    }
-                    val week = date.get(weekFields.weekOfWeekBasedYear())
-                    "${date.year}-W${String.format(Locale.US, "%02d", week)}"
-                }
-                .mapValues { group -> group.value.sumOf { it.weight } }
+        val chartData = generateChartData(
+            items = entries,
+            dateProvider = { parseDate(it.date) },
+            valueAggregator = { group -> group.sumOf { it.weight } },
+            granularity = _state.value.chartGranularity
+        )
 
-            val weeklyWindow = mutableMapOf<String, Double>()
-            for (i in 9 downTo 0) {
-                val date = now.minusWeeks(i.toLong())
-                val week = date.get(weekFields.weekOfWeekBasedYear())
-                val weekKey = "${date.year}-W${String.format(Locale.US, "%02d", week)}"
-                weeklyWindow[weekKey] = allWeeklyData[weekKey] ?: 0.0
-            }
-            weeklyWindow
-        }
-
-        updateChartState(chartData.toSortedMap(), ViewMode.TRAINING)
+        updateChartState(chartData, ViewMode.TRAINING)
     }
 
+    /**
+     * Atualiza o estado da UI com os pontos do gráfico normalizados, labels e variação percentual.
+     * 
+     * [data]: Mapa ordenado de labels para valores.
+     * [mode]: Modo de visualização atual (Geral, Treino ou Exercício).
+     */
     private fun updateChartState(data: Map<String, Double>, mode: ViewMode) {
         if (data.isEmpty()) {
             _state.update { it.copy(chartPoints = emptyList(), chartLabels = emptyList()) }
@@ -363,7 +392,7 @@ class ProgressViewModel @Inject constructor(
             }
         }
 
-        // Normalização (0.0 a 1.0)
+        // Normalização (0.0 a 1.0) para exibição no gráfico
         val normalizedPoints = if (values.size == 1) {
             listOf(0.5f)
         } else {
@@ -373,10 +402,12 @@ class ProgressViewModel @Inject constructor(
             values.map { ((it - min) / range).toFloat() }
         }
 
-        // Variação percentual (apenas para treinos e exercícios)
+        // Cálculo da variação percentual
+        // Buscamos o primeiro valor não-zero no período para evitar divisão por zero
+        // e para mostrar uma progressão significativa se o usuário começou a treinar no meio do período.
         val change = if (values.size >= 2) {
-            val first = values.first()
             val last = values.last()
+            val first = values.firstOrNull { it > 0 } ?: 0.0
             if (first > 0) ((last - first) / first) * 100 else 0.0
         } else 0.0
 

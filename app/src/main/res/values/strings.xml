@@ -191,6 +191,7 @@
     <string name="progress_search_action">Search</string>
     <string name="progress_max_load">Maximum load</string>
     <string name="progress_monthly_workouts">Monthly Workouts</string>
+    <string name="progress_weekly_workouts">Weekly Workouts</string>
     <string name="progress_monthly_workouts_change_positive">+%1$d from previous</string>
     <string name="progress_monthly_workouts_change_negative">%1$d from previous</string>
     <string name="progress_weekly_average">Weekly Average</string>
@@ -205,6 +206,7 @@
     <string name="progress_training_volume">Last Volume</string>
     <string name="progress_exercise_volume">1RM Estimate</string>
     <string name="progress_monthly_volume">Monthly Volume</string>
+    <string name="progress_weekly_volume">Weekly Volume</string>
     <string name="progress_record_volume">Record Volume</string>
     <string name="progress_record_weight">Max Weight</string>
     <string name="progress_total_kg">total kg moved</string>
