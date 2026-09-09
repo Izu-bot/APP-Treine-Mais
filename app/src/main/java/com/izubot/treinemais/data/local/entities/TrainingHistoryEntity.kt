@@ -14,5 +14,7 @@ data class TrainingHistoryEntity(
     val date: String,
     @ColumnInfo(defaultValue = "0")
     val timestamp: Long,
-    val isCompleted: Boolean = true
+    val isCompleted: Boolean = true,
+    @ColumnInfo(defaultValue = "0")
+    val isUnilateral: Boolean = false
 )

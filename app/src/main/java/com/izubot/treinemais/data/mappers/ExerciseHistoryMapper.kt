@@ -13,7 +13,8 @@ fun ExerciseHistoryEntity.toDomain(date: String): ExerciseHistory {
         weight = weight,
         reps = reps,
         sets = sets,
-        date = LocalDate.parse(date)
+        date = LocalDate.parse(date),
+        isUnilateral = isUnilateral,
     )
 }
 
@@ -25,6 +26,7 @@ fun ExerciseHistory.toEntity(): ExerciseHistoryEntity {
         exerciseName = exerciseName,
         weight = weight,
         reps = reps,
-        sets = sets
+        sets = sets,
+        isUnilateral = isUnilateral,
     )
 }

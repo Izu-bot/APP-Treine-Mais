@@ -10,7 +10,8 @@ fun ExerciseEntity.toDomain() : Exercise {
         sets = sets.toString(),
         reps = reps.toString(),
         weight = weight.toString(),
-        description = description ?: ""
+        description = description ?: "",
+        isUnilateral = isUnilateral,
     )
 }
 
@@ -22,6 +23,7 @@ fun Exercise.toEntity(trainingId: String) : ExerciseEntity {
         sets = sets?.toIntOrNull() ?: 0,
         reps = reps?.toIntOrNull() ?: 0,
         weight = weight?.toDoubleOrNull() ?: 0.0,
-        description = description
+        description = description,
+        isUnilateral = isUnilateral,
     )
 }

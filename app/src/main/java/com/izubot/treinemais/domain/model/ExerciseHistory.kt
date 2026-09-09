@@ -10,5 +10,6 @@ data class ExerciseHistory(
     val weight: Double,
     val reps: Int,
     val sets: Int,
-    val date: LocalDate
+    val date: LocalDate,
+    val isUnilateral: Boolean,
 )
