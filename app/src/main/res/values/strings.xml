@@ -105,6 +105,8 @@
     <string name="training_log_reps_label">Reps</string>
     <string name="training_log_weight_label">Weight</string>
     <string name="training_log_kg_label">Kg</string>
+    <string name="training_log_is_unilateral">Unilateral</string>
+    <string name="training_log_tooltip_unilateral">Click the switch button to mark this exercise as one-sided (changes the progress calculation).</string>
 
     <!-- Profile Screen -->
     <string name="title_profile">Profile</string>

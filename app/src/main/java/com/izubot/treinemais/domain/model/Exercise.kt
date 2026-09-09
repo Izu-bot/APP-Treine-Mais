@@ -6,5 +6,6 @@ data class Exercise (
     val sets: String? = null,
     val reps: String? = null,
     val weight: String? = null,
-    val description: String = ""
+    val description: String = "",
+    val isUnilateral: Boolean = false,
 )

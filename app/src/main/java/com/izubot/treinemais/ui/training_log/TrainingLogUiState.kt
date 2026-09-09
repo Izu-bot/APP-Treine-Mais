@@ -15,5 +15,6 @@ data class TrainingLogUiState(
 data class ExerciseSetLog(
     val reps: String = "",
     val weight: String = "",
-    val isCompleted: Boolean = false
+    val isCompleted: Boolean = false,
+    val isUnilateral: Boolean = false,
 )

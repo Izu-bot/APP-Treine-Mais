@@ -89,6 +89,8 @@
     <string name="home_no_trainings_message">Você ainda não possui treinos cadastrados. Vá até a aba de Treinos para criar um!</string>
     <string name="training_exercises_count">%1$d Exercícios</string>
     <string name="start_training">Iniciar</string>
+    <string name="training_log_tooltip_unilateral">Clique no botão de switch para poder marcar este exercício como unilateral (altera o calculo do progresso).</string>
+
 
     <!-- Tela de Log de Treino -->
     <string name="training_log_saving_progress">Salvando seu progresso…</string>
@@ -105,6 +107,7 @@
     <string name="training_log_reps_label">Reps</string>
     <string name="training_log_weight_label">Peso</string>
     <string name="training_log_kg_label">Kg</string>
+    <string name="training_log_is_unilateral">Unilateral</string>
 
     <!-- Tela de Perfil -->
     <string name="title_profile">Perfil</string>

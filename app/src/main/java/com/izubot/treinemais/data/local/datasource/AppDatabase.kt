@@ -15,7 +15,7 @@ import com.izubot.treinemais.data.local.entities.ExerciseHistoryEntity
 import com.izubot.treinemais.data.local.entities.TrainingEntity
 import com.izubot.treinemais.data.local.entities.TrainingHistoryEntity
 import com.izubot.treinemais.data.local.entities.User
-import com.izubot.treinemais.data.local.migrations.Migration3To4Spec
+import com.izubot.treinemais.data.local.migrations.Migration8To9Spec
 
 @Database(
     entities = [
@@ -25,13 +25,17 @@ import com.izubot.treinemais.data.local.migrations.Migration3To4Spec
         TrainingHistoryEntity::class,
         ExerciseHistoryEntity::class,
     ],
-    version = 7,
+    version = 11,
     autoMigrations = [
         AutoMigration(from = 2, to = 3),
-        AutoMigration(from = 3, to = 4, spec = Migration3To4Spec::class),
-        AutoMigration(from = 4, to = 5, spec = Migration3To4Spec::class),
-        AutoMigration(from = 5, to = 6, spec = Migration3To4Spec::class),
-        AutoMigration(from = 6, to = 7, spec = Migration3To4Spec::class)
+        AutoMigration(from = 3, to = 4),
+        AutoMigration(from = 4, to = 5),
+        AutoMigration(from = 5, to = 6),
+        AutoMigration(from = 6, to = 7),
+        AutoMigration(from = 7, to = 8),
+        AutoMigration(from = 8, to = 9, spec = Migration8To9Spec::class),
+        AutoMigration(from = 9, to = 10),
+        AutoMigration(from = 10, to = 11)
     ],
     exportSchema = true
 )

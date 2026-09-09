@@ -24,5 +24,6 @@ data class ExerciseEntity(
     @ColumnInfo val sets: Int,
     @ColumnInfo val reps: Int,
     @ColumnInfo val weight: Double,
-    @ColumnInfo val description: String?
+    @ColumnInfo val description: String?,
+    @ColumnInfo(defaultValue = "0") val isUnilateral: Boolean,
 )

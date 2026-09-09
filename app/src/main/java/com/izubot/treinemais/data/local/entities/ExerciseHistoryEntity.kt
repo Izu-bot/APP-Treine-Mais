@@ -24,5 +24,7 @@ data class ExerciseHistoryEntity(
     val exerciseName: String,
     val weight: Double,
     val reps: Int,
-    val sets: Int
+    val sets: Int,
+    @ColumnInfo(defaultValue = "false")
+    val isUnilateral: Boolean,
 )

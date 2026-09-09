@@ -9,8 +9,8 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -34,7 +34,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -48,13 +48,19 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -187,6 +193,9 @@ fun TrainingLog(
                             },
                             onToggleCompleted = { exerciseId, index ->
                                 trainingLogViewModel.toggleExerciseConfirmation(exerciseId, index)
+                            },
+                            onToggleSwitch = { exerciseId ->
+                                trainingLogViewModel.onHandlerSwitchIsUnilateral(exerciseId)
                             }
                         )
                     }
@@ -234,7 +243,9 @@ fun TrainingLog(
                     enabled = !isLastPage || progress == 1f
                 ) {
                     Text(
-                        text = if (isLastPage) stringResource(R.string.training_log_finish) else stringResource(R.string.training_log_next),
+                        text = if (isLastPage) stringResource(R.string.training_log_finish) else stringResource(
+                            R.string.training_log_next
+                        ),
                         fontWeight = FontWeight.Bold,
                         color = if (isLastPage && progress == 1f) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                     )
@@ -311,6 +322,7 @@ fun SuccessOverlay(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecordValues(
     currentExercise: Exercise,
@@ -318,12 +330,16 @@ fun RecordValues(
     onAddSet: (String) -> Unit,
     onRemoveSet: (String) -> Unit,
     onUpdateSet: (String, Int, String?, String?) -> Unit,
-    onToggleCompleted: (String, Int) -> Unit
+    onToggleCompleted: (String, Int) -> Unit,
+    onToggleSwitch: (String) -> Unit,
 ) {
     val weightSet = 0.2f
     val weightReps = 0.3f
     val weightKg = 0.4f
     val sets = uiState.exerciseSet[currentExercise.id] ?: emptyList()
+
+    val tooltipState = rememberTooltipState()
+    val coroutineScope = rememberCoroutineScope()
 
     Column {
         Text(
@@ -334,16 +350,43 @@ fun RecordValues(
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Icon(
-                imageVector = Icons.Default.FitnessCenter,
-                contentDescription = "",
-                Modifier.size(12.dp)
-            )
-            Text(
-                text = "${currentExercise.sets}x${currentExercise.reps}",
-                style = MaterialTheme.typography.labelMedium
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.training_log_is_unilateral),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.SemiBold
+                )
+                TooltipBox(
+                    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                        TooltipAnchorPosition.Above
+                    ),
+                    tooltip = {
+                        PlainTooltip { Text(stringResource(R.string.training_log_tooltip_unilateral)) }
+                    },
+                    state = tooltipState
+                ) {
+                    IconButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                tooltipState.show()
+                            }
+                        },
+                        modifier = Modifier.size(14.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Info,
+                            contentDescription = "Add to favorites"
+                        )
+                    }
+                }
+            }
+            Switch(
+                checked = sets.any { it.isUnilateral },
+                onCheckedChange = { onToggleSwitch(currentExercise.id) }
             )
         }
         HorizontalDivider(thickness = 1.dp)

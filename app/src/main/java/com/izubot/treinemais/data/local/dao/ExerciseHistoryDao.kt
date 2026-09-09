@@ -50,7 +50,7 @@ interface ExerciseHistoryDao {
     suspend fun getExerciseVolumeRecord(exerciseId: String): Double
 
     @Query("""
-        SELECT SUM(eh.weight * eh.reps * eh.sets)
+         SELECT SUM(eh.weight * eh.reps * eh.sets * (CASE WHEN eh.isUnilateral = 1 THEN 2 ELSE 1 END))
         FROM exercise_history eh
         INNER JOIN training_history th ON eh.training_history_id = th.id
         WHERE th.date >= :startDate AND th.date <= :endDate

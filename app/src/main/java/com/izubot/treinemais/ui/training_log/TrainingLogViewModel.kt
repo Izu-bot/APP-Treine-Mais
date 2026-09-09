@@ -54,6 +54,18 @@ class TrainingLogViewModel @Inject constructor(
         }
     }
 
+    fun onHandlerSwitchIsUnilateral(exerciseId: String) {
+        _uiState.update { currentState ->
+            val currentSets = currentState.exerciseSet[exerciseId] ?: return@update currentState
+            val targetValue = !currentSets.any { it.isUnilateral }
+            val updatedSets = currentSets.map { it.copy(isUnilateral = targetValue) }
+
+            currentState.copy(
+                exerciseSet = currentState.exerciseSet + (exerciseId to updatedSets)
+            )
+        }
+    }
+
     fun addSet(exerciseId: String) {
         _uiState.update { currentState ->
             val currentSets = currentState.exerciseSet[exerciseId] ?: emptyList()
@@ -92,7 +104,12 @@ class TrainingLogViewModel @Inject constructor(
             val trainingId = _trainingLogRoute.trainingId
             val training = _uiState.value.training ?: return@launch
 
-            val historyId = trainingHistoryRepository.markDayAsCompleted(date.toString(), trainingId)
+            val allSets = _uiState.value.exerciseSet
+            val isAnyExerciseUnilateral = allSets.any { (_, sets) ->
+                sets.any { it.isCompleted && it.isUnilateral }
+            }
+
+            val historyId = trainingHistoryRepository.markDayAsCompleted(date.toString(), trainingId, isAnyExerciseUnilateral)
 
             _uiState.value.exerciseSet.forEach { (exerciseId, sets) ->
                 val exercise = training.exercises.find { it.id == exerciseId }
@@ -110,7 +127,8 @@ class TrainingLogViewModel @Inject constructor(
                             weight = maxWeight,
                             reps = totalReps,
                             sets = completedSets.size,
-                            date = date
+                            date = date,
+                            isUnilateral = sets.any { it.isUnilateral }
                         )
                     )
                 }
